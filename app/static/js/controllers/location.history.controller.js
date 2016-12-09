@@ -134,8 +134,8 @@ angular.module('linc.location.history.controller', ['linc.location.history.direc
           map: $scope.map, 
           path: $scope.coord, 
           icons: [
-            {icon: offseticon,offset:'0%'},
-            {icon: endicon,offset:'100%'}
+            {icon: offseticon,offset:'95%'},
+            {icon: endicon,offset:'30px'}
           ], 
           strokeColor: 'black',
           strokeOpacity: 0.8, 

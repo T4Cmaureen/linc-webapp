@@ -327,6 +327,11 @@ textarea{font-family: 'Homenaje', sans-serif;}
     opacity:.8;
     padding: 5px 10px;
   }
+  .image-view-close{
+    z-index: 100;
+    position: absolute;
+    right: 0px;
+  }
   .carousel{
     height: 100%;
     .carousel-inner, .carousel-pagination, .text-center{
@@ -380,10 +385,22 @@ textarea{font-family: 'Homenaje', sans-serif;}
           border-left-color: $orange;
           padding-left: 20px;
         }
+        .photo-zoom-icon{
+          display: inline-block;
+          position: absolute;
+          right: 6px;
+          bottom: 16px;
+          .icon-zoom-in{
+            font-size: 24px;
+          }
+        }
       }
     }
     .carousel-indicators{
       li { visibility: hidden; }
+    }
+    .carousel-control{
+      bottom: 50px;
     }
   }
 }
@@ -434,8 +451,8 @@ textarea{font-family: 'Homenaje', sans-serif;}
   }
   .zoom-close{
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 5px;
+    right: 10px;
     z-index: 1;
     button{
       opacity: 0.6;

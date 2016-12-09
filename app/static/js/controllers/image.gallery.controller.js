@@ -47,6 +47,7 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
     return ga;
   }
 
+  $scope.zoomtooltip = {'title': 'click here to enter zoom mode', checked: true};
   $scope.gallery = set_gallery(gallery);
 
   $scope.imagesetId = optionsSet.id;
@@ -245,15 +246,9 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
     $scope.image_view = true;
   }
 
-  var hidepromise = null;
   $scope.hide_image_view = function(){
-    if(hidepromise) return;
-    hidepromise = $timeout(function() {
-      $timeout.cancel(hidepromise);
-      hidepromise = null;
-      $scope.image_view = false;
-      $scope.carousel.active = -1;
-     }, 250);
+    $scope.image_view = false;
+    $scope.carousel.active = -1;
   }
 
   // The panzoom config model can be used to override default configuration values
@@ -272,8 +267,6 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
   $scope.panzoomModel = {};
 
   $scope.show_zoom = function(url){
-    $timeout.cancel(hidepromise);
-    hidepromise = null;
     $scope.zoom_view = true;
     $scope.image_view = false;
     $scope.panzoomModel.photo = url;
