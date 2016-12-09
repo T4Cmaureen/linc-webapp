@@ -31,12 +31,12 @@ For more information or to contact visit linclion.org or email tech@linclion.org
   </div>
   <!-- LightBox -->
   <div id="image_view" ng-show="image_view" class="image-view">
-    <uib-carousel active="carousel.active" no-transition="carousel.no_transition" interval="carousel.interval" no-wrap="carousel.noWrapSlides">
-      <uib-slide ng-repeat="(index, photo) in paginated_gallery" index="index" class="carousel-pagination">
+    <div uib-carousel active="carousel.active" no-transition="carousel.no_transition" interval="carousel.interval" no-wrap="carousel.noWrapSlides">
+      <div uib-slide ng-repeat="(index, photo) in carousel.gallery track by photo.index" index="photo.index" class="carousel-pagination">
         <div class="div-image">
           <img ng-src="{{!photo.medium || '//:0' }}" class="carousel-img img-responsive center-block" ng-click="hide_image_view()" ng-dblclick="show_zoom(photo.medium);">
         </div>
-        <div class="carousel-caption"> 
+        <div class="carousel-caption">
           <div class="photo-caption">
             <i class="icon icon-star" ng-if="photo.cover">&nbsp;</i>
             {{!Type_Labels[photo.type]}}
@@ -46,8 +46,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             {{!photo.name}} {{!photo.date | date:'yyyy/MM/dd @ hh:mm'}}
           </div>
         </div>
-      </uib-slide>
-    </uib-carousel>
+      </div>
+    </div>
   </div>
   <!-- Zoom Panel -->
   <div id="zoom_view" ng-show="zoom_view" class="zoom-view">

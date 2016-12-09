@@ -42,7 +42,7 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
       var date = element.img_date_stamp ? 'date stamp: '+ element.img_date_stamp.toLocaleString() : 'updated at: ' + element.img_updated_at.toLocaleString();
       var texto = name + '<br> ' + date; 
       var tooltip = {'title': texto, 'checked': true};
-      return _.extend({}, element, {'select': false, 'tooltip': tooltip, 'name': name, 'date': data});
+      return _.extend({}, element, {'select': false, 'tooltip': tooltip, 'name': name, 'date': data, 'index': index});
     });
     return ga;
   }
@@ -231,9 +231,16 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
 
   // carousel image
   $scope.image_view = false;
-  $scope.carousel = {active: -1, interval: 500000, noWrapSlides: false, no_transition : false};
+  $scope.carousel = {active: 0, interval: 500000, noWrapSlides: false, no_transition : false, gallery: []};
 
   $scope.show_image_view = function(photo, index){
+
+    var photos = []
+    _.forEach($scope.paginated_gallery, function(photo, index){
+      photo.index = index;
+      photos.push(photo);
+    });
+    $scope.carousel.gallery = angular.copy(photos);
     $scope.carousel.active = index;
     $scope.image_view = true;
   }
