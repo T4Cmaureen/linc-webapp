@@ -62,7 +62,7 @@ angular.module('linc.login.controller', [])
               var modalInstance = $uibModal.open({
                   templateUrl: 'LoginError.tmpl.html',
                   scope: modalScope,
-                  size: 'sm'
+                  size: '350px'
               });
               modalScope.close = function (){
                 modalInstance.close();
