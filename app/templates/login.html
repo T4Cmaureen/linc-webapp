@@ -28,6 +28,18 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     </div>
   </div>
 </script>
+<script type="text/ng-template" id="LoginError.tmpl.html">
+  <div name="LoginError" class="font-homenaje-1-1">
+    <div class="modal-header" ng-show="title">
+      <h4 class="modal-title" ng-bind-html="title"></h4>
+    </div>
+    <div class="modal-body break-paragraph" ng-bind-html="modalMessage">
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" ng-click="close()">Close</button>
+    </div>
+  </div>
+</script>
 <script type="text/ng-template" id="ForgetPwd.tmpl.html">
   <div name="ForgetPws" class="font-homenaje-1-1">
     <div class="modal-header" ng-show="title">

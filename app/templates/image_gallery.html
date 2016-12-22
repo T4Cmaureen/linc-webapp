@@ -76,8 +76,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       <div class="row">
         <div class="row-gallery col-sm-9" ng-cloak>
           <a class="thumbnail" ng-repeat="(index, photo) in paginated_gallery = 
-            (filtered_gallery = (gallery | orderBy:Order.by.predicate:Order.by.reverse | PrivateFilter:showPrivated | 
-            TypeFilter:FilterSel.Type | CoverFilter:FilterSel.isCover | PropertiesFilter:Properties) | 
+            (filtered_gallery = (gallery | orderBy:Order.by.predicate:Order.by.reverse | PrivateFilter:showPrivated | TypeFilter:FilterSel.Type | 
+            CoverFilter:FilterSel.isCover | JoinFilter:FilterSel.isJoined | PropertiesFilter:Properties) | 
             limitTo:itemsPerPage)" 
             ng-class="{active:photo.select}" 
             ng-click="show_image_view(photo, index);" 
@@ -87,6 +87,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               data-animation="am-flip-x" data-html="true" data-template-url='tooltip.image.tpl.html'
               placement="bottom" bs-tooltip="photo.tooltip">
             <div class="caption">
+              <i class="icon icon-binoculars pull-right" ng-if="photo.joined && IsPrimary" data-animation="am-flip-x" data-html="true" placement="top" bs-tooltip="photo.joined_tooltip" ng-click="photo.joined_tooltip.checked && open_imageset(photo.joined_from); $event.stopPropagation();"></i>
+              <i class="icon icon-eye-plus pull-right" ng-if="photo.joined && !IsPrimary"></i>
               <i class="icon icon-globe pull-right" ng-if="photo.is_public"></i>
               <i class="icon icon-star" ng-if="photo.cover"></i>
               {{!Type_Labels[photo.type]}}
@@ -141,6 +143,13 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 Cover image
               </label>
             </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" ng-model="FilterSel.isJoined" ng-click="UnSelect_All();calc_itemspage()">
+                <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                Join Primary Image Set
+              </label>
+            </div>
           </div>
 
           <div ng-hide="isViewFilter || !showPrivated" class="gallery-edit">
@@ -161,9 +170,16 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 Cover image
               </label>
             </div>
+            <div class="checkbox">
+              <label>
+                <input ng-click="Change_Join()" ng-disabled="!JoinEnabled" type="checkbox" ng-model="Selected.isJoined">
+                <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                Join Primary Image Set
+              </label>
+            </div>
           </div>
           <p>
-            <button ng-if="showPrivated" ng-disabled="!Selecteds.length" class="btn btn-default btn-block btn-img-gallery" ng-click="Delete()">Delete</button>
+            <button ng-if="canDelete" ng-disabled="!Selecteds.length" class="btn btn-default btn-block btn-img-gallery" ng-click="Delete()">Delete</button>
             <button ng-disabled="!Selecteds.length" class="btn btn-default btn-block btn-img-gallery" ng-click="Download()">Download original</button>
             <upload-images use-ctrl="UploadImagesCtrl" use-template-url="uploadimages.html" form-size="lg" type="edit" imageset-id="imagesetId" image-updated="UpdateImages()" debug="debug"></upload-images>
           </p>

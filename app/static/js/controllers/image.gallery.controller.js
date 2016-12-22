@@ -20,7 +20,9 @@
 
 angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive'])
 
-.controller('ImageGalleryCtrl', ['$scope', '$timeout', '$sce', '$window', '$uibModal', '$uibModalInstance', 'LincServices', 'NotificationFactory', 'optionsSet', 'gallery', function($scope, $timeout, $sce, $window, $uibModal, $uibModalInstance, LincServices, NotificationFactory, optionsSet, gallery) {
+.controller('ImageGalleryCtrl', ['$scope', '$state', '$timeout', '$sce', '$window', '$uibModal', '$uibModalInstance', 
+  'LincServices', 'NotificationFactory', 'optionsSet', 'gallery', function($scope, $state, $timeout, $sce, $window, 
+    $uibModal, $uibModalInstance, LincServices, NotificationFactory, optionsSet, gallery) {
 
   // Order
   $scope.ListOfOrderBy = [
@@ -41,8 +43,14 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
       var data = element.img_date_stamp ? element.img_date_stamp : element.img_updated_at;
       var date = element.img_date_stamp ? 'date stamp: '+ element.img_date_stamp.toLocaleString() : 'updated at: ' + element.img_updated_at.toLocaleString();
       var texto = name + '<br> ' + date; 
-      var tooltip = {'title': texto, 'checked': true};
-      return _.extend({}, element, {'select': false, 'tooltip': tooltip, 'name': name, 'date': data, 'index': index});
+      var tooltip = {title: texto, checked: true};
+      var joined_from_text = '';
+      if(element.joined)
+        joined_from_text = 'from:&nbsp;' + element.joined_from;
+      var joined_tooltip = {title: joined_from_text, checked: element.joined};
+      console.log(joined_from_text);
+      //console.log(element.joined);
+      return _.extend({}, element, {select: false, tooltip: tooltip, joined_tooltip: joined_tooltip, name: name, date: data, index: index});
     });
     return ga;
   }
@@ -51,6 +59,10 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
   $scope.gallery = set_gallery(gallery);
 
   $scope.imagesetId = optionsSet.id;
+  $scope.IsPrimary = optionsSet.is_primary_imageset;
+  // $scope.JoinEnabled = !optionsSet.is_primary_imageset && optionsSet.is_associated;
+  $scope.JoinEnabled = false;
+  $scope.canDelete = false;
 
   var titles = {}; titles['lions'] = 'Lions'; titles['imagesets'] = 'Image Sets';
 
@@ -79,8 +91,8 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
                        {'name': 'Private', 'checked': true, 'value' : false}];
 
   // Selects
-  $scope.FilterSel = {Type: 'all', isPublic: true, isPrivate: true, isCover: false};
-  $scope.Selected = {Type: 'cv', isPublic: true, isCover: false};
+  $scope.FilterSel = {Type: 'all', isPublic: true, isPrivate: true, isCover: false, isJoined: false};
+  $scope.Selected = {Type: 'cv', isPublic: true, isCover: false, isJoined: false};
 
   var Reset_Filters = function (){
     _.map($scope.Selecteds, function (photo){
@@ -89,6 +101,7 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
     $scope.itemsPerPage = Math.max(100, $scope.itemsPerPage);
     $scope.FilterSel.Type = 'all';
     $scope.FilterSel.isCover = false;
+    $scope.FilterSel.isJoined = false;
     $scope.Properties[0].checked = true;
     $scope.Properties[0].checked = true;
     $scope.isViewFilter = true;
@@ -108,7 +121,7 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
       if(contem>1) return true;
       else return false;
     }
-    if(type="properties"){
+    if(type=="properties"){
       var selecteds = _.pluck(_.map($scope.Selecteds, function (photo){
         return {'is_public': photo.is_public};
       }), 'is_public');
@@ -118,6 +131,29 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
       else
         return false;
     }
+    if(type=="joined"){
+       var selecteds = _.pluck(_.map($scope.Selecteds, function (photo){
+        return {'joined': photo.joined};
+      }), 'joined');
+      if(_.includes(selecteds, true) && _.includes(selecteds, false))
+        return true;
+      else
+        return false;
+    }
+  }
+
+  var check_canDelete = function(){
+    var selecteds = _.pluck(_.map($scope.Selecteds, function (photo){
+      return {'joined': photo.joined};
+    }), 'joined');
+    if(!$scope.showPrivated)
+      return false;
+    else if(!_.includes(selecteds, true))
+      return true;
+    else if($scope.IsPrimary)
+      return false;
+    else
+      return true;
   }
 
   // Button Save
@@ -230,6 +266,11 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
     win.focus();
   }
 
+  $scope.open_imageset = function (id){
+    var url = $state.href("imageset", { 'id': id },  {absolute: true});
+    window.open(url,'_blank');
+  }
+
   // carousel image
   $scope.image_view = false;
   $scope.carousel = {active: 0, interval: 500000, noWrapSlides: false, no_transition : false, gallery: []};
@@ -301,6 +342,7 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
   var lastSelIndex = -1;
   $scope.Select_Image = function ($event, photo, index){
     var shiftKey = $event.shiftKey;
+    //$scope.canDelete = false;
     if(shiftKey && lastSelIndex>=0){
       var first = Math.min(lastSelIndex, index);
       var second = Math.max(lastSelIndex, index);
@@ -329,16 +371,20 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
       }
     }
 
+    $scope.JoinEnabled = !optionsSet.is_primary_imageset && optionsSet.is_associated;
+
     if($scope.Selecteds.length == 1){
       if(photo.select){
         $scope.Selected.isPublic = photo.is_public;
         $scope.Selected.Type = photo.type;
         $scope.Selected.isCover = photo.cover;
+        $scope.Selected.isJoined = photo.joined;
       }
       else{
         $scope.Selected.Type = $scope.Selecteds[0].type;
         $scope.Selected.isPublic = $scope.Selecteds[0].is_public;
         $scope.Selected.isCover = $scope.Selecteds[0].cover;
+        $scope.Selected.isJoined = $scope.Selecteds[0].joined;
       }
       console.log("Set Properties");
       if($scope.showPrivated)
@@ -355,6 +401,12 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
       else {
         $scope.Selected.isPublic = $scope.Selecteds[0].is_public;
       }
+      if(check_selecteds("joined")){
+        $scope.Selected.isJoined = false;
+      }
+      else {
+        $scope.Selected.isJoined = $scope.Selecteds[0].joined;
+      }
       $scope.Selected.isCover = false;
       if($scope.showPrivated)
         $scope.Change_Tab('edit');
@@ -363,8 +415,12 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
       $scope.Selected.Type = 'cv';
       $scope.Selected.isPublic = true;
       $scope.Selected.isCover = false;
+      $scope.Selected.isJoined = false;
       $scope.Change_Tab('filter');
     }
+    if($scope.Selected.isJoined)
+      $scope.JoinEnabled = true;
+    $scope.canDelete = check_canDelete();
   }
 
   $scope.Select_All = function () {
@@ -384,7 +440,17 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
       else {
         $scope.Selected.isPublic = $scope.Selecteds[0].is_public;
       }
+      if(check_selecteds("joined")){
+        $scope.Selected.isJoined = false;
+      }
+      else {
+        $scope.Selected.isJoined = $scope.Selecteds[0].joined;
+      }
       $scope.Selected.isCover = false;
+      if($scope.showPrivated)
+        $scope.Change_Tab('edit');
+
+      $scope.canDelete = check_canDelete();
     }
   }
   $scope.UnSelect_All = function () {
@@ -392,13 +458,14 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
       photo.select = false;
     });
     $scope.Selecteds = [];
+    $scope.Change_Tab('filter');
   }
   $scope.Change_Cover = function(){
     if($scope.Selecteds.length){
       var image = $scope.Selecteds[0];
       var data = {"main_image_id": $scope.Selected.isCover ? image.id : null};
       LincServices.SetMainImagenId($scope.imagesetId, data, function(result){
-        _.forEach($scope.paginated_gallery, function(photo, index) {
+        _.forEach($scope.gallery, function(photo, index) {
           if(image == photo){
             photo.cover = (data.main_image_id == null) ? false : true;
           }
@@ -480,7 +547,37 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
       });
     }
   };
+  $scope.Change_Join = function(){
+    if($scope.Selecteds.length){
+      var updated = [];
+      _.forEach($scope.Selecteds, function(photo, index) {
+        if($scope.Selected.isJoined != photo.joined){
+          updated.push({'index': index, 'image_id': photo.id, 'data': {'joined': $scope.Selected.isJoined}});
+        }
+      });
+      LincServices.UpdateImages(updated, function(results){
+        NotificationFactory.success({
+          title: "Update", message: "All Images have been updated",
+          position: "right", // right, left, center
+          duration: 2000     // milisecond
+        });
 
+        if(optionsSet.is_primary_imageset && !$scope.Selected.isJoined){
+          var items =  _.map($scope.Selecteds, function(photo){
+            return {'id': photo.id};
+          });
+          Adjust_Gallery(items);
+        }
+        else{
+          _.forEach($scope.Selecteds, function(photo, idx) {
+            photo.joined = $scope.Selected.isJoined;
+          });
+          Reset_Filters();
+        }
+        $scope.UpdateGallery();
+      });
+    }
+  }
   $scope.UpdateImages = function () {
     LincServices.getImageGallery($scope.imagesetId).then(function (data) {
       gallery = data;
@@ -517,6 +614,16 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
     var filtered = _.filter(input, function(value){
       //if(value.select==true) return true;
       return value.cover == cover;
+    });
+    return filtered;
+  };
+})
+
+.filter('JoinFilter', function(){
+  return function(input, joined) {
+    if(!joined) return input;
+    var filtered = _.filter(input, function(value){
+      return value.joined == joined;
     });
     return filtered;
   };

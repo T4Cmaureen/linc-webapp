@@ -56,12 +56,17 @@ angular.module('linc.login.controller', [])
             }
           }, function (error){
             $scope.dataLoading = false;
-            NotificationFactory.error({
-              title: "Error", message: 'Login failed',
-              position: 'right', // right, left, center
-              duration: 5000   // milisecond
-            });
-            console.log(error);
+            var modalScope = $scope.$new();
+              modalScope.title = 'Login Error';
+              modalScope.modalMessage = error.data.message;
+              var modalInstance = $uibModal.open({
+                  templateUrl: 'LoginError.tmpl.html',
+                  scope: modalScope,
+                  size: 'sm'
+              });
+              modalScope.close = function (){
+                modalInstance.close();
+              }
           });
         }
       }

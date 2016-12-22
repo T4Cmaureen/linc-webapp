@@ -20,9 +20,9 @@
 
 angular.module('linc.search.image.set.controllers', [])
 
-.controller('SearchImageSetCtrl', ['$scope', '$timeout', '$interval', '$uibModal', '$stateParams', '$bsTooltip', 'NotificationFactory', 
+.controller('SearchImageSetCtrl', ['$scope', '$timeout', '$q', '$interval', '$uibModal', '$stateParams', '$bsTooltip', 'NotificationFactory', 
   'LincServices', 'AuthService', 'PollerService', 'imagesets_filters', 'default_filters', 'imagesets', 'TAG_LABELS', 'TOOL_TITLE', 
-  function ($scope, $timeout, $interval, $uibModal, $stateParams, $bsTooltip, NotificationFactory, LincServices, AuthService, 
+  function ($scope, $timeout, $q, $interval, $uibModal, $stateParams, $bsTooltip, NotificationFactory, LincServices, AuthService, 
     PollerService, imagesets_filters, default_filters, imagesets, TAG_LABELS, TOOL_TITLE) {
 
   $scope.user = AuthService.user;
@@ -367,7 +367,7 @@ angular.module('linc.search.image.set.controllers', [])
       if(result)
         $scope.Verify_Imageset(modalScope.imageset.id);
       else
-        $scope.Disassociate(modalScope.imageset.id);
+        $scope.Disassociate(modalScope.imageset);
     },
     function (){
     });
@@ -406,23 +406,43 @@ angular.module('linc.search.image.set.controllers', [])
     });
   };
 
-  $scope.Disassociate = function (ImagesetId){
+  $scope.Disassociate = function (imageset){
     var data = {'lion_id': null, 'is_verified': false};
-    LincServices.Associate(ImagesetId, data, function(response){
-      var id = _.indexOf($scope.imagesets, _.find($scope.imagesets, {id: ImagesetId}));
-      $scope.imagesets[id].lion_id = null;
-      $scope.imagesets[id].name = '-';
-      $scope.imagesets[id].dead = false;
-      $scope.imagesets[id].lions_org_id = null;
-      $scope.imagesets[id].is_verified = false;
-      //$scope.imagesets[id].NeedVerify = false;
-      Set_Tags($scope.imagesets[id]);
-      NotificationFactory.success({
-        title: "Disassociate", message:'Lion was disassociated',
-        position: "right", // right, left, center
-        duration: 2000     // milisecond
+    LincServices.Associate(imageset.id, data, function(response){
+
+      var message = {
+        title: 'Disassociate',
+        Sucess:'Lion was disassociated.',
+        Error: 'Unable to disassociate this Image Set.'
+      };
+      var promises = _.map($scope.imagesets, function(item) {
+        var deferred = $q.defer();
+        if(item.lion_id==imageset.lion_id){
+          deferred.resolve(LincServices.ImageSet(item.id));
+        }
+        else{
+          deferred.resolve(item);
+        }
+        return deferred.promise;
       });
-      set_all_imagesets($scope.imagesets);
+      $q.all(promises).then(function (results) {
+        $scope.imagesets = angular.copy(results);
+        set_all_imagesets($scope.imagesets);
+        NotificationFactory.success({
+          title: message.title, 
+          message: message.Sucess,
+          position: "right",
+          duration: 2000
+        });
+      },
+      function (reason) {
+        NotificationFactory.error({
+          title: "Fail: " + message.title, 
+          message: message.Error,
+          position: 'right',
+          duration: 5000
+        });
+      });
     },
     function(error){
       if($scope.debug || (error.status != 401 && error.status != 403)){
@@ -463,19 +483,34 @@ angular.module('linc.search.image.set.controllers', [])
     modalInstance.result.then(function (result) {
       var data = {'primary_image_set_id': imageset.id};
       LincServices.SetPrimary(imageset.lion_id, data, function(results){
-        NotificationFactory.success({
-          title: modalScope.title, 
-          message: message.Sucess,
-          position: "right",
-          duration: 2000
-        });
-        _.forEach($scope.imagesets, function(item){
+        var promises = _.map($scope.imagesets, function(item) {
+          var deferred = $q.defer();
           if(item.lion_id==imageset.lion_id){
-            item.is_primary = (imageset.id == item.id) ? true : false;
+            deferred.resolve(LincServices.ImageSet(item.id));
           }
+          else{
+            deferred.resolve(item);
+          }
+          return deferred.promise;
         });
-        //$scope.imagesets = 
-        set_all_imagesets($scope.imagesets);
+        $q.all(promises).then(function (results) {
+          $scope.imagesets = angular.copy(results);
+          set_all_imagesets($scope.imagesets);
+          NotificationFactory.success({
+            title: modalScope.title, 
+            message: message.Sucess,
+            position: "right",
+            duration: 2000
+          });
+        },
+        function (reason) {
+          NotificationFactory.error({
+            title: "Fail: " + modalScope.title, 
+            message: message.Error,
+            position: 'right',
+            duration: 5000
+          });
+        });
       },
       function(error){
         if($scope.debug || (error.status != 401 && error.status != 403)){

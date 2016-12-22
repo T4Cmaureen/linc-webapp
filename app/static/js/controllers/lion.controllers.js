@@ -67,7 +67,13 @@ angular.module('linc.lions.controllers', ['search.linc.lions.controllers'])
     // Metadata Options
     $scope.metadata_options = { type: 'lion', edit: 'edit', data: $scope.lion};
     // Image Gallery
-    $scope.gallery_options = { type: 'lion', edit: 'edit', id: $scope.lion.primary_image_set_id};
+    $scope.gallery_options = { 
+      type: 'lion', 
+      edit: 'edit', 
+      id: $scope.lion.primary_image_set_id,
+      is_primary_imageset: true,
+      is_associated: false
+    };
     // Location History
     $scope.location_options = { type: 'lion', lion_id: $scope.lion.id};
     $scope.lion.age = isNaN(parseInt($scope.lion.age)) ? null : $scope.lion.age;

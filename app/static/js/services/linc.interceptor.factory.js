@@ -34,7 +34,8 @@ angular.module('linc.interceptor.factory', [])
                (rejection.config.ignore401 != undefined && !rejection.config.ignore401)){
               $injector.get('AuthService').setUser(null);
               $cookies.remove("userlogin");
-              $injector.get('$window').location.reload();
+              if(rejection.config.url != "/login")
+                $injector.get('$window').location.reload();
               //$injector.get('$state').transitionTo('login');
               //console.log("Response Error 401");
             }

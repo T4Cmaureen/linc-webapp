@@ -297,6 +297,43 @@ textarea{font-family: 'Homenaje', sans-serif;}
     .icon-globe{
       font-size: 16px;
       margin-top: 2px;
+      padding-right: 3px;
+      padding-left: 3px;
+    }
+    .icon-eye-plus{
+      font-size: 18px;
+      margin-top: 2px;
+      padding-right: 3px;
+      padding-left: 3px;
+    }
+    .icon-binoculars{
+      padding-right: 3px;
+      padding-left: 3px;
+      padding-top: 3px;
+    }
+    .tooltip{
+      opacity: 1 !important;
+      .tooltip-inner{
+        background-color: #fff;
+        color: $orange;
+        border-style: solid;
+        border-color: #f1975b;
+        border-width: thin;
+        bottom: 100%;
+        position: relative;
+      }
+      .tooltip-arrow {
+        top: 85%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 6px;
+        border-top-color: #f1975b !important;
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-color: transparent;
+        border-style: solid;
+      }
     }
   }
   .select{

@@ -143,7 +143,13 @@ angular.module('linc.image.set.controllers', ['linc.search.image.set.controllers
     $scope.imageset.scars = LABELS(TAGS_BY_TYPE['SCARS'],_.intersection(TAGS, TAGS_CONST['SCARS']));
 
     // Image Gallery
-    $scope.gallery_options = { type: 'imageset', edit: 'edit', id: $scope.imageset.id};
+    $scope.gallery_options = { 
+      type: 'imageset', 
+      edit: 'edit', 
+      id: $scope.imageset.id,
+      is_primary_imageset: $scope.imageset.is_primary,
+      is_associated: ($scope.imageset.lion_id == null) ? false : true
+    };
     // Location History
     var label = 'Image Set ' + $scope.imageset.id;
     var date = (new Date($scope.imageset.updated_at)).toLocaleDateString();
