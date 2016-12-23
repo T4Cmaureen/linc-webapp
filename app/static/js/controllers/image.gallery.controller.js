@@ -450,6 +450,10 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
       if($scope.showPrivated)
         $scope.Change_Tab('edit');
 
+      $scope.JoinEnabled = !optionsSet.is_primary_imageset && optionsSet.is_associated;
+      if($scope.Selected.isJoined)
+        $scope.JoinEnabled = true;
+
       $scope.canDelete = check_canDelete();
     }
   }

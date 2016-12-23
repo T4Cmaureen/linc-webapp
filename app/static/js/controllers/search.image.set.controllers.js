@@ -405,11 +405,9 @@ angular.module('linc.search.image.set.controllers', [])
       console.log(error);
     });
   };
-
   $scope.Disassociate = function (imageset){
     var data = {'lion_id': null, 'is_verified': false};
     LincServices.Associate(imageset.id, data, function(response){
-
       var message = {
         title: 'Disassociate',
         Sucess:'Lion was disassociated.',
@@ -482,7 +480,7 @@ angular.module('linc.search.image.set.controllers', [])
 
     modalInstance.result.then(function (result) {
       var data = {'primary_image_set_id': imageset.id};
-      LincServices.SetPrimary(imageset.lion_id, data, function(results){
+      LincServices.SetPrimary(imageset.lion_id, data, function(resp){
         var promises = _.map($scope.imagesets, function(item) {
           var deferred = $q.defer();
           if(item.lion_id==imageset.lion_id){
