@@ -350,8 +350,8 @@ angular.module('linc.search.image.set.controllers', [])
   $scope.CVResultsErased = function (ImagesetId) {
     var index = _.indexOf($scope.imagesets, _.find($scope.imagesets, {id: ImagesetId}));
     $scope.imagesets[index]['action'] = 'cvrequest';
-    $scope.imageset[index]['cvresults'] = null;
-    $scope.imageset[index]['cvrequest'] = null;
+    $scope.imagesets[index]['cvresults'] = null;
+    $scope.imagesets[index]['cvrequest'] = null;
   }
 
   $scope.Verify = function (imageset) {
