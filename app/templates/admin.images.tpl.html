@@ -108,7 +108,9 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         <ul class="pagination pagination-1">
           <li ng-class="prevPageDisabled()"><a href ng-click="firstPage()">««</a></li>
           <li ng-class="prevPageDisabled()"><a href ng-click="prevPage()">«</a></li>
-          <li ng-repeat="n in range()" ng-class="{active: n == currentPage}" ng-click="setPage(n)"><a href="#">{{! n+1}}</a></li>
+          <li ng-repeat="n in range()" ng-class="{active: n == currentPage}" ng-click="setPage(n)">
+            <a>{{! n+1}}</a>
+          </li>
           <li ng-class="nextPageDisabled()"><a href ng-click="nextPage()">»</a></li>
           <li ng-class="nextPageDisabled()"><a href ng-click="lastPage()">»»</a></li>
         </ul>
@@ -144,7 +146,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       <tr>
     </thead>
     <tbody>
-      <tr class="link" ng-repeat="image in paginated_images = (filtered_images = (images | orderBy:predicate:reverse) | offset:currentPage*itemsPerPage | limitTo: itemsPerPage)" 
+      <tr class="link" ng-repeat="image in paginated_images = (filtered_images = (images | orderBy:predicate:reverse) | offset:currentPage*itemsPerPage | limitTo: itemsPerPage)" repeat-done="setRange()"
         ng-class="{active:image.selected}" 
         ng-click="Select_Image($event, image, 'line-click');$event.stopPropagation();">
         <td class="text-center"><input type="checkbox" ng-disabled="Image_Mode != ''" ng-model="image.selected" ng-click="Select_Image($event, image, 'checkbox-click');$event.stopPropagation();"></td>

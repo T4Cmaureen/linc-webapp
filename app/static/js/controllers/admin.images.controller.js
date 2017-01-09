@@ -356,6 +356,10 @@ angular.module('linc.admin.images.controller', [])
     return ret;
   };
 
+  $scope.setRange = function(){
+    $scope.range();
+  }
+
   $scope.Selecteds = [];
   _.forEach($scope.settings.images.Selecteds, function(selected) {
     if(selected != undefined){
