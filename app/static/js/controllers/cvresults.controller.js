@@ -28,17 +28,22 @@ angular.module('linc.cvresults.controller', ['linc.cvresults.directive'])
   $scope.cvresults = data_cvresults.cvresults;
   $scope.cvresults = _.map(data_cvresults.cvresults, function(element, index) {
     var style = {'background-color': 'green'};
-  
-    if(element.cn == null){
-      style = {};
-    }
-    else if(element.cn < .45)
-      style = {'background-color': 'red'};
-    else if(element.cn < .70)
-      style = {'background-color': 'yellow', 'color': 'black'};
     var elem = {};
-    var conf = {'number': element.cn, 'style': style};
-    elem['confidence'] = conf;
+
+    if(element.cn == null || element.cn == undefined){
+      style = {};
+      var conf = {'style': style};
+      elem['confidence'] = conf;
+    }
+    else{
+      if(element.cn < .45)
+        style = {'background-color': 'red'};
+      else if(element.cn < .70)
+        style = {'background-color': 'yellow', 'color': 'black'};
+      
+      var conf = {'number': element.cn/100., 'style': style};
+      elem['confidence'] = conf;
+    }
     return _.extend({}, element, elem);
   });
 

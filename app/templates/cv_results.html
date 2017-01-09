@@ -96,13 +96,14 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               <span class="badge">{{!lion.cv | percentage:2}}</span>
             </a>
           </td>
-          <td class="text-center" ng-if="lion.cn==!null">
+          <td class="text-center" ng-if="lion.confidence.number!=undefined">
             <a ui-sref="lion({id: lion.id})" target="_blank">
               <span class="badge" ng-style="lion.confidence.style">
                 {{!lion.confidence.number | percentage:2}}</td>
               </span>
             </a>
-          <td class="text-center" ng-if="lion.cn==null"></td>
+          <td class="text-center" ng-if="lion.confidence.number==undefined"></td>
+
           <td class="text-center">
             <button ng-if="!lion.associated" class="btn btn-default" ng-click="Associate(lion.id)"> Associate </button>
             <button ng-if="lion.associated" class="btn btn-warning" ng-click="Disassociate(lion.id)"> Disassociate </button>
