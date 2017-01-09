@@ -36,6 +36,8 @@ angular.module('linc.cvresults.controller', ['linc.cvresults.directive'])
       elem['confidence'] = conf;
     }
     else{
+      if(element.cn > 1.)
+        element.cn /= 100.;
       if(element.cn < .45)
         style = {'background-color': 'red'};
       else if(element.cn < .70)
