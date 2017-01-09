@@ -151,7 +151,7 @@ class PageAdminCVResultsHandler(BaseHandler):
     def get(self):
         self.render('admin.cvresults.tpl.html')
 
-class ViewImagesHandler(BaseHandler):
+class CompareImagesHandler(BaseHandler):
     @web_authenticated
     def get(self):
-        self.render('view.images.html')
+        self.render('compare.images.tpl.html')

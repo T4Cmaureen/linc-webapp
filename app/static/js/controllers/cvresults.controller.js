@@ -20,7 +20,8 @@
 
 angular.module('linc.cvresults.controller', ['linc.cvresults.directive'])
 
-.controller('CVResultsCtrl', ['$scope', '$state', '$timeout', '$interval', '$uibModalInstance', 'LincServices', 'NotificationFactory', 'imageset', 'cvrequestId', 'cvresultsId', 'data_cvresults', function ($scope, $state, $timeout, $interval, $uibModalInstance, LincServices, NotificationFactory, imageset, cvrequestId, cvresultsId, data_cvresults) {
+.controller('CVResultsCtrl', ['$scope', '$state', '$timeout', '$interval', '$uibModalInstance', '$uibModal', 'LincServices', 'NotificationFactory', 'imageset', 'cvrequestId', 'cvresultsId', 'data_cvresults', 
+  function ($scope, $state, $timeout, $interval, $uibModalInstance, $uibModal, LincServices, NotificationFactory, imageset, cvrequestId, cvresultsId, data_cvresults) {
 
   $scope.title = 'CV Results (CV Request Id: '+ data_cvresults.req_id + ' - Status: ' + data_cvresults.status + ')';
   $scope.content = 'Form';
@@ -51,16 +52,29 @@ angular.module('linc.cvresults.controller', ['linc.cvresults.directive'])
 
   var count = 0;
 
-  $scope.show_photo = function(object){
-    if(angular.isObject(object)){
-      var url = $state.href("viewimages", {'images':{'imageset': imageset, 'lion': object}},  {absolute: true});
-      window.open(url,"_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=100, left=100, width=1200");
-    }
-    else if (angular.isString(object)){
-      var win = window.open(object, "_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=100, left=100, width=600, height=600");
-      win.focus();    
-    }
+  $scope.show_photo = function(image){
+    var win = window.open(image, "_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=100, left=100, width=600, height=600");
+    win.focus();
   }
+
+  $scope.CompareImages = function (object){
+    var modalScope = $scope.$new();
+    modalScope.title = 'Compare Images';
+
+    modalScope.imageset = imageset;
+    modalScope.lion = object;
+
+    var modalInstance = $uibModal.open({
+        templateUrl: 'compare.images.tpl.html',
+        scope: modalScope,
+        size: 'lg'
+    });
+    modalInstance.result.then(function (result) {
+    }, function (){ });
+    modalScope.close = function (){
+      modalInstance.close();
+    }
+  };
 
   var Poller = function () {
     LincServices.getCVResults(cvresultsId).then(function(response){
