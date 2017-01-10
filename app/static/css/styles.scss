@@ -800,11 +800,13 @@ hr.style-line {
 
 // CV Search Modal
 .Container-Panel-1 { display: flex; overflow: hidden; height: 75vh; position: relative; width: 100%; backface-visibility: hidden; will-change: overflow; }
-.Left-Panel { overflow: auto; width: 20%; height: auto; padding: .5rem; -webkit-overflow-scrolling: touch; -ms-overflow-style: none; }
-.Right-Panel { overflow: auto; width: 80%; height: auto; padding: .5rem;  -webkit-overflow-scrolling: touch; -ms-overflow-style: none; }
+.Left-Panel { overflow: auto; width: 20%; height: auto; padding: .5rem; }
+.Right-Panel { overflow: auto; width: 80%; height: auto;}
+
 .Container-Panel-2 { display: flex; overflow: hidden; height: 75vh; position: relative; width: 100%; backface-visibility: hidden; will-change: overflow; }
 .Right-Top-Panel { display: flex; justify-content: left;  position: fixed; width: 70%; z-index: 10; height: auto;}
-.Scroll-Panel { overflow: auto; height: auto; padding: .1rem; margin-top:4rem; margin-left:1rem; -webkit-overflow-scrolling: touch; -ms-overflow-style: none; }
+.Scroll-Panel { overflow: auto; height: auto; padding: .1rem; margin-top:4rem; margin-left:1rem;}
+
 .Left-Panel::-webkit-scrollbar, .Right-Panel::-webkit-scrollbar, .Scroll-Panel::-webkit-scrollbar { display: none; }
 .large-Modal .modal-dialog .modal-content{ max-height: 700px !important;}
 .modal-content {overflow-y: auto;}

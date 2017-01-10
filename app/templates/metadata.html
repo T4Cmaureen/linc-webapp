@@ -56,7 +56,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             <hr class="style-line">
             <div class="form-inline group-input" ng-class="{'has-error': datepickerForm.date.$invalid}">
               <label class="control-label meta_label"><i class="fa fa-calendar"></i>Date Stamp: </label>
-              <input type="text" class="form-control meta_input" ng-model="selected.date_stamp" data-date-format="yyyy-MM-dd" data-date-type="date" data-min-date="02/10/86" data-max-date="today" data-autoclose="1" name="date" bs-datepicker placement="bottom-left">
+              <input type="text" class="form-control meta_input" ng-model="selected.date_stamp" data-date-format="yyyy-MM-dd" data-date-type="date" data-timezone="UTC" data-min-date="02/10/86" data-max-date="today" data-autoclose="1" name="date" bs-datepicker placement="bottom-left">
             </div>
             <pre ng-show="debug">{{!selected.date_stamp}}</pre>
             <hr class="style-line">
@@ -152,7 +152,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 
             <div class="form-inline group-input" ng-class="{'has-error': datepickerForm.date1.$invalid}">
               <label class="control-label"><i class="fa fa-calendar"></i>Date of Birth: </label>
-              <input type="text" class="form-control meta_input" ng-model="selected.date_of_birth" ng-change='Calc_Age()' data-date-format="yyyy-MM-dd" data-date-type="date" data-max-date="today" data-autoclose="1" name="date1" bs-datepicker placement="bottom-right">
+              <input type="text" class="form-control meta_input" ng-model="selected.date_of_birth" ng-change='Calc_Age()' data-date-format="yyyy-MM-dd" data-date-type="date" data-timezone="UTC" data-max-date="today" data-autoclose="1" name="date1" bs-datepicker placement="bottom-right">
             </div>
             <pre ng-show="debug">{{!selected.date_of_birth}}</pre>
 
