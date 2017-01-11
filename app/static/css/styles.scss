@@ -800,7 +800,7 @@ hr.style-line {
 
 // CV Search Modal
 .Container-Panel-1 { display: flex; overflow: hidden; height: 75vh; position: relative; width: 100%; backface-visibility: hidden; will-change: overflow; }
-.Left-Panel { overflow: auto; width: 20%; height: auto; padding: .5rem; }
+.Left-Panel { overflow: auto; width: 20%; min-width: 200px; height: auto; padding: .5rem; }
 .Right-Panel { overflow: auto; width: 80%; height: auto;}
 
 .Container-Panel-2 { display: flex; overflow: hidden; height: 75vh; position: relative; width: 100%; backface-visibility: hidden; will-change: overflow; }

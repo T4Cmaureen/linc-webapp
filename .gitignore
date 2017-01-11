@@ -66,3 +66,6 @@ target/
 
 #temporary files
 tmp/*
+
+#map debug files
+app/static/lib/**/*.map
