@@ -106,7 +106,7 @@ angular.module('linc.lions.controllers', ['search.linc.lions.controllers'])
     };
     
     var modalInstance = $uibModal.open({
-        templateUrl: 'Dialog.Delete.tmpl.html',
+        templateUrl: 'Dialog.Delete.tpl.html',
         scope: modalScope
     });
     

@@ -270,7 +270,7 @@ angular.module('linc.location.history.controller', ['linc.location.history.direc
         modalScope.GoBackMessage = "Go Back to " + $scope.locations[index].label;
       
       var modalInstance = $uibModal.open({
-          templateUrl: 'InfoWindow.tmpl.html',
+          templateUrl: 'InfoWindow.tpl.html',
           scope: modalScope,
           size: 'sm'
       });

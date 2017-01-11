@@ -60,7 +60,7 @@ angular.module('linc.login.controller', [])
               modalScope.title = 'Login Error';
               modalScope.modalMessage = error.data.message;
               var modalInstance = $uibModal.open({
-                  templateUrl: 'LoginError.tmpl.html',
+                  templateUrl: 'LoginError.tpl.html',
                   scope: modalScope,
                   size: '350px'
               });
@@ -79,7 +79,7 @@ angular.module('linc.login.controller', [])
       modalScope.forgot = {username: $scope.loginData.username};
 
       var modalInstance = $uibModal.open({
-        templateUrl: 'ForgetPwd.tmpl.html',
+        templateUrl: 'ForgetPwd.tpl.html',
         scope: modalScope
       });
       modalInstance.result.then(function (result) {
@@ -127,7 +127,7 @@ angular.module('linc.login.controller', [])
       modalScope.modalMessage = "An email with new password has been sent to "+ 
                             data.username + ".";
       var modalInstance = $uibModal.open({
-          templateUrl: 'ForgetSended.tmpl.html',
+          templateUrl: 'ForgetSended.tpl.html',
           scope: modalScope,
           size: '350px'
       });

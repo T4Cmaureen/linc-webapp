@@ -127,7 +127,7 @@ angular.module('linc.admin.imagesets.controller', [])
     modalScope.imageset.lion_id = undefined;
 
     var modalInstance = $uibModal.open({
-        templateUrl: 'Edit_ImageSet.tmpl.html',
+        templateUrl: 'Edit_ImageSet.tpl.html',
         scope: modalScope,
         size: 'lg'
     });
@@ -289,7 +289,7 @@ angular.module('linc.admin.imagesets.controller', [])
       modalScope.imageset.scars = _.includes(TAGS,'SCARS_NONE')? ['NONE'] : _.intersection(TAGS,TAGS_CONST['SCARS']);
 
       var modalInstance = $uibModal.open({
-          templateUrl: 'Edit_ImageSet.tmpl.html',
+          templateUrl: 'Edit_ImageSet.tpl.html',
           scope: modalScope,
           size: 'lg'
       });

@@ -94,7 +94,7 @@ angular.module('linc.admin.organizations.controller', [])
     };
     
     var modalInstance = $uibModal.open({
-        templateUrl: 'Edit_Organization.tmpl.html',
+        templateUrl: 'Edit_Organization.tpl.html',
         scope: modalScope
     });
 
@@ -159,7 +159,7 @@ angular.module('linc.admin.organizations.controller', [])
       modalScope.organization = angular.copy($scope.Selecteds[0]);
 
       var modalInstance = $uibModal.open({
-          templateUrl: 'Edit_Organization.tmpl.html',
+          templateUrl: 'Edit_Organization.tpl.html',
           scope: modalScope
       });
 

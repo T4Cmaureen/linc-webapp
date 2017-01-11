@@ -74,7 +74,7 @@ angular.module('linc.controllers', ['linc.admin.controller',
         }
       };
       var modalInstance = $uibModal.open({
-        templateUrl: 'ChangePwd.tmpl.html',
+        templateUrl: 'ChangePwd.tpl.html',
         scope: modalScope,
         size: '350px'
       });

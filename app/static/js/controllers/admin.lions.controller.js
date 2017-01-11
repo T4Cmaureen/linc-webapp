@@ -98,7 +98,7 @@ angular.module('linc.admin.lions.controller', [])
     }
 
     var modalInstance = $uibModal.open({
-        templateUrl: 'Edit_Lion.tmpl.html',
+        templateUrl: 'Edit_Lion.tpl.html',
         scope: modalScope
     });
 
@@ -170,7 +170,7 @@ angular.module('linc.admin.lions.controller', [])
       modalScope.lion = angular.copy($scope.Selecteds[0]);
 
       var modalInstance = $uibModal.open({
-          templateUrl: 'Edit_Lion.tmpl.html',
+          templateUrl: 'Edit_Lion.tpl.html',
           scope: modalScope
       });
 

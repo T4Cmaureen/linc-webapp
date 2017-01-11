@@ -103,7 +103,7 @@ angular.module('linc.admin.images.controller', [])
     };
 
     var modalInstance = $uibModal.open({
-        templateUrl: 'Edit_Image.tmpl.html',
+        templateUrl: 'Edit_Image.tpl.html',
         scope: modalScope
     });
 
@@ -175,7 +175,7 @@ angular.module('linc.admin.images.controller', [])
       modalScope.image = angular.copy($scope.Selecteds[0]);
       
       var modalInstance = $uibModal.open({
-          templateUrl: 'Edit_Image.tmpl.html',
+          templateUrl: 'Edit_Image.tpl.html',
           scope: modalScope,
           size: 'lg'
       });

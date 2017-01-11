@@ -212,7 +212,7 @@ angular.module('linc.image.gallery.controller', ['linc.image.gallery.directive']
         };
       }
       var modalInstance = $uibModal.open({
-        templateUrl: 'Dialog.Delete.tmpl.html',
+        templateUrl: 'Dialog.Delete.tpl.html',
         scope: modalScope
       });
 

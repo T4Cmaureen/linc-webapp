@@ -99,7 +99,7 @@ angular.module('linc.admin.users.controller', [])
     }
     
     var modalInstance = $uibModal.open({
-        templateUrl: 'Edit_User.tmpl.html',
+        templateUrl: 'Edit_User.tpl.html',
         scope: modalScope
     });
 
@@ -171,7 +171,7 @@ angular.module('linc.admin.users.controller', [])
       modalScope.user = angular.copy($scope.Selecteds[0]);
 
       var modalInstance = $uibModal.open({
-          templateUrl: 'Edit_User.tmpl.html',
+          templateUrl: 'Edit_User.tpl.html',
           scope: modalScope
       });
 
@@ -319,7 +319,7 @@ angular.module('linc.admin.users.controller', [])
         'password': "", 'confirmPassword': "" 
       };
       var modalInstance = $uibModal.open({
-          templateUrl: 'Password.tmpl.html',
+          templateUrl: 'Password.tpl.html',
           scope: modalScope,
           size: '350px'
       });

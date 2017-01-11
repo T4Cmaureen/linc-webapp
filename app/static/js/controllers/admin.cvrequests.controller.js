@@ -108,7 +108,7 @@ angular.module('linc.admin.cvrequests.controller', [])
     }
 
     var modalInstance  = $uibModal.open({
-        templateUrl: 'Edit_CVRequest.tmpl.html',
+        templateUrl: 'Edit_CVRequest.tpl.html',
         scope:modalScope
     });
 
@@ -179,7 +179,7 @@ angular.module('linc.admin.cvrequests.controller', [])
       modalScope.cvrequest = angular.copy($scope.Selecteds[0]);
 
       var modalInstance = $uibModal.open({
-          templateUrl: 'Edit_CVRequest.tmpl.html',
+          templateUrl: 'Edit_CVRequest.tpl.html',
           scope: modalScope
       });
 

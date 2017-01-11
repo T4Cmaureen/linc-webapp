@@ -95,7 +95,7 @@ angular.module('linc.admin.cvresults.controller', [])
     }
 
     var modalInstance = $uibModal.open({
-        templateUrl: 'Edit_CVResult.tmpl.html',
+        templateUrl: 'Edit_CVResult.tpl.html',
         scope: modalScope
     });
 
@@ -160,7 +160,7 @@ angular.module('linc.admin.cvresults.controller', [])
       modalScope.cvresult = angular.copy($scope.Selecteds[0]);
       
       var modalInstance = $uibModal.open({
-          templateUrl: 'Edit_CVResult.tmpl.html',
+          templateUrl: 'Edit_CVResult.tpl.html',
           scope: modalScope
       });
 

@@ -67,7 +67,7 @@ angular.module('linc.admin.controller', [ 'linc.admin.users.controller',
     modalScope.title = 'Delete ' + title;
     modalScope.message = 'Are you sure you want to delete the ' + title + ' ?';
     var modalInstance = $uibModal.open({
-        templateUrl: 'Dialog.Delete.tmpl.html',
+        templateUrl: 'Dialog.Delete.tpl.html',
         scope: modalScope
     });
     modalScope.ok = function (){

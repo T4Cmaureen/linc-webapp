@@ -474,7 +474,7 @@ angular.module('linc.search.image.set.controllers', [])
     };
     
     var modalInstance = $uibModal.open({
-        templateUrl: 'Dialog.Delete.tmpl.html',
+        templateUrl: 'Dialog.Delete.tpl.html',
         scope: modalScope
     });
 

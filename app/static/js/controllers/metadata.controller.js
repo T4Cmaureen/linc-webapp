@@ -108,7 +108,7 @@ angular.module('linc.metadata.controller', ['linc.metadata.directive'])
     modalScope.message = 'This change transfers Ownership of Lion/Image Set, and can not be undone!' +
     'Would you like to transfer ownership of this ' + type + ' to ' + org.name + ' ?';
     var modalInstance = $uibModal.open({
-        templateUrl: 'Warning.tmpl.html',
+        templateUrl: 'Warning.tpl.html',
         scope: modalScope
     });
     modalInstance.result.then(function (result) {

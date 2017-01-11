@@ -222,7 +222,7 @@ angular.module('linc.image.set.controllers', ['linc.search.image.set.controllers
     };
     
     var modalInstance = $uibModal.open({
-        templateUrl: 'Dialog.Delete.tmpl.html',
+        templateUrl: 'Dialog.Delete.tpl.html',
         scope: modalScope
     });
 
@@ -382,7 +382,7 @@ angular.module('linc.image.set.controllers', ['linc.search.image.set.controllers
     };
     
     var modalInstance = $uibModal.open({
-        templateUrl: 'Dialog.Delete.tmpl.html',
+        templateUrl: 'Dialog.Delete.tpl.html',
         scope: modalScope
     });
 
