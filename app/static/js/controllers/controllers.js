@@ -325,4 +325,16 @@ angular.module('linc.controllers', ['linc.admin.controller',
     return out;
   };
 })
+
+
+// Filter by Image Types
+.filter('imageTypes_filter', function(){
+  return function(input, imagetypes) {
+    var filtered = _.filter(input, function(image){
+        return (_.result(_.find(imagetypes, {'type': image.type}), 'checked'));
+    });
+    return filtered;
+  };
+})
+
 ;

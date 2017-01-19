@@ -16,40 +16,220 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 For more information or to contact visit linclion.org or email tech@linclion.org -->
-<div name="CVResults" class="font-homenaje-1-1">
-	<div class="modal-header" ng-show="title">
-		<button type="button" class="close" ng-click="close()">&times;</button>
-		<h3 class="modal-title modal-title-image" ng-bind-html="title"></h3>
+<script type="text/ng-template" id="tooltip.tpl.html">
+	<div class="tooltip in tooltip-image font-homenaje-1-1" ng-show="title">
+		<div class="tooltip-arrow"></div>
+		<div class="tooltip-arrow custom-arrow"></div>
+		<div class="tooltip-inner" ng-bind-html="title | unsafe"></div>
 	</div>
-	<div class="modal-body" ng-show="content">
-		<div class="view-images row">
-			<div class="col-sm-6 text-center">
-				<img ng-src="{{!imageset.image}}" class="img-responsive"></p>
+</script>
+<script type="text/ng-template" id="tooltip-1.tpl.html">
+	<div class="tooltip in tooltip-compare-image font-homenaje-1-1" ng-show="title">
+		<div class="tooltip-arrow"></div>
+		<div class="tooltip-arrow custom-arrow"></div>
+		<div class="tooltip-inner" ng-bind-html="title | unsafe"></div>
+	</div>
+</script>
+<div name="CompareImages" class="modal-compare-images font-homenaje-1-1" style="min-width: 550px;">
+	<div class="compare-close">
+		<button type="button" class="close pull-right" ng-click="close()">&times;</button>
+	</div>
+	<div class="modal-body compare-images" ng-show="content" ng-style="resize()" 
+			resizable resize-change="resizeChange()">
+		<!-- Image Set Gallery Carousel -->
+		<div class="row-pagination">
+			<div class="imageset-title" ng-style="carouselImg.imgTitlePos">
+				<h4>
+					Image Set ({{!imageset.id}}) Gallery 
+				</h4>
 			</div>
-			<div class="col-sm-6 text-center">
-				<img ng-src="{{!lion.image}}" class="img-responsive"></p>
-				<div class="photo-caption">
-					<h3>{{!lion.name}}</h3>
+			<nav class="text-left">
+				<ul class="pagination pagination-2">
+					<!-- Type Filter -->
+					<li class="filter-imageset">
+						<div class="tablist" data-allow-multiple="true" role="tablist" aria-multiselectable="true" bs-collapse>
+							<div role="tab" class="div-tab">
+								<a bs-collapse-toggle ng-click="isImageSetCollapsed=!isImageSetCollapsed">
+									<i class="pull-right icon icon-select-arrows"></i>Type
+								</a>
+							</div>
+							<div uib-collapse="isImageSetCollapsed" class="div-collapse">
+								<div class="panel-body checkbox">
+									<label ng-repeat="type in ImageSetTypes">
+										<input ng-click="Change_Types(carouselImg, ImageSetTypes)" type="checkbox" ng-model="type.checked" ng-checked="type.checked">
+										<span class="cr">
+											<i class="cr-icon fa fa-check"></i>
+										</span>
+										{{! type.name}}
+									</label>
+								</div>
+							</div>
+						</div>
+					</li>
+					<!-- Previous Button-->
+					<li class="previous" ng-class="prevPageDisabled(carouselImg)">
+						<a href ng-click="prevPage(carouselImg)">«</a>
+					</li>
+					<!-- Thumbnails's Carousel -->
+					<li ng-repeat="photo in carouselImg.paginated = (carouselImg.filtered = (carouselImg.gallery | imageTypes_filter:ImageSetTypes) | limitTo:carouselImg.Count:carouselImg.Begin)" 
+						ng-click="setActive(photo.index, carouselImg)"
+						ng-class="{active:(photo.index==carouselImg.active)}" repeat-done="layoutDone(carouselImg)" ng-cloak>
+						<span data-animation="am-flip-x" 
+							data-html="true" 
+							data-template-url='tooltip.tpl.html'
+							placement="bottom-center" 
+							bs-tooltip="photo.tooltip">
+							<img ng-src="{{!photo.medium || '//:0' }}">
+						</span>
+					</li>
+					<!-- Next Button -->
+					<li class="next" ng-class="nextPageDisabled(carouselImg)">
+						<a href ng-click="nextPage(carouselImg)">»</a>
+					</li>
+					<!-- Page Count Label -->
+					<li class="imageset-count">
+						<div>
+							{{!carouselImg.Page}}/{{!carouselImg.TotalPages}} page
+						</div>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		<!-- Gallery Selected Thumbnail Image -->
+		<div class="row row-carousel">
+			<!-- Imaget Set -->
+			<div class="col-sm-6 left-row-carousel">
+				<div uib-carousel active="carouselImg.active" 
+					 no-transition="carousel.no_transition" 
+					 interval="carousel.interval" 
+					 no-wrap="carousel.noWrapSlides"
+					 ng-show="carouselImg.showslide">
+					<div uib-slide ng-repeat="photo in carouselImg.gallery track by photo.index" 
+						 index="photo.index"
+						 class="carousel-pagination">
+						<div class="div-image">
+							<img ng-src="{{!photo.medium || '//:0' }}" class="carousel-img img-responsive center-block">
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>	
-	</div>
-	<div class="modal-footer">
+			<!-- CV Result's Selected Lion's Primary Imaget Set-->
+			<div class="col-sm-6">
+				<div uib-carousel active="carouselLion.active" 
+					 no-transition="carousel.no_transition" 
+					 interval="carousel.interval" 
+					 no-wrap="carousel.noWrapSlides"
+					 ng-show="carouselLion.showslide">
+					<div uib-slide ng-repeat="photo in carouselLion.gallery track by photo.index" 
+						 index="photo.index" 
+						 class="carousel-pagination">
+						<div class="div-image">
+							<img ng-src="{{!photo.medium || '//:0' }}" class="carousel-img img-responsive center-block">
+						</div>
+					</div>
+				</div>
+				<div class="image-loading" ng-class="{'large': windowWidth>=1000,'medium': windowWidth<1000 && windowWidth>= 768, 'small': windowWidth<768}">
+					<p class="text-center" ng-if="dataLoading">
+						<img src="/static/images/downloading.gif" /> 
+						Loading ... please wait&hellip;
+					</p>
+				</div>
+			</div>
+		</div>
+		<!-- Primary Image Sets of CV Results' Lions -->
+		<div class="row-pagination bottom-pagination">
+			<nav class="text-left">
+				<!-- CV Results Lions' Carousel -->
+				<ul class="pagination pagination-2">
+					<!-- Previous Button -->
+					<li class="previous" ng-class="prevPageDisabled(carouselCV)">
+						<a href ng-click="prevPage(carouselCV)">«</a>
+					</li>
+					<!-- Thumbnails's Carousel -->
+					<li ng-repeat="photo in carouselCV.paginated = (carouselCV.gallery | orderBy:predicate:reverse | limitTo:carouselCV.Count:carouselCV.Begin)" 
+						ng-click="selectLion(photo)" 
+						ng-class="{active:(photo.index==carouselCV.active)}" >
+						<span data-animation="am-flip-x" 
+							data-html="true" 
+							data-template-url='tooltip-1.tpl.html'
+							placement="top-center" 
+							bs-tooltip="photo.tooltip">
+							<img ng-src="{{!photo.thumbnail || '//:0' }}">
+						</span>
+					</li>
+					<!-- Next Button -->
+					<li class="next" ng-class="nextPageDisabled(carouselCV)">
+						<a href ng-click="nextCVPage(carouselCV)">»</a>
+					</li>
+					<!-- Page Count Label -->
+					<li class="imageset-count">
+						<div>
+							{{!carouselCV.Page}}/{{!carouselCV.TotalPages}} page
+						</div>
+					</li>
+					<div class="cvresults-title">
+						<h4>
+							CV Results 
+						</h4>
+					</div>
+				</ul>
+				<!-- Selected Lion's Primary Image Set Carousel -->
+				<ul class="pagination pagination-3">
+					<!-- Previous Button -->
+					<li class="previous" ng-class="prevPageDisabled(carouselLion)">
+						<a href ng-click="prevPage(carouselLion)">«</a>
+					</li>
+					<!-- Thumbnails's Carousel -->
+					<li ng-repeat="photo in carouselLion.paginated = (carouselLion.filtered = (carouselLion.gallery | imageTypes_filter:LionTypes) | limitTo:carouselLion.Count:carouselLion.Begin)" 
+						ng-click="setActive(photo.index, carouselLion)" 
+						ng-class="{active:(photo.index==carouselLion.active)}" repeat-done="layoutDone(carouselLion)" ng-cloak>
+						<span data-animation="am-flip-x" 
+							data-html="true" 
+							data-template-url='tooltip-1.tpl.html'
+							placement="top-center" 
+							bs-tooltip="photo.tooltip">
+							<img ng-src="{{!photo.medium || '//:0' }}">
+						</span>
+					</li>
+					<!-- Next Button -->
+					<li class="next" ng-class="nextPageDisabled(carouselLion)">
+						<a href ng-click="nextPage(carouselLion)">»</a>
+					</li>
+					<!-- Page Count Label -->
+					<li class="imageset-count">
+						<div>
+							{{!carouselLion.Page}}/{{!carouselLion.TotalPages}} page
+						</div>
+					</li>
+					<!-- Type Filter -->
+					<li class="filter-lion">
+						<div class="tablist" data-allow-multiple="true" role="tablist" aria-multiselectable="true" bs-collapse>
+							<div role="tab" class="div-tab">
+								<a bs-collapse-toggle ng-click="isLionCollapsed=!isLionCollapsed">
+									<i class="pull-right icon icon-select-arrows"></i>Type
+								</a>
+							</div>
+							<div uib-collapse="isLionCollapsed" class="div-collapse">
+								<div class="panel-body checkbox">
+									<label ng-repeat="type in LionTypes">
+										<input ng-click="Change_Types(carouselLion, LionTypes)" type="checkbox"  ng-model="type.checked" ng-checked="type.checked">
+										<span class="cr">
+											<i class="cr-icon fa fa-check"></i>
+										</span>
+										{{! type.name}}
+									</label>
+								</div>
+							</div>
+						</div>
+					</li>
+					<div class="cvresult-title" ng-style="carouselLion.imgTitlePos">
+						<h4>
+						CV Result (Image Set: {{!lion.primary_image_set_id}}) Gallery 
+						</h4>
+					</div>
+				</ul>
+			</nav>
+		</div>
 	</div>
 </div>
-<!-- 
 
-<div class="font-homenaje-1-1">
-	<h1>Compare Images</h1>
-	<div class="view-images row">
-	  <div class="col-sm-6 text-center">
-	    <img ng-src="{{!images.imageset.image}}" class="img-responsive"></p>
-	  </div>
-	  <div class="col-sm-6 text-center">
-	    <img ng-src="{{!images.lion.image}}" class="img-responsive"></p>
-	    <div class="photo-caption">
-	    	<h3>{{!images.lion.name}}</h3>
-	    </div>
-	  </div>
-	</div>
-</div> -->

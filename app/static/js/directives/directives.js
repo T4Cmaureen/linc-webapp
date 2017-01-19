@@ -252,6 +252,33 @@ angular.module('linc.directive', [])
 }])
 
 
+.directive('resizable', function ($window) {
+    return function (scope, element, attr) {
+        var oldVal={h:0,w:0};
+        var w = angular.element($window);
+        scope.$watch(function () {
+            return {
+                'h': w.height(), 
+                'w': w.width()
+            };
+        }, function (newValue, oldValue) {
+            scope.windowHeight = newValue.h;
+            scope.windowWidth = newValue.w;
+            scope.resize = function () {
+                if(Math.abs(newValue.w-oldVal.w) > 1){
+                  scope.$eval(scope.resizeChange(newValue.h, newValue.w));
+                  oldVal.w = newValue.w;
+                  oldVal.h = newValue.h;
+                }
+            };
+        }, true);
+
+        w.bind('resize', function () {
+            scope.$apply();
+        });
+    }
+})
+
 // .directive('uiSelectChoices', ['$timeout', '$parse', '$compile', '$document', '$filter', 
 //   function($timeout, $parse, $compile, $document, $filter) {
 //     return function(scope, elm, attr) {

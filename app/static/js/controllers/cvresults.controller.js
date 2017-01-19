@@ -18,7 +18,7 @@
 // For more information or to contact visit linclion.org or email tech@linclion.org
 'use strict';
 
-angular.module('linc.cvresults.controller', ['linc.cvresults.directive'])
+angular.module('linc.cvresults.controller', ['linc.cvresults.directive', 'linc.compare.images.controller'])
 
 .controller('CVResultsCtrl', ['$scope', '$state', '$timeout', '$interval', '$uibModalInstance', '$uibModal', 'LincServices', 'NotificationFactory', 'imageset', 'cvrequestId', 'cvresultsId', 'data_cvresults', 
   function ($scope, $state, $timeout, $interval, $uibModalInstance, $uibModal, LincServices, NotificationFactory, imageset, cvrequestId, cvresultsId, data_cvresults) {
@@ -57,17 +57,32 @@ angular.module('linc.cvresults.controller', ['linc.cvresults.directive'])
     win.focus();
   }
 
-  $scope.CompareImages = function (object){
+  $scope.CompareImages = function (lion){
     var modalScope = $scope.$new();
     modalScope.title = 'Compare Images';
 
     modalScope.imageset = imageset;
-    modalScope.lion = object;
+    modalScope.lion = lion;
+    modalScope.cvresults = $scope.cvresults;
+    modalScope.reverse = $scope.reverse;
+    modalScope.predicate = $scope.predicate;
 
     var modalInstance = $uibModal.open({
+        animation: true,
+        backdrop  : 'static',
         templateUrl: 'compare.images.tpl.html',
+        controller:  'CompareImagesCtrl',
         scope: modalScope,
-        size: 'lg'
+        size: 'lg',
+        windowClass: 'large-modal',
+        resolve: {
+          imageset_gallery: ['LincServices', function(LincServices) {
+            return LincServices.getImageGallery(modalScope.imageset.id);
+          }],
+          lion_gallery: ['LincServices', function(LincServices) {
+            return LincServices.getImageGallery(modalScope.lion.primary_image_set_id);
+          }]
+        }
     });
     modalInstance.result.then(function (result) {
     }, function (){ });
