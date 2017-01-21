@@ -50,9 +50,9 @@ angular.module('linc.compare.images.controller', [])
 	// Carousel Options
 	$scope.carousel = { interval: 500000, noWrapSlides: false, no_transition : false};
 	// ImageSet
-	$scope.carouselImg={ showslide: true, gallery:[], active: 0, Page: 1, Begin: 0, Count: 10 };
+	$scope.carouselImg={ showslide: true, gallery:[], active: 0, Page: 1, Begin: 0, Count: 4 };
 	// Lion
-	$scope.carouselLion={ showslide: true, gallery: [], active: 0, Page: 1, Begin: 0, Count: 7 };
+	$scope.carouselLion={ showslide: true, gallery: [], active: 0, Page: 1, Begin: 0, Count: 4 };
 	// ImageSet Gallery
 	var setGallery = function (gallery){
 		var photos = []
@@ -157,67 +157,30 @@ angular.module('linc.compare.images.controller', [])
 		$set.filtered = $filter('imageTypes_filter')($set.gallery, types);
 		ChangePage($set);
 		$set.paginated = $filter('limitTo')($set.filtered, $set.Count, $set.Begin);
-		calc_title_pos($set);
 	}
 
-	var calc_title_pos = function ($set){
-		var tot = $set.Count;
-		var imgs = $set.paginated.length;
-		var rate = $set.paginated.length/$set.Count;
-		if($set === $scope.carouselImg){
-			if (rate < .3)
-				$set.imgTitlePos = {'left': '10%'};
-			else if(rate < .5)
-				$set.imgTitlePos = {'left': '20%'};
-			else if(rate < .8)
-				$set.imgTitlePos = {'left': '30%'};
-			else
-				$set.imgTitlePos = {'left': '40%'};
-		}
-		else if($set === $scope.carouselLion){
-			if(!imgs)
-				$set.imgTitlePos = {'display': 'none'};
-			else if(imgs<4)
-				$set.imgTitlePos = {'display': 'block','left': '0%'};
-			else{
-				if (rate > .8)
-					$set.imgTitlePos = {'display': 'block','left': '40%'};
-				else if(rate > .5)
-					$set.imgTitlePos = {'display': 'block','left': '30%'};
-				else
-					$set.imgTitlePos = {'display': 'block','left': '20%'};
-			}
-		}
-	}
-	$scope.carouselImg.imgTitlePos = {'left': '35%'};
-	$scope.carouselLion.imgTitlePos = {'left': '35%'};
-	//$scope.carouselImg.imgTitlePos = {'left': '35%'};
 	$scope.resizeChange = function(h,w){
 		if(w >= 1200){
-			$scope.carouselImg.Count = 16, $scope.carouselLion.Count = 10, $scope.carouselCV.Count = 5;
+		$scope.carouselImg.Count = 6, $scope.carouselLion.Count = 6, $scope.carouselCV.Count = 7;
 		}
 		else if(w < 1200 && w > 1000){
-			$scope.carouselImg.Count = 13, $scope.carouselLion.Count = 8, $scope.carouselCV.Count = 4;
+		 	$scope.carouselImg.Count = 5, $scope.carouselLion.Count = 5, $scope.carouselCV.Count = 6;
 		}
 		else if(w <= 1000 && w >= 900){
-			$scope.carouselImg.Count = 11, $scope.carouselLion.Count = 6, $scope.carouselCV.Count = 4;
+		 	$scope.carouselImg.Count = 4, $scope.carouselLion.Count = 4, $scope.carouselCV.Count = 5;
 		}
 		else if(w < 900 && w >= 768){
-			$scope.carouselImg.Count = 9,  $scope.carouselLion.Count = 6, $scope.carouselCV.Count = 2;
+		 	$scope.carouselImg.Count = 3,  
+		 	$scope.carouselLion.Count = 3, 
+		 	$scope.carouselCV.Count = 4;
 		}
-		else if(w < 768 && w >= 680){
-			$scope.carouselImg.Count = 7, $scope.carouselLion.Count = 5, $scope.carouselCV.Count = 1;
-		}
-		else if(w < 680 && w >= 620){
-			$scope.carouselImg.Count = 6, $scope.carouselLion.Count = 4, $scope.carouselCV.Count = 1;
-		}
-		else if(w < 620){
-			$scope.carouselImg.Count = 5, $scope.carouselLion.Count = 3, $scope.carouselCV.Count = 1;
+		else if(w < 768){
+			$scope.carouselImg.Count = 9, 
+			$scope.carouselLion.Count = 9, 
+			$scope.carouselCV.Count = 9;
 		}
 		SetCarousel($scope.carouselImg), SetCarousel($scope.carouselLion), SetCarouselCV();
-		ChangePage($scope.carouselImg);ChangePage($scope.carouselLion);
-		calc_title_pos($scope.carouselImg);
-		calc_title_pos($scope.carouselLion);
+		ChangePage($scope.carouselImg); ChangePage($scope.carouselLion);
 		$scope.isImageSetCollapsed = true;
 		$scope.isLionCollapsed = true; 
 	};
@@ -300,8 +263,5 @@ angular.module('linc.compare.images.controller', [])
 		});
 	}
 
-	$scope.layoutDone = function($set) {
-    	calc_title_pos($set);
-  	}
 }]);
 

@@ -20,8 +20,8 @@
 
 angular.module('linc.cvresults.controller', ['linc.cvresults.directive', 'linc.compare.images.controller'])
 
-.controller('CVResultsCtrl', ['$scope', '$state', '$timeout', '$interval', '$uibModalInstance', '$uibModal', 'LincServices', 'NotificationFactory', 'imageset', 'cvrequestId', 'cvresultsId', 'data_cvresults', 
-  function ($scope, $state, $timeout, $interval, $uibModalInstance, $uibModal, LincServices, NotificationFactory, imageset, cvrequestId, cvresultsId, data_cvresults) {
+.controller('CVResultsCtrl', ['$scope', '$state', '$timeout', '$interval', '$uibModalInstance', '$uibModal', '$filter', 'LincServices', 'NotificationFactory', 'imageset', 'cvrequestId', 'cvresultsId', 'data_cvresults', 
+  function ($scope, $state, $timeout, $interval, $uibModalInstance, $uibModal, $filter, LincServices, NotificationFactory, imageset, cvrequestId, cvresultsId, data_cvresults) {
 
   $scope.title = 'CV Results (CV Request Id: '+ data_cvresults.req_id + ' - Status: ' + data_cvresults.status + ')';
   $scope.content = 'Form';
@@ -63,7 +63,7 @@ angular.module('linc.cvresults.controller', ['linc.cvresults.directive', 'linc.c
 
     modalScope.imageset = imageset;
     modalScope.lion = lion;
-    modalScope.cvresults = $scope.cvresults;
+    modalScope.cvresults = $filter('orderBy')($scope.cvresults,$scope.predicate,$scope.reverse);
     modalScope.reverse = $scope.reverse;
     modalScope.predicate = $scope.predicate;
 
