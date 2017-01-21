@@ -167,7 +167,7 @@ angular.module('linc.compare.images.controller', [])
 		 	$scope.carouselImg.Count = 5, $scope.carouselLion.Count = 5, $scope.carouselCV.Count = 6;
 		}
 		else if(w <= 1000 && w >= 900){
-		 	$scope.carouselImg.Count = 4, $scope.carouselLion.Count = 4, $scope.carouselCV.Count = 5;
+		 	$scope.carouselImg.Count = 4, $scope.carouselLion.Count = 4, $scope.carouselCV.Count = 4;
 		}
 		else if(w < 900 && w >= 768){
 		 	$scope.carouselImg.Count = 3,  
