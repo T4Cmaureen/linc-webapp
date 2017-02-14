@@ -86,7 +86,9 @@ textarea{font-family: 'Homenaje', sans-serif;}
 		}
 	}
 }
-
+.h4-notes{
+	white-space: pre; 
+}
 @media (max-width: 768px){
 	.navbar>.container-fluid{
 		display: inline-flex;
