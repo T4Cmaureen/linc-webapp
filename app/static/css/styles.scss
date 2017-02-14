@@ -112,7 +112,8 @@ textarea{font-family: 'Homenaje', sans-serif;}
 }
 
 @media(min-width: 768px){
-	.modal-dialog{
+	// .modal-dialog{
+	.large-modal>.modal-lg {
 		width: 760px;
 		margin: 30px auto;
 	}
