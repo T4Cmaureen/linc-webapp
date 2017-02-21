@@ -197,18 +197,65 @@ angular.module('linc.controllers', ['linc.admin.controller',
       return input;
 
     var features = features_str.toLowerCase();
-    var pieces = features.match(/\S+/g);
-
+    var toExcludes = [];
+    var toIncludes = [];
+    // All Compost Values
+    var compost = features.match(/(["'])(?:(?=(\\?))\2.)*?\1/g);
+    if(compost){
+      compost.forEach(function (co, i){
+        var ini = features.indexOf(co);
+        var val = co.slice(1,-1);
+        // Negatives
+        if(ini-1>=0 && features[ini-1] == '-'){
+          toExcludes.push(val);
+          features = features.replace('-' + co, '');
+        }
+        else{
+          toIncludes.push(val);
+          features = features.replace(co, '');
+        }
+      });
+    }
+    console.log("incluir c: " + toIncludes);
+    console.log("encluir c: " + toExcludes);
+    var single = features.match(/\S+/g);
+    if(single){
+      single.forEach(function (si, i){
+        var ini = features.indexOf(si);
+        // Negatives
+        if(ini>=0 && features[ini] == '-'){
+          var val = si.slice(1);
+          toExcludes.push(val);
+          features = features.replace(si, '');
+        }
+        else{
+          toIncludes.push(si);
+          features = features.replace(si, '');
+        }
+      });
+    }
+    console.log("incluir s: " + toIncludes);
+    console.log("encluir s: " + toExcludes);
+    
     var filtered = _.filter(input, function(value){
       var val = value.tag_features.toLowerCase();
       // For each piece test contained in input
       var contain = true;
-      pieces.forEach(function (piece, i){
+      toIncludes.forEach(function (piece, i){
         if(val.indexOf(piece) == -1){
           contain = false;
           return;
         }
       });
+      // Excluse NOT 
+      if(contain){
+        toExcludes.forEach(function (piece, i){
+          if(val.indexOf(piece) != -1){
+            contain = false;
+            return;
+          }
+        });
+      }
       return contain;
     });
     return filtered;
