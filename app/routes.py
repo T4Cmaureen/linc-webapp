@@ -21,31 +21,30 @@
 # For more information or to contact visit linclion.org or email tech@linclion.org
 
 from handlers.base import VersionHandler
-from handlers.error import ErrorHandler
-from handlers.auth import LogoutHandler,LoginHandler, CheckAuthHandler, ResetPassword, ChangePassword
-from handlers.main import MainHandler,LoginMainHandler,HomeHandler,SideMenuHandler,\
-    LionMainHandler,SearchLionHandler,ImageSetMainHandler,SearchImageSetHandler,\
-    ConservationistsHandler,ImageGalleryHandler,LocationHistoryHandler,CompareImagesHandler,\
-    EditMetadataHandler,CVResultsMainHandler,CVRequestMainHandler,UploadImagesHandler,VerifyImageSetHandler,\
-    PageAdminHandler, PageAdminUsersHandler, PageAdminOrganizationsHandler, PageAdminLionsHandler,\
-    PageAdminImageSetsHandler, PageAdminImagesHandler, PageAdminCVRequestsHandler, PageAdminCVResultsHandler
-from handlers.api import LionsListHandler, ImagesListHandler, ImageSetsListHandler, OrganizationsListHandler,\
-    ImagesUploadHandler, ImagesHandler, LionsHandler, ImageSetsHandler, OrganizationsHandler, CVResultsHandler, CVRequestHandler,\
-    UsersHandler
+from handlers.auth import LogoutHandler, LoginHandler, CheckAuthHandler, ResetPassword, ChangePassword
+from handlers.main import MainHandler, LoginMainHandler, HomeHandler, SideMenuHandler
+from handlers.main import LionMainHandler, SearchLionHandler, ImageSetMainHandler, SearchImageSetHandler
+from handlers.main import ConservationistsHandler, ImageGalleryHandler, LocationHistoryHandler, CompareImagesHandler
+from handlers.main import EditMetadataHandler, CVResultsMainHandler, CVRequestMainHandler, UploadImagesHandler, VerifyImageSetHandler
+from handlers.main import PageAdminHandler, PageAdminUsersHandler, PageAdminOrganizationsHandler, PageAdminLionsHandler
+from handlers.main import PageAdminImageSetsHandler, PageAdminImagesHandler, PageAdminCVRequestsHandler, PageAdminCVResultsHandler
+from handlers.api import LionsListHandler, ImagesListHandler, ImageSetsListHandler, OrganizationsListHandler
+from handlers.api import ImagesUploadHandler, ImagesHandler, LionsHandler, ImageSetsHandler
+from handlers.api import OrganizationsHandler, CVResultsHandler, CVRequestHandler, UsersHandler
 
 # Defining routes
 url_patterns = [
     # Handlers for the website
     (r"/", MainHandler),
     (r"/version", VersionHandler),
-    (r"/admin.html",PageAdminHandler),
-    (r"/admin.users.tpl.html",PageAdminUsersHandler),
-    (r"/admin.organizations.tpl.html",PageAdminOrganizationsHandler),
-    (r"/admin.lions.tpl.html",PageAdminLionsHandler),
-    (r"/admin.imagesets.tpl.html",PageAdminImageSetsHandler),
-    (r"/admin.images.tpl.html",PageAdminImagesHandler),
-    (r"/admin.cvrequests.tpl.html",PageAdminCVRequestsHandler),
-    (r"/admin.cvresults.tpl.html",PageAdminCVResultsHandler),
+    (r"/admin.html", PageAdminHandler),
+    (r"/admin.users.tpl.html", PageAdminUsersHandler),
+    (r"/admin.organizations.tpl.html", PageAdminOrganizationsHandler),
+    (r"/admin.lions.tpl.html", PageAdminLionsHandler),
+    (r"/admin.imagesets.tpl.html", PageAdminImageSetsHandler),
+    (r"/admin.images.tpl.html", PageAdminImagesHandler),
+    (r"/admin.cvrequests.tpl.html", PageAdminCVRequestsHandler),
+    (r"/admin.cvresults.tpl.html", PageAdminCVResultsHandler),
     (r"/login.html", LoginMainHandler),
     (r"/home.html", HomeHandler),
     (r"/sidemenu.html", SideMenuHandler),

@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 
 # LINC is an open source shared database and facial recognition
@@ -31,42 +28,28 @@ import tornado.template
 import socket
 from sys import executable as pythonbin
 from tornado.options import define, options
-from handlers.error import ErrorHandler
+from handlers.base import BaseHandler
 from apscheduler.schedulers.tornado import TornadoScheduler
+from logging import info
+
 
 # make filepaths relative to settings.
-ROOT = os.path.dirname(os.path.abspath(__file__))
-path = lambda *a: os.path.join(ROOT, *a)
-
-# save original Python path
-old_sys_path = list(sys.path)
+appdir = os.path.dirname(os.path.realpath(__file__))
+info('Working directory: %s' % (appdir))
 
 # add local packages directories to Python's site-packages path
-site.addsitedir(ROOT)
-site.addsitedir(path('handlers'))  # Request handlers
-site.addsitedir(ROOT+'/models')
-site.addsitedir(ROOT+'/handlers')
-
-# add local dependencies
-if os.path.exists(path('lib')):
-    for directory in os.listdir(path('lib')):
-        full_path = path('lib/%s' % directory)
-        if os.path.isdir(full_path):
-            site.addsitedir(full_path)
-
-# move the new items to the front of sys.path
-new_sys_path = []
-for item in list(sys.path):
-    if item not in old_sys_path:
-        new_sys_path.append(item)
-        sys.path.remove(item)
-sys.path[:0] = new_sys_path
+paths = [appdir, appdir + '/handlers', appdir + '/models', appdir + '/lib', appdir + '/utils']
+for npath in paths:
+    if os.path.isdir(npath):
+        site.addsitedir(npath)
+        sys.path.append(npath)
 
 # port defined as heroku deploy
-define("port",default=5080,type=int,help=("Server port"))
-define("config",default=None,help=("Tornado configuration file"))
-define('debug',default=True,type=bool,help=("Turn on autoreload, log to stderr only"))
+define("port", default=5080, type=int, help=("Server port"))
+define("config", default=None, help=("Tornado configuration file"))
+define('debug', default=True, type=bool, help=("Turn on autoreload, log to stderr only"))
 tornado.options.parse_command_line()
+
 
 # Temporary alternative to define app URL
 def getHostIp():
@@ -80,29 +63,29 @@ def getHostIp():
         hip = s.getsockname()[0]
     return hip
 
-appdir = os.path.dirname(os.path.realpath(__file__))
 
 # config settings
 config = {}
 config['debug'] = options.debug
-config['cookie_secret'] = os.environ.get('COOKIE_SECRET','c84b706bc36363217b2cdf0e615e41c186c5e0cfc6869a078e7243e9affc8e87')
+config['cookie_secret'] = os.environ.get('COOKIE_SECRET', 'c84b706bc36363217b2cdf0e615e41c186c5e0cfc6869a078e7243e9affc8e87')
 config['xsrf_cookies'] = True
 config['app_path'] = appdir
-config['version'] = 'LINC webapp version v1.1.0-20161123'
+config['version'] = 'LINC webapp version v4.0.0-2018-04-05'
 config['static_path'] = os.path.join(appdir, "static")
 config['template_path'] = os.path.join(appdir, "templates")
 config['autoescape'] = None
 config['login_url'] = '/#/login'
+config['default_handler_class'] = BaseHandler
 
 config['scheduler'] = TornadoScheduler()
 config['scheduler'].start()
 
 # Setting URL
 appurl = "https://linc-website.herokuapp.com/"
-#appurl = 'http://localhost:5080'
+# appurl = 'http://localhost:5080'
 config['url'] = appurl
 
 # Setting linc-api URL
 config['API_URL'] = 'https://linc-api.herokuapp.com'
 # for development purpose
-#config['API_URL'] = 'http://192.168.100.10:5050'
+# config['API_URL'] = 'http://192.168.100.10:5050'

@@ -17,10 +17,11 @@
 #
 # For more information or to contact visit linclion.org or email tech@linclion.org
 
-import functools
+
 # The _checkAuth should return a user object, and this
 # configure which property from that objet get the 'role'
 _userRolePropertyName = 'role'
+
 
 def _checkRole(role, roles):
     ''' Check given role is inside or equals to roles '''
@@ -32,7 +33,7 @@ def _checkRole(role, roles):
                 found = True
                 break
 
-        if found == True:
+        if found is True:
             return True
 
     # Role is a single string
@@ -42,7 +43,8 @@ def _checkRole(role, roles):
 
     return False
 
-def allowedRole(roles = None):
+
+def allowedRole(roles=None):
     def decorator(func):
         def decorated(self, *args, **kwargs):
             user = self.current_user
@@ -53,19 +55,20 @@ def allowedRole(roles = None):
                 role = 'admin'
             else:
                 role = 'user'
-            #role = user[_userRolePropertyName]
+            # role = user[_userRolePropertyName]
 
-            if _checkRole(role, roles) == False:
+            if _checkRole(role, roles) is False:
                 self.set_status(403)
                 self._transforms = []
-                self.finish({'status':'error','message':'endpoint not allowed for the current user role'})
+                self.finish({'status': 'error', 'message': 'endpoint not allowed for the current user role'})
                 return None
 
             return func(self, *args, **kwargs)
         return decorated
     return decorator
 
-def refusedRole(roles = None):
+
+def refusedRole(roles=None):
     def decorator(func):
         def decorated(self, *args, **kwargs):
             user = self.current_user
@@ -76,12 +79,12 @@ def refusedRole(roles = None):
                 role = 'admin'
             else:
                 role = 'user'
-            #role = user[_userRolePropertyName]
+            # role = user[_userRolePropertyName]
 
-            if _checkRole(role, roles) == True:
+            if _checkRole(role, roles) is True:
                 self.set_status(403)
                 self._transforms = []
-                self.finish({'status':'error','message':'endpoint not allowed for the current user role'})
+                self.finish({'status': 'error', 'message': 'endpoint not allowed for the current user role'})
                 return None
 
             return func(self, *args, **kwargs)

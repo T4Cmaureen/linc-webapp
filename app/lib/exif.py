@@ -4,14 +4,15 @@ from PIL.ExifTags import TAGS, GPSTAGS
 from logging import info
 from datetime import datetime
 
-tags_skip = ['MakerNote','UserComment']
+tags_skip = ['MakerNote', 'UserComment']
+
 
 def get_exif_data(filename):
-    """Returns a dictionary from the exif data of an PIL Image item. Also converts the GPS Tags"""
+    """ Returns a dictionary from the exif data of an PIL Image item. Also converts the GPS Tags """
     try:
         image = Image.open(filename)
     except OSError as e:
-        info('The file '+filename+' can\'t be open as image')
+        info('The file ' + filename + ' can\'t be open as image')
         return {}
     exif_data = {}
     einfo = image._getexif()
@@ -25,20 +26,20 @@ def get_exif_data(filename):
                 for t in value:
                     sub_decoded = GPSTAGS.get(t, t)
                     tvalue = value[t]
-                    if isinstance(tvalue,bytes):
+                    if isinstance(tvalue, bytes):
                         tvalue = tvalue.decode('utf-8')
                     gps_data[sub_decoded] = tvalue
 
                 exif_data[decoded] = gps_data
             else:
                 dvalue = value
-                if isinstance(value,bytes):
+                if isinstance(value, bytes):
                     dvalue = value.decode('utf-8')
                 exif_data[decoded] = dvalue
-            if decoded in ['DateTimeOriginal','DateTime','DateTimeDigitized']:
+            if decoded in ['DateTimeOriginal', 'DateTime', 'DateTimeDigitized']:
                 date_portion = exif_data[decoded][0:10]
                 time_portion = exif_data[decoded][11:]
-                exif_data[decoded] = date_portion.replace(':','/')+' '+time_portion
+                exif_data[decoded] = date_portion.replace(':', '/') + ' ' + time_portion
     # Adjusting the output
     output = dict()
     output['tags'] = exif_data
@@ -47,20 +48,22 @@ def get_exif_data(filename):
     output['longitude'] = coords[1]
     edkeys = exif_data.keys()
     if 'DateTimeOriginal' in edkeys and ['DateTimeOriginal'] != '':
-        output['date_stamp'] = datetime.strptime(exif_data['DateTimeOriginal'],'%Y/%m/%d %H:%M:%S').isoformat()
+        output['date_stamp'] = datetime.strptime(exif_data['DateTimeOriginal'], '%Y/%m/%d %H:%M:%S').isoformat()
     elif 'DateTimeOriginal' in edkeys and exif_data['DateTimeDigitized'] != '':
-        output['date_stamp'] = datetime.strptime(exif_data['DateTimeDigitized'],'%Y/%m/%d %H:%M:%S').isoformat()
+        output['date_stamp'] = datetime.strptime(exif_data['DateTimeDigitized'], '%Y/%m/%d %H:%M:%S').isoformat()
     elif 'DateTimeOriginal' in edkeys and exif_data['DateTime'] != '':
-        output['date_stamp'] = datetime.strptime(exif_data['DateTime'],'%Y/%m/%d %H:%M:%S').isoformat()
+        output['date_stamp'] = datetime.strptime(exif_data['DateTime'], '%Y/%m/%d %H:%M:%S').isoformat()
     else:
         output['date_stamp'] = None
     return output
+
 
 def _get_if_exist(data, key):
     if key in data:
         return data[key]
 
     return None
+
 
 def _convert_to_degress(value):
     """Helper function to convert the GPS coordinates stored in the EXIF to degress in float format"""
@@ -78,8 +81,10 @@ def _convert_to_degress(value):
 
     return d + (m / 60.0) + (s / 3600.0)
 
+
 def get_lat_lon(exif_data):
-    """Returns the latitude and longitude, if available, from the provided exif_data (obtained through get_exif_data above)"""
+    """ Returns the latitude and longitude, if available, from the
+       provided exif_data (obtained through get_exif_data above) """
     lat = None
     lon = None
 

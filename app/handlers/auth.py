@@ -23,10 +23,10 @@
 from tornado.web import asynchronous
 from tornado.gen import coroutine
 from lib.authentication import web_authenticated
-from tornado.gen import engine,Task
+from tornado.gen import engine, Task
 from handlers.base import BaseHandler
-from json import dumps,loads
-from logging import info
+from json import dumps, loads
+
 
 class CheckAuthHandler(BaseHandler):
     @asynchronous
@@ -34,34 +34,35 @@ class CheckAuthHandler(BaseHandler):
     @web_authenticated
     def get(self):
         resource_url = '/auth/check'
-        headers = {'Linc-Api-AuthToken':self.current_user['token']}
-        response = yield Task(self.api,url=self.settings['API_URL']+resource_url,method='GET',headers=headers)
+        headers = {'Linc-Api-AuthToken': self.current_user['token']}
+        response = yield Task(self.api, url=self.settings['API_URL'] + resource_url, method='GET', headers=headers)
         self.set_json_output()
         if response.code != 200:
             resource_url = '/auth/login'
             username = self.current_user['username']
             password = self.current_user['password']
-            body = {'username':username,
-                    'password':password}
-            url = self.settings['API_URL']+resource_url
-            response = yield Task(self.api,url=url,method='POST',body=self.json_encode(body))
+            body = {'username': username,
+                    'password': password}
+            url = self.settings['API_URL'] + resource_url
+            response = yield Task(self.api, url=url, method='POST', body=self.json_encode(body))
             if response and response.code == 200:
                 data = loads(response.body.decode('utf-8'))['data']
-                obj = {'username' : username,
-                       'orgname' : data['orgname'],
-                       'admin' : (data['role']=='admin'),
-                       'token' : data['token'],
-                       'id' : data['id'],
-                       'organization_id' : data['organization_id'],
-                       'password':password}
-                self.set_secure_cookie("userlogin",dumps(obj))
+                obj = {'username': username,
+                       'orgname': data['orgname'],
+                       'admin': (data['role'] == 'admin'),
+                       'token': data['token'],
+                       'id': data['id'],
+                       'organization_id': data['organization_id'],
+                       'password': password}
+                self.set_secure_cookie("userlogin", dumps(obj))
                 del obj['password']
-                self.response(200,'User has a new token login in API.',obj)
+                self.response(200, 'User has a new token login in API.', obj)
                 return
         elif response.code == 200:
-            self.response(200,'Token valid for the current user.')
+            self.response(200, 'Token valid for the current user.')
             return
-        self.response(401,'Fail to get user authentication.')
+        self.response(401, 'Fail to get user authentication.')
+
 
 class LoginHandler(BaseHandler):
     @asynchronous
@@ -72,28 +73,29 @@ class LoginHandler(BaseHandler):
             password = self.input_data['password']
             # Check authentication with the API
             resource_url = '/auth/login'
-            body = {'username':username,
-                    'password':password}
-            url = self.settings['API_URL']+resource_url
-            response = yield Task(self.api,url=url,method='POST',body=self.json_encode(body))
+            body = {'username': username,
+                    'password': password}
+            url = self.settings['API_URL'] + resource_url
+            response = yield Task(self.api, url=url, method='POST', body=self.json_encode(body))
             resp = loads(response.body.decode('utf-8'))
             if 200 <= response.code < 300:
                 data = resp['data']
-                obj = {'username' : username,
-                       'orgname' : data['orgname'],
-                       'admin' : (data['role']=='admin'),
-                       'token' : data['token'],
-                       'id' : data['id'],
-                       'organization_id' : data['organization_id'],
-                       'password':password}
-                self.set_secure_cookie("userlogin",dumps(obj))
+                obj = {'username': username,
+                       'orgname': data['orgname'],
+                       'admin': (data['role'] == 'admin'),
+                       'token': data['token'],
+                       'id': data['id'],
+                       'organization_id': data['organization_id'],
+                       'password': password}
+                self.set_secure_cookie("userlogin", dumps(obj))
                 del obj['password']
                 # this will be acquired with the api
-                self.response(response.code,resp['message'],obj)
+                self.response(response.code, resp['message'], obj)
             else:
-                self.response(response.code,resp['message'])
+                self.response(response.code, resp['message'])
         else:
-            self.response(401,'Invalid request, you must provide username and password to login.')
+            self.response(401, 'Invalid request, you must provide username and password to login.')
+
 
 class LogoutHandler(BaseHandler):
     @asynchronous
@@ -102,27 +104,29 @@ class LogoutHandler(BaseHandler):
     def post(self):
         print(self.current_user)
         resource_url = '/auth/logout'
-        url = self.settings['API_URL']+resource_url
-        headers = {'Linc-Api-AuthToken':self.current_user['token']}
-        response = yield Task(self.api,url=url,method='POST',body='{}',headers=headers)
+        url = self.settings['API_URL'] + resource_url
+        headers = {'Linc-Api-AuthToken': self.current_user['token']}
+        response = yield Task(self.api, url=url, method='POST', body='{}', headers=headers)
         if response and response.code == 200:
             self.clear_cookie("userlogin")
-            self.response(200,'Logout ok.')
+            self.response(200, 'Logout ok.')
         else:
-            self.response(500,'Fail to logout.')
+            self.response(500, 'Fail to logout.')
+
 
 class ResetPassword(BaseHandler):
     @asynchronous
     @coroutine
     def post(self):
         if 'email' in self.input_data.keys():
-            url = self.settings['API_URL']+'/auth/recover'
+            url = self.settings['API_URL'] + '/auth/recover'
             body = {'email': self.input_data['email']}
-            response = yield Task(self.api,url=url,method='POST',body=self.json_encode(body))
+            response = yield Task(self.api, url=url, method='POST', body=self.json_encode(body))
             rbody = loads(response.body.decode('utf-8'))
-            self.response(response.code,rbody['message'])
+            self.response(response.code, rbody['message'])
         else:
-            self.response(400,'An email is required to restart user\'s passwords.')
+            self.response(400, 'An email is required to restart user\'s passwords.')
+
 
 class ChangePassword(BaseHandler):
     @asynchronous
@@ -130,11 +134,11 @@ class ChangePassword(BaseHandler):
     @web_authenticated
     def post(self):
         if 'new_password' in self.input_data.keys():
-            url = self.settings['API_URL']+'/auth/changepassword'
+            url = self.settings['API_URL'] + '/auth/changepassword'
             body = {'new_password': self.input_data['new_password']}
-            headers = {'Linc-Api-AuthToken':self.current_user['token']}
-            response = yield Task(self.api,url=url,method='POST',body=self.json_encode(body),headers=headers)
+            headers = {'Linc-Api-AuthToken': self.current_user['token']}
+            response = yield Task(self.api, url=url, method='POST', body=self.json_encode(body), headers=headers)
             rbody = loads(response.body.decode('utf-8'))
-            self.response(response.code,rbody['message'])
+            self.response(response.code, rbody['message'])
         else:
-            self.response(400,'Fail to change passwords.')
+            self.response(400, 'Fail to change passwords.')

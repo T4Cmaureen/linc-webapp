@@ -30,32 +30,33 @@ import tornado.httpserver
 import tornado.ioloop
 from tornado.options import options
 import logging
-from sys import stdout
 from settings import config as settings
 from routes import url_patterns
 import os
 
-logging.basicConfig(
-    stream=stdout,
-    level=logging.DEBUG,
-    format='"%(asctime)s %(levelname)8s %(name)s - %(message)s"',
-    datefmt='%H:%M:%S'
-)
+logger = logging.getLogger()
+
 
 # Tornado application
 class Application(tornado.web.Application):
     def __init__(self):
         tornado.web.Application.__init__(self, url_patterns, **settings)
 
+
 # Run server
 def main():
     app = Application()
-    logging.info('Web App Handlers:')
+    if (len(logger.handlers) > 0):
+        formatter = logging.Formatter(
+            "[%(levelname).1s %(asctime)s %(module)s:%(lineno)s] %(message)s", datefmt='%y%m%d %H:%M:%S')
+        logger.handlers[0].setFormatter(formatter)
+    logging.info('Web App handlers:')
     for h in url_patterns:
-        logging.info(h)
-    httpserver = tornado.httpserver.HTTPServer(app)
-    httpserver.listen(int(os.environ.get('PORT',options.port)))
+        logging.info(str(h))
+    httpserver = tornado.httpserver.HTTPServer(app, xheaders=True)
+    httpserver.listen(int(os.environ.get('PORT', options.port)))
     tornado.ioloop.IOLoop.instance().start()
+
 
 if __name__ == "__main__":
     main()
