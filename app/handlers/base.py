@@ -122,13 +122,7 @@ class BaseHandler(RequestHandler):
         self.set_header('Content-Type', 'application/json; charset=UTF-8')
 
     def write_error(self, status_code=404, **kwargs):
-        # Add Error page to be render here
-        if status_code == 404:
-            self.response(status_code, 'Resource not found. Check the URL.')
-        elif status_code == 405:
-            self.response(status_code, 'Method not allowed in this resource. Check your verb (GET,POST,PUT and DELETE)')
-        else:
-            self.response(status_code, 'Internal server error.')
+        self.render('error.page.html', status_code=status_code)
 
 
 class VersionHandler(BaseHandler):
