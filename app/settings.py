@@ -20,7 +20,8 @@
 #
 # For more information or to contact visit linclion.org or email tech@linclion.org
 
-import os
+from os.path import realpath, dirname, join
+from os import environ
 import site
 import sys
 import tornado
@@ -34,7 +35,7 @@ from logging import info
 
 
 # make filepaths relative to settings.
-appdir = os.path.dirname(os.path.realpath(__file__))
+appdir = dirname(realpath(__file__))
 info('Working directory: %s' % (appdir))
 
 # add local packages directories to Python's site-packages path
@@ -71,8 +72,8 @@ config['cookie_secret'] = os.environ.get('COOKIE_SECRET', 'c84b706bc36363217b2cd
 config['xsrf_cookies'] = True
 config['app_path'] = appdir
 config['version'] = 'LINC webapp version v4.0.0-2018-04-05'
-config['static_path'] = os.path.join(appdir, "static")
-config['template_path'] = os.path.join(appdir, "templates")
+config['static_path'] = join(appdir, "static")
+config['template_path'] = join(appdir, "templates")
 config['autoescape'] = None
 config['login_url'] = '/#/login'
 config['default_handler_class'] = BaseHandler
@@ -81,11 +82,8 @@ config['scheduler'] = TornadoScheduler()
 config['scheduler'].start()
 
 # Setting URL
-appurl = "https://linc-website.herokuapp.com/"
-# appurl = 'http://localhost:5080'
-config['url'] = appurl
+# appurl = "https://linc-website.herokuapp.com/"
+config['url'] = environ('APP_URL', 'http://localhost:5080/')
 
 # Setting linc-api URL
-config['API_URL'] = 'https://linc-api.herokuapp.com'
-# for development purpose
-# config['API_URL'] = 'http://192.168.100.10:5050'
+config['API_URL'] = environ('API_URL', 'http://localhost:5050/')
