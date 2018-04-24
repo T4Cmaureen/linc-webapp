@@ -39,6 +39,105 @@ import pycurl
 from lib.exif import get_exif_data
 
 
+class RelativesHandler(BaseHandler):
+    SUPPORTED_METHODS = ("GET", "PUT", "POST", "DELETE")
+
+    @asynchronous
+    @engine
+    @web_authenticated
+    def get(self, lion_id=None):
+        if lion_id:
+            resource_url = '/lions/' + lion_id + '/relatives'
+            url = self.settings['API_URL'] + resource_url
+            info(url)
+            headers = {'Linc-Api-AuthToken': self.current_user['token']}
+            response = yield Task(self.api, url=url, method='GET', headers=headers)
+            self.set_json_output()
+            if response.code == 404:
+                body = loads(response.body.decode("utf-8"))
+                self.finish(self.json_encode({
+                            'status': 'success',
+                            'message': body['message'],
+                            'data': []}))
+            else:
+                self.set_status(response.code)
+                self.finish(response.body)
+        else:
+            self.response(401, 'Invalid request, you must provide lion id.')
+
+    @asynchronous
+    @engine
+    @web_authenticated
+    def post(self, lion_id=None):
+        if lion_id:
+            resource_url = '/lions/' + lion_id + '/relatives'
+            body = self.json_encode(self.input_data)
+            url = self.settings['API_URL'] + resource_url
+            headers = {'Linc-Api-AuthToken': self.current_user['token']}
+            response = yield Task(self.api, url=url, method='POST', body=body, headers=headers)
+            self.set_json_output()
+            self.set_status(response.code)
+            self.finish(response.body)
+        else:
+            self.response(401, 'Invalid request, you must provide lion id.')
+
+    @asynchronous
+    @coroutine
+    @web_authenticated
+    def put(self, lion_id=None, rurl=None, relat_id=None):
+        if lion_id and relat_id:
+            resource_url = '/lions/' + lion_id + '/relatives/' + relat_id
+            body = self.json_encode(self.input_data)
+            url = self.settings['API_URL'] + resource_url
+            headers = {'Linc-Api-AuthToken': self.current_user['token']}
+            response = yield Task(self.api, url=url, method='PUT', body=body, headers=headers)
+            self.set_json_output()
+            self.set_status(response.code)
+            self.finish(response.body)
+        elif relat_id:
+            self.response(401, 'Invalid request, you must provide lion id.')
+        else:
+            self.response(401, 'Invalid request, you must provide relative lion id.')
+
+    @asynchronous
+    @coroutine
+    @web_authenticated
+    def delete(self, lion_id=None, rurl=None, relat_id=None):
+        if lion_id and relat_id:
+            resource_url = '/lions/' + lion_id + '/relatives/' + relat_id
+            body = self.json_encode({"message": "delete relation"})
+            url = self.settings['API_URL'] + resource_url
+            headers = {'Linc-Api-AuthToken': self.current_user['token']}
+            response = yield Task(self.api, url=url, method='DELETE', body=body, headers=headers)
+            self.set_json_output()
+            self.set_status(response.code)
+            self.finish(response.body)
+        elif relat_id:
+            self.response(401, 'Invalid request, you must provide lion id.')
+        else:
+            self.response(401, 'Invalid request, you must provide relative lion id.')
+
+
+class DataExportHandler(BaseHandler):
+    SUPPORTED_METHODS = ('POST')
+
+    @asynchronous
+    @engine
+    @web_authenticated
+    def post(self, lions=None, imagesets=None):
+        resource_url = '/data/export/'
+        body = self.json_encode(self.input_data)
+        url = self.settings['API_URL'] + resource_url
+        headers = {'Linc-Api-AuthToken': self.current_user['token']}
+        response = yield Task(self.api, url=url, method='POST', body=body, headers=headers)
+        self.set_json_output()
+        self.set_status(response.code)
+        if response.code == 200:
+            self.finish(response.body)
+        else:
+            self.finish(self.json_encode({'status': 'error', 'messagem': 'Bad request'}))
+
+
 class ImageSetsListHandler(BaseHandler):
     @asynchronous
     @engine
@@ -263,10 +362,7 @@ class LionsHandler(BaseHandler):
             headers=headers)
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
-            self.finish(response.body)
-        else:
-            self.finish({'status': 'error', 'message': 'fail to create new lion POST'})
+        self.finish(response.body)
 
     @asynchronous
     @coroutine
@@ -718,6 +814,7 @@ class ImagesUploadHandler(BaseHandler, ProcessMixin):
             if fileencoded:
                 remove(dirfs + '/' + fname)
                 image_type = self.get_argument("image_type", "cv")
+                image_tags = self.get_argument("image_tags", "[]")
                 is_public = self.get_argument("is_public", '')
                 is_public = (is_public.lower() == 'true')
                 image_set_id = self.get_argument("image_set_id")
@@ -725,6 +822,7 @@ class ImagesUploadHandler(BaseHandler, ProcessMixin):
                 iscover = (iscover.lower() == 'true')
                 body = {
                     "image_type": image_type,
+                    "image_tags": image_tags,
                     "is_public": is_public,
                     "image_set_id": int(image_set_id),
                     "iscover": iscover,

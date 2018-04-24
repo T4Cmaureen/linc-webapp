@@ -21,7 +21,7 @@
 # For more information or to contact visit linclion.org or email tech@linclion.org
 
 from handlers.base import VersionHandler
-from handlers.auth import LogoutHandler, LoginHandler, CheckAuthHandler, ResetPassword, ChangePassword
+from handlers.auth import LogoutHandler, LoginHandler, CheckAuthHandler, ResetPassword, ChangePassword, RequestAccessEmailHandler
 from handlers.main import MainHandler, LoginMainHandler, HomeHandler, SideMenuHandler
 from handlers.main import LionMainHandler, SearchLionHandler, ImageSetMainHandler, SearchImageSetHandler
 from handlers.main import ConservationistsHandler, ImageGalleryHandler, LocationHistoryHandler, CompareImagesHandler
@@ -29,8 +29,8 @@ from handlers.main import EditMetadataHandler, CVResultsMainHandler, CVRequestMa
 from handlers.main import PageAdminHandler, PageAdminUsersHandler, PageAdminOrganizationsHandler, PageAdminLionsHandler
 from handlers.main import PageAdminImageSetsHandler, PageAdminImagesHandler, PageAdminCVRequestsHandler, PageAdminCVResultsHandler
 from handlers.api import LionsListHandler, ImagesListHandler, ImageSetsListHandler, OrganizationsListHandler
-from handlers.api import ImagesUploadHandler, ImagesHandler, LionsHandler, ImageSetsHandler
-from handlers.api import OrganizationsHandler, CVResultsHandler, CVRequestHandler, UsersHandler
+from handlers.api import ImagesUploadHandler, ImagesHandler, LionsHandler, ImageSetsHandler, DataExportHandler
+from handlers.api import OrganizationsHandler, CVResultsHandler, CVRequestHandler, UsersHandler, RelativesHandler
 
 # Defining routes
 url_patterns = [
@@ -86,12 +86,19 @@ url_patterns = [
     (r"/cvresults/(\w+$)", CVResultsHandler),
     (r"/cvresults/(\w+)/(list)$", CVResultsHandler),
 
+    (r"/data/export", DataExportHandler),
+
+    (r"/relatives/?$", RelativesHandler),
+    (r"/relatives/(\w+$)", RelativesHandler),
+    (r"/relatives/(\w+)/(relatives)/(\w+)/?$", RelativesHandler),
+
     (r"/cvrequests/?$", CVRequestHandler),
     (r"/cvrequests/(\w+$)", CVRequestHandler),
     (r"/login", LoginHandler),
     (r"/logout", LogoutHandler),
     (r"/auth/check", CheckAuthHandler),
     (r"/auth/recover", ResetPassword),
+    (r"/auth/requestaccess", RequestAccessEmailHandler),
     (r"/auth/changepassword", ChangePassword),
     (r"/users/?$", UsersHandler),
     (r"/users/(.*)$", UsersHandler)

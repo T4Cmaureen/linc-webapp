@@ -50,6 +50,11 @@ def main():
         formatter = logging.Formatter(
             "[%(levelname).1s %(asctime)s %(module)s:%(lineno)s] %(message)s", datefmt='%y%m%d %H:%M:%S')
         logger.handlers[0].setFormatter(formatter)
+    if options.debug:
+        logging.info('== Tornado in DEBUG mode ==============================')
+        for key, cfg in settings.items():
+            logging.info(key + ' = ' + str(cfg))
+        logging.info('=======================================================')
     logging.info('Web App handlers:')
     for h in url_patterns:
         logging.info(str(h))

@@ -142,3 +142,20 @@ class ChangePassword(BaseHandler):
             self.response(response.code, rbody['message'])
         else:
             self.response(400, 'Fail to change passwords.')
+
+
+class RequestAccessEmailHandler(BaseHandler):
+    @asynchronous
+    @coroutine
+    def post(self):
+        if 'email' in self.input_data.keys():
+            url = self.settings['API_URL']+'/auth/requestaccess'
+            body = {'email': self.input_data['email'], 'fullname': self.input_data['fullname'],
+            'organization': self.input_data['organization'],'geographical': self.input_data['geographical']}
+            info(url)
+            info(body)
+            response = yield Task(self.api,url=url,method='POST',body=self.json_encode(body))
+            rbody = loads(response.body.decode('utf-8'))
+            self.response(response.code,rbody['message'])
+        else:
+            self.response(400, rbody['message'])
