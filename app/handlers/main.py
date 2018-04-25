@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# coding: utf-8
+#!/usr/bin/env python3.6
+# -*- coding: utf-8 -*-
 
 # LINC is an open source shared database and facial recognition
 # system that allows for collaboration in wildlife monitoring.

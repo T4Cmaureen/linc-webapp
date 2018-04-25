@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# coding: utf-8
+#!/usr/bin/env python3.6
+# -*- coding: utf-8 -*-
 
 # LINC is an open source shared database and facial recognition
 # system that allows for collaboration in wildlife monitoring.
@@ -116,26 +116,6 @@ class RelativesHandler(BaseHandler):
             self.response(401, 'Invalid request, you must provide lion id.')
         else:
             self.response(401, 'Invalid request, you must provide relative lion id.')
-
-
-class DataExportHandler(BaseHandler):
-    SUPPORTED_METHODS = ('POST')
-
-    @asynchronous
-    @engine
-    @web_authenticated
-    def post(self, lions=None, imagesets=None):
-        resource_url = '/data/export/'
-        body = self.json_encode(self.input_data)
-        url = self.settings['API_URL'] + resource_url
-        headers = {'Linc-Api-AuthToken': self.current_user['token']}
-        response = yield Task(self.api, url=url, method='POST', body=body, headers=headers)
-        self.set_json_output()
-        self.set_status(response.code)
-        if response.code == 200:
-            self.finish(response.body)
-        else:
-            self.finish(self.json_encode({'status': 'error', 'messagem': 'Bad request'}))
 
 
 class ImageSetsListHandler(BaseHandler):

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.6
 # -*- coding: utf-8 -*-
 
 # LINC is an open source shared database and facial recognition
@@ -42,6 +42,7 @@ class BaseHandler(RequestHandler):
     def prepare(self):
         self.input_data = dict()
         if self.request.method in ['POST', 'PUT'] and \
+           "Content-Type" in self.request.headers.keys() and \
            self.request.headers["Content-Type"].startswith("application/json"):
             try:
                 if self.request.body:

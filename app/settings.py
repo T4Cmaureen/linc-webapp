@@ -20,7 +20,7 @@
 #
 # For more information or to contact visit linclion.org or email tech@linclion.org
 
-from os.path import realpath, dirname, join
+from os.path import realpath, dirname, join, isdir
 from os import environ
 import site
 import sys
@@ -41,7 +41,7 @@ info('Working directory: %s' % (appdir))
 # add local packages directories to Python's site-packages path
 paths = [appdir, appdir + '/handlers', appdir + '/models', appdir + '/lib', appdir + '/utils']
 for npath in paths:
-    if os.path.isdir(npath):
+    if isdir(npath):
         site.addsitedir(npath)
         sys.path.append(npath)
 
@@ -68,7 +68,7 @@ def getHostIp():
 # config settings
 config = {}
 config['debug'] = options.debug
-config['cookie_secret'] = os.environ.get('COOKIE_SECRET', 'c84b706bc36363217b2cdf0e615e41c186c5e0cfc6869a078e7243e9affc8e87')
+config['cookie_secret'] = environ.get('COOKIE_SECRET', 'c84b706bc36363217b2cdf0e615e41c186c5e0cfc6869a078e7243e9affc8e87')
 config['xsrf_cookies'] = True
 config['app_path'] = appdir
 config['version'] = 'LINC webapp version v4.0.0-2018-04-05'
@@ -83,7 +83,7 @@ config['scheduler'].start()
 
 # Setting URL
 # appurl = "https://linc-website.herokuapp.com/"
-config['url'] = environ('APP_URL', 'http://localhost:5080/')
+config['url'] = environ.get('APP_URL', 'http://localhost:5080')
 
 # Setting linc-api URL
-config['API_URL'] = environ('API_URL', 'http://localhost:5050/')
+config['API_URL'] = environ.get('API_URL', 'http://localhost:5050')

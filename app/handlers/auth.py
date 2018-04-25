@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# coding: utf-8
+#!/usr/bin/env python3.6
+# -*- coding: utf-8 -*-
 
 # LINC is an open source shared database and facial recognition
 # system that allows for collaboration in wildlife monitoring.
@@ -26,6 +26,7 @@ from lib.authentication import web_authenticated
 from tornado.gen import engine, Task
 from handlers.base import BaseHandler
 from json import dumps, loads
+from logging import info
 
 
 class CheckAuthHandler(BaseHandler):
@@ -149,13 +150,16 @@ class RequestAccessEmailHandler(BaseHandler):
     @coroutine
     def post(self):
         if 'email' in self.input_data.keys():
-            url = self.settings['API_URL']+'/auth/requestaccess'
-            body = {'email': self.input_data['email'], 'fullname': self.input_data['fullname'],
-            'organization': self.input_data['organization'],'geographical': self.input_data['geographical']}
+            url = self.settings['API_URL'] + '/auth/requestaccess'
+            body = {
+                'email': self.input_data['email'],
+                'fullname': self.input_data['fullname'],
+                'organization': self.input_data['organization'],
+                'geographical': self.input_data['geographical']}
             info(url)
             info(body)
-            response = yield Task(self.api,url=url,method='POST',body=self.json_encode(body))
+            response = yield Task(self.api, url=url, method='POST', body=self.json_encode(body))
             rbody = loads(response.body.decode('utf-8'))
-            self.response(response.code,rbody['message'])
+            self.response(response.code, rbody['message'])
         else:
             self.response(400, rbody['message'])

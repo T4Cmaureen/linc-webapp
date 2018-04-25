@@ -29,8 +29,10 @@ from handlers.main import EditMetadataHandler, CVResultsMainHandler, CVRequestMa
 from handlers.main import PageAdminHandler, PageAdminUsersHandler, PageAdminOrganizationsHandler, PageAdminLionsHandler
 from handlers.main import PageAdminImageSetsHandler, PageAdminImagesHandler, PageAdminCVRequestsHandler, PageAdminCVResultsHandler
 from handlers.api import LionsListHandler, ImagesListHandler, ImageSetsListHandler, OrganizationsListHandler
-from handlers.api import ImagesUploadHandler, ImagesHandler, LionsHandler, ImageSetsHandler, DataExportHandler
+from handlers.api import ImagesUploadHandler, ImagesHandler, LionsHandler, ImageSetsHandler
 from handlers.api import OrganizationsHandler, CVResultsHandler, CVRequestHandler, UsersHandler, RelativesHandler
+from handlers.data_export import DataExportHandler
+
 
 # Defining routes
 url_patterns = [
