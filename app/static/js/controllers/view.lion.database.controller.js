@@ -22,9 +22,10 @@ angular.module('linc.view.lion.database.controller', [])
 
 .controller('ViewLionDatabaseCtrl', ['$scope', '$state', '$timeout', '$q', '$filter', '$stateParams', '$bsTooltip',
   'AuthService', 'lions', 'lion_options', 'default_options', '$ModalPage', '$uibModal', 'NgMap', 'LincServices',
-  'LincDataFactory', 'TAG_LABELS', 'TOOL_TITLE',
+  'LincDataFactory', 'NotificationFactory', 'TAG_LABELS', 'TOOL_TITLE',
   function ($scope, $state, $timeout, $q, $filter, $stateParams, $bsTooltip, AuthService, lions, lion_options,
-  default_options, $ModalPage, $uibModal, NgMap, LincServices, LincDataFactory, TAG_LABELS, TOOL_TITLE) {
+  default_options, $ModalPage, $uibModal, NgMap, LincServices, LincDataFactory, NotificationFactory, 
+  TAG_LABELS, TOOL_TITLE) {
 
 	$scope.user = AuthService.user;
 
@@ -263,6 +264,9 @@ angular.module('linc.view.lion.database.controller', [])
 
 	$scope.$on('BatchModeUpdated', function(event, args) {
 		$scope.message_select_all.show = args.isBatchMode;
+		if(!$scope.isBatchMode){
+			$scope.check_all($scope.lions, false, 'paginated');
+		}
 	});
 	
 	$scope.Selecteds = [];

@@ -552,6 +552,9 @@ angular.module('linc.view.imagesets.controller', [])
 
 	$scope.$on('BatchModeUpdated', function(event, args) {
 		$scope.message_select_all.show = args.isBatchMode;
+		if(!$scope.isBatchMode){
+			$scope.check_all($scope.imagesets, false, 'paginated');
+		}
 	});
 
 	$scope.Selecteds = [];

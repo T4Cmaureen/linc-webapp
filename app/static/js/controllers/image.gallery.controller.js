@@ -107,12 +107,12 @@ angular.module('linc.image.gallery.controller', [])
 	// Join Primary Image Set
 	$scope.Joined = [ { checked: true, type: 'joined', title: 'Joined', value: true, 
 			label: ($scope.IsPrimary ? 'Joined Image' : 'Joined in the Primary Imageset')},
-		{ checked: true, type: 'not-joined', title: 'Not a Joined', value: false, label: 'Not a Joined'} ];
+		{ checked: true, type: 'not-joined', title: 'Not Joined', value: false, label: 'Not Joined'} ];
 	// Filters Selects
 	//$scope.FilterSel = {isCover: false};
 	$scope.Cover = [
 		{ checked: true, type: 'is_cover', label: 'Cover Image', value : true },
-		{ checked: true, type: 'no-cover', label: 'Not a Cover Image', value : false } 
+		{ checked: true, type: 'no-cover', label: 'Not Cover Image', value : false } 
 	];
 
 	// Tab
@@ -132,12 +132,12 @@ angular.module('linc.image.gallery.controller', [])
 	};
 
 	$scope.TagsList = {
-		'cv': [{ type: 'none', label: 'Not a CV'}, { type: 'cv', label: 'CV'} ],
-		'full-body': [ { type: 'none', label: 'Not a Full Body'}, { type: 'full-body', label: 'Full Body'} ],
-		'main-id': [ { type: 'none', label: 'Not a Main Id'}, { type: 'main-id', label: 'Main Id'} ],
-		'marking': [ { type: 'none', label: 'Not a Marking'}, { type: 'marking', label: 'Marking'} ],
+		'cv': [{ type: 'none', label: 'Not CV'}, { type: 'cv', label: 'CV'} ],
+		'full-body': [ { type: 'none', label: 'Not Full Body'}, { type: 'full-body', label: 'Full Body'} ],
+		'main-id': [ { type: 'none', label: 'Not Main Id'}, { type: 'main-id', label: 'Main Id'} ],
+		'marking': [ { type: 'none', label: 'Not Marking'}, { type: 'marking', label: 'Marking'} ],
 		'whisker': [
-			{ type: 'none', label: 'Not a Whiskers'}, { type: 'whisker', label: 'Do not use in Algorithm'},
+			{ type: 'none', label: 'Not Whisker'}, { type: 'whisker', label: 'Do not use in Algorithm'},
 			{ type: 'whisker-left', label: 'Whisker Left'}, { type: 'whisker-right', label: 'Whisker Right'}
 		]
 	};
