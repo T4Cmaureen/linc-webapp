@@ -23,9 +23,13 @@ angular.module('linc.home.controller', [])
 .controller('HomeCtrl', ['$scope', '$state', function ($scope, $state) {
 
   $scope.is_modal_open = false;
+  $scope.loading = {lion: false, imageset: false};
   $scope.options = {
     "imageset": {"type": "imageset", "edit": "new"},
        "lions": {"type": "lion", "edit": "new"}
+  };
+  $scope.StarLoading = function(data){
+    $scope.loading[data] = true;
   };
 
   $scope.goto_imageset = function (Id) {

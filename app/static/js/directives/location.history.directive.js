@@ -51,6 +51,7 @@ angular.module('linc.location.history.directive', [])
             var modalInstance = $uibModal.open({
               animation: true,
               backdrop  : 'static',
+              keyboard: false,
               templateUrl: scope.useTemplateUrl,
               controller:  scope.useCtrl,
               size: scope.formSize,
@@ -68,7 +69,7 @@ angular.module('linc.location.history.directive', [])
               scope.modalIsOpen = false;
               scope.locationGoto({imageset_Id: imagesetId});
               console.log('Goto Imageset ' + imagesetId);
-            }, function () {
+            }, function (response) {
               scope.modalIsOpen = false;
               console.log('Modal dismissed at: ' + new Date());
             });
@@ -82,6 +83,7 @@ angular.module('linc.location.history.directive', [])
             var modalInstance = $uibModal.open({
               animation: true,
               backdrop  : 'static',
+              keyboard: false,
               templateUrl: scope.useTemplateUrl,
               controller:  scope.useCtrl,
               size: scope.formSize,
@@ -104,7 +106,7 @@ angular.module('linc.location.history.directive', [])
               scope.modalIsOpen = false;
               scope.locationGoto({imageset_Id: imagesetId});
               console.log('Goto Imageset ' + imagesetId);
-            }, function () {
+            }, function (response) {
               scope.modalIsOpen = false;
               console.log('Modal dismissed at: ' + new Date());
             });

@@ -229,15 +229,11 @@ angular.module('linc.admin.users.controller', [])
   $scope.Delete_User = function() {
     $scope.DialogDelete('Users')
     .then(function (result) {
-      var users_id = _.pluck(_.map($scope.Selecteds, function (user){
-        return {'id': user.id};
-      }), 'id');
+      var users_id = _.map($scope.Selecteds, 'id');
 
       $scope.LincApiServices.Users({'method': 'delete', 'users_id': users_id}).then(function(response){
         if(response.error.length>0){
-          var data = _.pluck(_.map(response.error, function (user){
-            return {'id': user.id};
-          }), 'id');
+          var data = _.map(response.error, 'id');
           var msg = (data.length>1) ? 'Unable to delete users ' + data : 'Unable to delete user ' + data;
           $scope.Notification.error({
             title: "Delete", 

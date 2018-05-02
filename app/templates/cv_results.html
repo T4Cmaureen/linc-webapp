@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 For more information or to contact visit linclion.org or email tech@linclion.org -->
 <div name="CVResults" class="font-homenaje-1-1">
   <div class="modal-header" ng-show="title">
-    <button type="button" class="close" ng-click="Close()">&times;</button>
+    <button type="button" class="close" ng-click="!processing && Close()">&times;</button>
     <div class="modal-header-image" ng-right-click="show_photo(imageset.image)">
       <a ui-sref="imageset({id: imageset.id})" target="_blank">
         <img ng-src="{{!imageset.thumbnail}}" width="40" height="40">
@@ -66,11 +66,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         </tr>
       </thead>
       <tbody>
-          <tr class="link" ng-repeat="lion in cvresults | orderBy:predicate:reverse" ng-class="{active:lion.associated}">
+          <tr class="link" ng-right-click="!processing && CompareImages(lion)" ng-repeat="lion in cvresults | orderBy:predicate:reverse" ng-class="{active:lion.associated}">
           <td class="text-center">
             <a ui-sref="lion({id: lion.id})" target="_blank">{{!lion.id}}</a>
           </td>
-          <td class="text-center" ng-right-click="CompareImages(lion)">
+          <td class="text-center">
             <a ui-sref="lion({id: lion.id})" target="_blank">
               <img ng-src="{{!lion.thumbnail}}" width="40" height="40">
             </a>
@@ -105,8 +105,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           <td class="text-center" ng-if="lion.confidence.number==undefined"></td>
 
           <td class="text-center">
-            <button ng-if="!lion.associated" class="btn btn-default" ng-click="Associate(lion.id)"> Associate </button>
-            <button ng-if="lion.associated" class="btn btn-warning" ng-click="Disassociate(lion.id)"> Disassociate </button>
+            <button ng-if="!lion.associated" ng-disabled="processing" class="btn btn-default" ng-click="Associate(lion)"> Associate </button>
+            <button ng-if="lion.associated" ng-disabled="processing" class="btn btn-warning" ng-click="Disassociate(lion)"> Disassociate </button>
+            <span ng-if="lion.dataloading" class="text-right text-danger span-preloader">
+              <img src="/static/images/loading.gif" class="preloader" />wait {{!lion.associated ? 'disassociating' : 'associating'}}&hellip;
+            </span>
           </td>
         </tr>
       </tbody>

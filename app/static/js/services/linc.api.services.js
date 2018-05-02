@@ -34,7 +34,7 @@ angular.module('linc.api.services', [])
           $http(req).then(success, error);
       }
     },error);
-  }
+  };
 
   var http_defer = function (id,data){
     var deferred = $q.defer();
@@ -56,7 +56,7 @@ angular.module('linc.api.services', [])
       deferred.reject(error);
     });
     return deferred.promise;
-  }
+  };
 
   var Organizations = function (data_in) {
     var deferred = $q.defer();
@@ -742,6 +742,4 @@ angular.module('linc.api.services', [])
   dataFactory.CVRequests = CVRequests
 
   return dataFactory;
-}])
-
-;
+}]);

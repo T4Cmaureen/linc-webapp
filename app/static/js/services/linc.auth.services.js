@@ -44,6 +44,7 @@ angular.module('linc.auth.services', [])
       success(auth_user.logged);
     }, error);
   };
+
   authService.Logout = function (success, error){
     var xsrfcookie = $cookies.get('_xsrf');
     var req = { method: 'POST',
@@ -81,7 +82,8 @@ angular.module('linc.auth.services', [])
       deferred.reject(err);
     });
     return deferred.promise;
-  }
+  };
+
   authService.ChangePassword = function(data){
     var deferred = $q.defer();
     var xsrfcookie = $cookies.get('_xsrf');
@@ -100,7 +102,28 @@ angular.module('linc.auth.services', [])
       deferred.reject(err);
     });
     return deferred.promise;
-  }
+  };
+
+  authService.RequestAccess = function(data){
+    var deferred = $q.defer();
+    var xsrfcookie = $cookies.get('_xsrf');
+    var url = '/auth/requestaccess';
+    var req = { 
+      method: 'POST', 
+      url: url, 
+      data: data['data'],
+      headers: { 'Content-Type': 'application/json','X-XSRFToken' : xsrfcookie}, 
+      config: {}
+    };
+
+    $http(req).then(function(response){
+      deferred.resolve(response.data);
+    },function(err){
+      deferred.reject(err);
+    });
+    return deferred.promise;
+  };
+
   authService.isAuthenticated = function(){
     var user = authService.user;
     if(user==undefined || !user.logged)
@@ -108,6 +131,7 @@ angular.module('linc.auth.services', [])
     else
       return true;
   };
+
   authService.isAuthorized = function (authorized) {
     var user = authService.user;
     if(user==undefined) return false;
@@ -116,14 +140,17 @@ angular.module('linc.auth.services', [])
     if(authorized=='admin') return false;
     return true;
   };
+  
   authService.setUser = function (val) {
     authService.user = val;
     $localStorage.user = val;
   };
+
   authService.chech_auth = function(){
     var req = { method: 'GET', url: 'auth/check', data: {} };
     return $http(req);
-  }
+  };
+
   authService.login_chech_auth = function(){
     var req = { method: 'GET', url: 'auth/check', data: {}, ignore401: true };
     return $http(req);

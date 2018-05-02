@@ -1,0 +1,110 @@
+<!-- LINC is an open source shared database and facial recognition
+system that allows for collaboration in wildlife monitoring.
+Copyright (C) 2016  Wildlifeguardians
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+For more information or to contact visit linclion.org or email tech@linclion.org -->
+<script type="text/ng-template" id="InfoWindow.tpl.html">
+  <div name="InfoWindow" class="font-homenaje-1-1">
+    <div class="modal-header" ng-show="title">
+      <h4 class="modal-title" ng-bind-html="title"></h4>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-sm-6 line-right">
+          <div class="form-group">
+            <label for="imageset">Image Set:</label>
+            <input name="imageset" readonly type="text" class="form-control" ng-model="info.imageset">
+          </div>
+          <div class="form-group">
+            <label for="latitude">Latitude: </label>
+            <input type="text" readonly class="form-control" name="latitude" ng-model="info.latitude">
+          </div>
+          <div class="form-group">
+            <label for="date_stamp">Date Stamp: </label>
+            <input type="text" readonly class="form-control" ng-model="info.date_stamp">
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group" ng-if="info.lion_name">
+            <label for="lion_name">Lion name:</label>
+            <input type="text" readonly class="form-control" name="lion_name" ng-model="info.lion_name">
+          </div>
+          <div class="form-group">
+            <label for="longitude">Longitude: </label>
+            <input type="text" readonly class="form-control" ng-model="info.longitude">
+          </div>
+          <div class="form-group">
+            <label for="updated_at">Updated At: </label>
+            <input type="text" readonly class="form-control" ng-model="info.updated_at">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" ng-click="Go_To()">{{!GoToMessage}}</button>
+      <button type="button" class="btn btn-default" ng-click="close()" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+</script>
+
+<div name="LocationHistory" class="map font-homenaje-1-1" ng-keyup="KeyEvent($event)">
+  <div class="modal-header" ng-show="title">
+    <button type="button" class="close" ng-click="Cancel()">&times;</button>
+    <h4 class="modal-title" ng-bind-html="title"></h4>
+  </div>
+  <div class="modal-body" ng-show="content">
+    <div ng-if="show.map" class="row">
+      <div class="col-sm-3 text-center">
+        <div class="list-group list-locations">
+          <div class="form-group location-group" ng-repeat="location in locations">
+           <button ng-class="{'btn btn-default': !location.selected, 'btn btn-primary': location.selected}" 
+             ng-style="location.selected && location.style" ng-model="location.selected"
+             class="btn-min-width-165"
+             ng-click="Animate(location)" ng-dblclick="Open_Imageset(location.id)">{{!location.label}} - 
+              <span class="badge" ng-class="{update_at: !location.date_stamp}" data-animation="am-flip-x" 
+                data-html="true" data-type="info" placement="auto" bs-tooltip="location.tooltip" 
+                bs-enabled="location.tooltip.checked">{{!location.date}}
+              </span>
+            </button>
+          </div>
+        </div>
+        <div class="btn-group show-arrow" ng-show="locations.length>1">
+          <button type="button" class="btn btn-default" ng-class="{'disabled-btn':!show.arrow}" 
+            ng-model="show.arrow" uib-btn-checkbox ng-click="Show_Arrows()"
+            ng-disabled="coord.length<2">
+            <span>{{!show.arrow ? 'Click to Hide' : 'Click to Show'}} </span>
+            <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="btn-group show-tag-location" ng-show="tag_circles.length">
+          <button type="button" class="btn btn-default" ng-class="{'disabled-btn':!show.tag_location}" 
+            ng-model="show.tag_location" uib-btn-checkbox ng-click="Show_TagLocations()">
+            <span>{{!show.tag_location ? 'Hide Tag Location' : 'Show Tag Location'}} </span>
+            <i class="fa fa-location-arrow" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <div class="map-container col-sm-9">
+        <map id="history-location" scale-control="true"></map>
+      </div>
+    </div>
+    <div ng-if="!show.map" class="map-container">
+      <div class="alert alert-warning no-results" ng-if="!loading" ng-show="!has_results" >
+        {{!no_locations_info}}
+      </div>
+    </div>
+  </div>
+</div>

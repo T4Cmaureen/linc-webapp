@@ -1,0 +1,161 @@
+<!-- LINC is an open source shared database and facial recognition
+system that allows for collaboration in wildlife monitoring.
+Copyright (C) 2016  Wildlifeguardians
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+For more information or to contact visit linclion.org or email tech@linclion.org -->
+
+<div name="Relatives" class="modal-relatives font-homenaje-1-1">
+	<div class="modal-header" ng-show="title">
+		<button type="button" class="close" ng-click="Close()">&times;</button>
+		<h3 class="modal-title modal-title-image" ng-bind-html="title"></h3>
+	</div>
+	<div class="modal-body body-relatives">
+		<div class="row">
+			<div class="col-sm-6 line-right">
+				{{!TextCounts}}
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': orderby.predicate === 'id'}">Id</a>
+								<span class="sortorder" ng-show="orderby.predicate === 'id'" ng-class="{reverse: orderby.reverse}"></span>
+							</th>
+							<th class="text-center">Photo</th>
+							<th class="text-center">
+								<a href="" ng-click="order('name')" ng-class="{'order_class': orderby.predicate === 'name'}">Name</a>
+								<span class="sortorder" ng-show="orderby.predicate === 'name'" ng-class="{reverse: orderby.reverse}"></span>
+							</th>
+							<th class="text-center">
+								<a href="" ng-click="order('gender')" ng-class="{'order_class': orderby.predicate === 'gender'}">Gender</a>
+								<span class="sortorder" ng-show="orderby.predicate === 'gender'" ng-class="{reverse: orderby.reverse}"></span>
+							</th>
+							<th class="text-center">
+								<a href="" ng-click="order('primary_image_set_id')" ng-class="{'order_class': orderby.predicate === 'primary_image_set_id'}">Imageset Id</a>
+								<span class="sortorder" ng-show="orderby.predicate === 'primary_image_set_id'" ng-class="{reverse: orderby.reverse}"></span>
+							</th>
+							<th class="text-center">
+								<a href="" ng-click="order('organization')" ng-class="{'order_class': orderby.predicate === 'organization'}">Organization</a>
+								<span class="sortorder" ng-show="orderby.predicate === 'organization'" ng-class="{reverse: orderby.reverse}"></span>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="link" ng-click="SetActiveLion(lion)" ng-repeat="(key, lion) in filtered_lions = (lions_list | nameid_filter: filters.NameOrId: 'primary_image_set_id') | orderBy : orderby.predicate : orderby.reverse">
+							<td class="text-center lion-image" ng-show="lion.show_image" ng-click="SwitchImage(lion, false)">
+								<img ng-src="{{!lion.image}}">
+							</td>
+							<td class="text-center" ng-show="!lion.show_image">{{!lion.id}}</td>
+							<td class="text-center" ng-show="!lion.show_image" ng-click="SwitchImage(lion, true)">
+								<img ng-src="{{!lion.thumbnail}}" width="40" height="40">
+							</td>
+							<td class="text-center" ng-show="!lion.show_image">{{!lion.name}}</td>
+							<td class="text-center" ng-show="!lion.show_image">{{!lion.gender}}</td>
+							<td class="text-center" ng-show="!lion.show_image">{{!lion.primary_image_set_id}}</td>
+							<td class="text-center" ng-show="!lion.show_image">{{!lion.organization}}</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="form-group div-filter">
+					<label for="filter">Filter:</label>
+					<input type="text" class="form-control" name="filter" ng-model="filters.NameOrId" 
+						ng-change="FilterChange();" placeholder="Lion Name">
+				</div>
+			</div>
+			<div class="col-sm-6 right-relatives">
+				<div class="row add-relatives">
+					<div class="col-sm-12" ng-show="show_big" ng-click="show_big=!show_big">
+						<img ng-src="{{!animal.image}}">
+					</div>
+					<div class="col-sm-2 big-img" ng-show="!show_big" ng-click="show_big=!show_big">
+						<img ng-src="{{!animal.image}}">
+					</div>
+					<div class="col-sm-5 form-group">
+						<label class="meta_label label-margin-bottom-0" for="name">Name: </label>
+						<input data-lpignore="true" class="form-control" ng-readonly="true"
+							ng-model="selected.name" name="name"
+							placeholder="Select a lion in the left panel">
+					</div>
+					<div class="col-sm-5 form-group">
+						<label class="label-margin-bottom-0" for="type" data-abm-label>Relation</label>
+						<ui-select class="lion-ui-select custom-select" ng-disabled="!selected.id"
+							name="relation" ng-model="selected.relation" theme="bootstrap">
+							<ui-select-match placeholder="Select a relation...">
+								<div ng-bind-html="$select.selected.type | highlight: $select.search"></div>
+							</ui-select-match>
+							<ui-select-choices repeat="item.type as item in (allrelatives | filter: $select.search) track by $index"
+								 ui-disable-choice="item.disabled">
+								<div ng-bind-html="Labels[item.type] | highlight: $select.search"></div>
+							</ui-select-choices>
+						</ui-select>
+					</div>
+					<div class="col-sm-2 form-group pull-right" ng-class="{'btn-add-relative': show_big}">
+						<button class="btn btn-default" type="button" ng-click="AddRelative()"
+						ng-disabled="!selected.relation || !selected.id" >Add</button>
+					</div>
+				</div>
+				<form name="form" ng-submit="submit()">
+					<div class="wrapper container-relatives well well-lg">
+						<table class="table table-hover1">
+							<thead>
+								<tr>
+									<th class="text-center">
+										<a ng-click="order2('id_to')" ng-class="{'order_class': orderby2.predicate === 'id_to'}">Id</a>
+										<span class="sortorder" ng-show="orderby2.predicate === 'id_to'" ng-class="{reverse: orderby2.reverse}"></span>
+									</th>
+									<th class="text-center">
+										<a href="" ng-click="order2('name_to')" ng-class="{'order_class': orderby2.predicate === 'name_to'}">Lion</a>
+										<span class="sortorder" ng-show="orderby2.predicate === 'name_to'" ng-class="{reverse: orderby2.reverse}"></span>
+									</th>
+									<th class="text-center">
+										<a href="" ng-click="order2('type')" ng-class="{'order_class': orderby2.predicate === 'type'}">Relation</a>
+										<span class="sortorder" ng-show="orderby2.predicate === 'type'" ng-class="{reverse: orderby2.reverse}"></span>
+									</th>
+									<th class="text-center">
+										Remove
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="link" ng-dblclick="SetBackActiveLion(relative)" ng-repeat="relative in relatives | orderBy : orderby2.predicate : orderby2.reverse track by $index">
+									<td class="text-center">{{!relative.id_to}}</td>
+									<td class="text-center">{{!relative.name_to}}</td>
+									<td class="text-center">{{!Labels[relative.relation]}}</td>
+									<td class="cr text-center" ng-click="DelRelative(relative)">
+										<i class="cr-icon fa fa-times"></i>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="form-group user-actions text-right">
+							<button ng-disabled="!selection.modified" 
+								class="btn btn-default" ng-click="Reset()">Reset</button>
+							</button>
+							<button ng-disabled="!selection.modified" 
+								type="submit" class="btn btn-raised btn-primary">Update</button>
+							<span ng-if="dataloading" class="text-right text-danger span-preloader">
+								<img src="/static/images/loading.gif" class="preloader" />updating&hellip;
+							</span>
+						</div>
+					</div>
+				</form>
+				<div class="warning" ng-if="genderWarning">
+					<p>The "suspect father", "mother" and "cub" options are disabled because the lion does not have a defined gender.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+

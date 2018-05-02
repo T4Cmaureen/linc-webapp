@@ -16,10 +16,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 // For more information or to contact visit linclion.org or email tech@linclion.org
-var app = angular.module('linc', ['ngStorage', 'ngAnimate', 'ui.bootstrap', 'ngSanitize', 'rzModule', 'ui.router', 
-  'ngMap', 'mgcrea.ngStrap', 'angularFileUpload', 'cgNotify', 'ngCookies', 'angular-loading-bar', 'ngInputModified', 
-  'ngMessages', 'ui.select', 'panzoom', 'panzoomwidget', 'linc.controllers', 'linc.directive', 'linc.services', 
-  'linc.interceptor.factory', 'linc.auth.services']);
+var app = angular.module('linc', ['ngStorage', 'ngAnimate', 'ui.bootstrap', 'ngSanitize', 'rzModule', 'ui.router',
+  'ngMap', 'mgcrea.ngStrap', 'angularFileUpload', 'cgNotify', 'ngCookies', 'angular-loading-bar', 'ngInputModified',
+  'ngMessages', 'ui.select', 'panzoom', 'panzoomwidget', 'ui.router.state.events',
+  'linc.controllers', 'linc.directives', 'linc.services']);
 
 'use strict';
 
@@ -81,6 +81,10 @@ app.constant('TAG_LABELS', {
     {value:'NONE',label:'None',chekall:false}]
 })
 
+.constant('MANUAL_URL', {
+  url: 'http://linclion.com/linc/linc-manual/'
+})
+
 app.run(['$rootScope', '$state', '$stateParams', 'AuthService', function ($rootScope, $state, $stateParams, AuthService) {
 
     // It's very handy to add references to $state and $stateParams to the $rootScope
@@ -113,10 +117,8 @@ app.run(['$rootScope', '$state', '$stateParams', 'AuthService', function ($rootS
       $state.go(prevUrl.name, prevUrl.param);
     };
     $rootScope.remove_history = function(name, id) {
-      var find = _.findWhere(history, {'name': name, 'param' : {'id': id}});
+      var find = _.find(history, {'name': name, 'param' : {'id': id}});
       var result = _.without(history,find);
-      //if(result[result.length-1].name == ('search' + name))
-      // result.pop();
       history = result;
     }
 }]);
@@ -144,7 +146,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', functio
         authorized: '*',
       }
     })
-    // Search Lion
     .state("admin", {
       url: "/admin",
       controller: 'AdminCtrl',
@@ -255,6 +256,9 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', functio
         }],
         lion: ['$stateParams', 'LincServices', function($stateParams, LincServices) {
           return LincServices.Lion($stateParams.id);
+        }],
+        relatives: ['LincServices', 'lion', function(LincServices, lion) {
+          return LincServices.Relatives({method: 'GET', lion_id: lion.id});
         }]
       }
     })
@@ -277,13 +281,13 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', functio
         }]
       }
     })
-    // Search Lion
-    .state("searchlion", {
-      url: "/searchlion",
-      controller: 'SearchLionCtrl',
-      templateUrl: 'searchlion.html',
+    // View Lion Database
+    .state("viewliondatabase", {
+      url: "/viewliondatabase",
+      controller: 'ViewLionDatabaseCtrl',
+      templateUrl: 'view.lion.database.html',
       data: {
-        bodyClasses: 'searchlion',
+        bodyClasses: 'viewliondatabase',
         authorized: 'logged',
         debug: debug
       },
@@ -291,21 +295,21 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', functio
         lions: ['LincServices', function(LincServices) {
           return LincServices.Lions();
         }],
-        lion_filters: ['LincDataFactory', function(LincDataFactory) {
-          return LincDataFactory.get_lions_filters();
+        lion_options: ['LincDataFactory', function(LincDataFactory) {
+          return LincDataFactory.get_lions_options();
         }],
-        default_filters: ['LincDataFactory', function(LincDataFactory) {
+        default_options: ['LincDataFactory', function(LincDataFactory) {
           return LincDataFactory.get_defaults();
         }]
       }
     })
-    // Search Image Set
-    .state("searchimageset", {
-      url: '/searchimageset?{filter:ObjParam}',
-      controller: 'SearchImageSetCtrl',
-      templateUrl: 'searchimageset.html',
+    // View Image Sets
+    .state("viewimagesets", {
+      url: '/viewimagesets?{filter:ObjParam}',
+      controller: 'ViewImageSetsCtrl',
+      templateUrl: 'view.imagesets.html',
       data: {
-        bodyClasses: 'searchimageset',
+        bodyClasses: 'viewimagesets',
         authorized: 'logged',
         debug: debug
       },
@@ -313,10 +317,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', functio
         imagesets: ['LincServices', function(LincServices) {
           return LincServices.ImageSets();
         }],
-        imagesets_filters: ['LincDataFactory', function(LincDataFactory) {
-          return LincDataFactory.get_imagesets_filters();
+        imagesets_options: ['LincDataFactory', function(LincDataFactory) {
+          return LincDataFactory.get_imagesets_options();
         }],
-        default_filters: ['LincDataFactory', function(LincDataFactory) {
+        default_options: ['LincDataFactory', function(LincDataFactory) {
           return LincDataFactory.get_defaults();
         }]
       }
@@ -347,6 +351,31 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', functio
         debug: debug
       }
     })
+
+    .state("comparecvresults", {
+      url: "/comparecvresults?{data:ObjParam}",
+      controller: 'CompareImagesCtrl',
+      templateUrl: 'compare.images.html',
+      data: {
+        bodyClasses: 'comparecvresults',
+        authorized: 'logged',
+        debug: debug
+      },
+      resolve: {
+        cvresults_data: ['$stateParams', function($stateParams){
+          return $stateParams.data;
+        }],
+        imageset_gallery: ['LincServices', '$stateParams', function(LincServices, $stateParams) {
+          var imageset = $stateParams.data.imageset;
+          return LincServices.GetImageGallery(imageset.id);
+        }],
+        lion_gallery: ['LincServices', '$stateParams', function(LincServices, $stateParams) {
+          var lion = $stateParams.data.lion;
+          return LincServices.GetImageGallery(lion.primary_image_set_id);
+        }]
+      }
+    })
+
     // About
     .state('about', {
       url: '/about',
@@ -395,7 +424,7 @@ app.config(['$provide', function($provide) {
       // dismiss reason is 'backdrop click' or 'escape key press'
       modalInstance.freezed = function(reason) {
         if (!modalInstance._freezed) { return false; }
-        return _.contains(['backdrop click', 'escape key press'], reason);
+        return _.includes(['backdrop click', 'escape key press'], reason);
       };
 
       return modalInstance;

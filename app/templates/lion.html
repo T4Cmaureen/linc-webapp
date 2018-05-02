@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 For more information or to contact visit linclion.org or email tech@linclion.org -->
-<div name="Lion" class="font-homenaje-1-1">
+<div name="Lion" class="lion-page font-homenaje-1-1">
   <h1><a class="btn btn-default" ng-click="go_back()"><i class="icon icon-arrow-left"></i></a>Lion Info</h1>
   <div class="row">
     <div class="col-sm-3 line-right">
@@ -71,6 +71,10 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         <h4 class="h4inline">Longitude:</h4>
         <h4 class="h4data">{{!lion.longitude | number:4}}</h4>
       </div>
+      <div class="meta-info" ng-if="permissions.showGeoPos && lion.latitude && lion.longitude && lion.tag_location">
+        <h4 class="h4inline">Tag Location:</h4>
+        <h4 class="h4data">{{!tag_label(lion.tag_location)}}</h4>
+      </div>
       <div class="meta-info">
         <h4 class="h4inline">Gender:</h4>
         <h4 ng-show="lion.gender" class="h4data">{{!lion.gender}}</h4>
@@ -108,12 +112,56 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     <div class="col-sm-5">
       <h4 class="h4inline">Notes:</h4>
       <h4 class="h4data h4-notes"><br>{{!lion.notes}}</h4>
+      <div class="wrapper container-relatives">
+        <h4 class="h4inline">Relatives:</h4>
+        <table class="table table-hover1">
+          <thead>
+            <tr>
+              <th class="text-center">
+                <a ng-click="order('id_to')" ng-class="{'order_class': orderby.predicate === 'id_to'}">Id</a>
+                <span class="sortorder" ng-show="orderby.predicate === 'id_to'" ng-class="{reverse: orderby.reverse}"></span>
+              </th>
+              <th class="text-center">
+                <a href="" ng-click="order('name_to')" ng-class="{'order_class': orderby.predicate === 'name_to'}">Lion</a>
+                <span class="sortorder" ng-show="orderby.predicate === 'name_to'" ng-class="{reverse: orderby.reverse}"></span>
+              </th>
+              <th class="text-center">
+                <a href="" ng-click="order('relation')" ng-class="{'order_class': orderby.predicate === 'relation'}">Relation</a>
+                <span class="sortorder" ng-show="orderby.predicate === 'relation'" ng-class="{reverse: orderby.reverse}"></span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="link" ui-sref="lion({id: relative.id_to})" ng-repeat="relative in relatives | orderBy : orderby.predicate : orderby.reverse track by $index">
+              <td class="text-center">{{!relative.id_to}}</td>
+              <td class="text-center">{{!relative.name_to}}</td>
+              <td class="text-center">{{!Ralatives_Labels[relative.relation]}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="col-sm-3 line-left padding-top-12" >
-      <image-gallery ng-show="lion" use-ctrl="ImageGalleryCtrl" use-template-url="imagegallery.html" form-size="lg" options-set="gallery_options" debug="debug" modal-is-open="is_modal_open" gallery-updated="Reload_Page()" show-privated="permissions.canShow"></image-gallery>
-      <location-history ng-if="lion && permissions.showGeoPos" use-ctrl="LocationHistoryCtrl" use-template-url="locationhistory.html" form-size="lg" type="lion" options="location_options" location-goto="location_goto(imageset_Id)" debug="debug" modal-is-open="is_modal_open"></location-history>
-      <metadata ng-if="lion && permissions.canShow" use-ctrl="MetadataCtrl" use-template-url="metadata.html" form-size="lg" type="edit" options-set="metadata_options" update-action="update_lion(data)" debug="debug" modal-is-open="is_modal_open"></metadata>
-      <p ng-click="goto_search_imageset()"><a class="btn btn-lg btn-default btn-block btn-minwidth-180">
+      <image-gallery ng-show="lion" use-ctrl="ImageGalleryCtrl" use-template-url="image.gallery.html" 
+        form-size="lg" options-set="gallery_options" debug="debug" modal-is-open="is_modal_open"
+        gallery-updated="Reload_Page()" show-privated="permissions.canShow">
+      </image-gallery>
+      <location-history ng-if="lion && permissions.showGeoPos" use-ctrl="LocationHistoryCtrl" 
+        use-template-url="location.history.html" form-size="lg" type="lion" options="location_options" 
+        location-goto="location_goto(imageset_Id)" debug="debug" modal-is-open="is_modal_open">
+      </location-history>
+      <metadata ng-if="lion && permissions.canShow" use-ctrl="MetadataCtrl" use-template-url="metadata.html"
+        form-size="lg" type="edit" options-set="metadata_options" update-action="update_lion(data)" debug="debug"
+        modal-is-open="is_modal_open">
+      </metadata>
+      
+      <relatives use-ctrl="RelativesCtrl" use-template-url="relatives.tpl.html" form-size="lg" 
+        lion="lion" lions-relatives="relatives" debug="debug" modal-is-open="is_modal_open"
+        update-action="update_relatives(data)">
+      </relatives>
+      
+
+      <p ng-click="goto_view_imagesets()"><a class="btn btn-lg btn-default btn-block btn-minwidth-180">
         <i class="icon icon-images"></i> LION IMAGE SETS</a>
       </p>
       <p ng-if="lion && permissions.canShow"><a ng-click="Delete()" class="btn btn-lg btn-default btn-block btn-minwidth-180">

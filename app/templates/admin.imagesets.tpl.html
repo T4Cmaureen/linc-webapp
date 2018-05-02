@@ -36,7 +36,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               </ui-select-match>
               <ui-select-choices repeat="lion.id as lion in lions | propsFilter: {name: $select.search, id: $select.search}">
                 <small>{{!lion.id}} - 
-                  <div class="display-inline" ng-bind-html="lion.name | highlight: $select.search" style="padding-right: 5px"></div>
+                  <div class="display-inline padding-right-5" ng-bind-html="lion.name | highlight: $select.search"></div>
                   (<div class="display-inline" ng-bind-html="lion.organization | highlight: $select.search"></div>)
                 </small>
               </ui-select-choices>

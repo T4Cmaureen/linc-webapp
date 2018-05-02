@@ -1,0 +1,60 @@
+<!-- LINC is an open source shared database and facial recognition
+system that allows for collaboration in wildlife monitoring.
+Copyright (C) 2016  Wildlifeguardians
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+For more information or to contact visit linclion.org or email tech@linclion.org -->
+<div name="ReuqestAcess">
+	<div class="modal-header" ng-show="title">
+		<button type="button" class="btn btn-sm btn-default pull-right" ng-click="Cancel()"><i class="material-icons">close</i></button>
+		<h2 class="modal-title forgot-title" ng-bind-html="title"></h2>
+	</div>
+	<div class="modal-body">
+		<div id="container-forgot" class="wrapper">
+			<div class="instruction">
+				<p>Please complete the form with the email information, the full name, the organization to which it belongs and the geographical study area.</p>
+			</div>
+			<div class="callout-box">
+				<form name="form" ng-submit="submit(form)">
+					<div class="form-group" ng-class="{'has-error': form.email.$dirty && form.email.$error.required }">
+						<label for="email">Email</label>
+						<input type="email" name="email" id="email" class="form-control" ng-model="request.email" required 
+							oninvalid="this.setCustomValidity('Email is required.')" oninput="setCustomValidity('')" autofocus ng-focus="ngFocus()">
+					</div>
+					<div class="form-group" ng-class="{'has-error': form.fullname.$dirty && form.fullname.$error.required }">
+						<label for="fullname">Full Name</label>
+						<input type="text" name="fullname" id="fullname" class="form-control" ng-model="request.fullname" required 
+							oninvalid="this.setCustomValidity('Full Name is required')" oninput="setCustomValidity('')" autofocus ng-focus="ngFocus()">
+					</div>
+					<div class="form-group"  ng-class="{'has-error': form.organization.$dirty && form.organization.$error.required }">
+						<label for="organization">Organization:</label>
+						<input type="text" name="organization" id="organization" class="form-control" ng-model="request.organization" required 
+							oninvalid="this.setCustomValidity('Organization is required')" oninput="setCustomValidity('')" autofocus ng-focus="ngFocus()">
+					</div>
+					<div class="form-group" ng-class="{'has-error': form.geographical.$dirty && form.geographical.$error.required }">
+						<label for="geographical">Geographical Study Area:</label>
+						<textarea class="form-control" rows="3" ng-model="request.geographical" required name="geographical"
+							oninvalid="this.setCustomValidity('Geographical Study Area is required')" oninput="setCustomValidity('')"
+							placeholder="Geographical Study Area Here"></textarea>
+					</div>
+					<div class="form-actions">
+						<p><button class="btn btn-lg btn-primary btn-block" type="submit">Send Request</button></p>
+						<p class="text-center" ng-if="dataloading"><img src="/static/images/loading.gif" /> Loading&hellip;</p>
+					</div> 
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

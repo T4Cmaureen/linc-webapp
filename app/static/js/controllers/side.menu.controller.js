@@ -18,9 +18,10 @@
 // For more information or to contact visit linclion.org or email tech@linclion.org
 'use strict';
 
-angular.module('linc.side.menu.controller', ['linc.side.menu.directive'])
+angular.module('linc.side.menu.controller', [])
 
-.controller('SideMenuCtrl', ['$scope', '$state', 'AuthService', 'NotificationFactory', function ($scope, $state, AuthService, NotificationFactory) {
+.controller('SideMenuCtrl', ['$scope', '$state', 'AuthService', 'NotificationFactory', 'MANUAL_URL', 
+  function ($scope, $state, AuthService, NotificationFactory, MANUAL_URL) {
 
   $scope.is_modal_open = false;
   $scope.title = 'Menu';
@@ -35,10 +36,11 @@ angular.module('linc.side.menu.controller', ['linc.side.menu.directive'])
 
   $scope.goto_imageset = function (Id) {
     $state.go("imageset", { id: Id });
-  }
+  };
+
   $scope.goto_lion = function (Id) {
     $state.go("lion", { id: Id });
-  }
+  };
 
   $scope.logout = function($hide){
     $hide();
@@ -52,10 +54,16 @@ angular.module('linc.side.menu.controller', ['linc.side.menu.directive'])
     }, function(){
       $state.go("login");
     });
-  }
+  };
+
+  $scope.user_manual = function(){
+    var url = MANUAL_URL.url;
+    window.open(url,'_blank');
+  };
+
   $scope.changePWD = function($hide){
      $hide();
      $scope.changePassword($scope.user);
-  }
+  };
 
 }]);

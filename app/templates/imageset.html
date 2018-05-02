@@ -1,0 +1,199 @@
+<!-- LINC is an open source shared database and facial recognition
+system that allows for collaboration in wildlife monitoring.
+Copyright (C) 2016  Wildlifeguardians
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+For more information or to contact visit linclion.org or email tech@linclion.org -->
+<script type="text/ng-template" id="lion.name.tpl.html">
+  <form name="form" ng-submit="Submit(lion)" class="font-homenaje-1-1">
+    <div class="modal-header" ng-show="title">
+      <button type="button" class="close" ng-click="cancel()">&times;</button>
+      <h1 class="modal-title forgot-title" ng-bind-html="title"></h1>
+    </div>
+    <div class="modal-body">
+      <div class="wrapper">
+        <div class="form-group">
+          <input class="form-control" type="text" name="name" ng-model="lion.name" required
+            oninvalid="this.setCustomValidity('Please enter a new lion name')" 
+            oninput="setCustomValidity('')">
+        </div>
+      </div>
+      <div class="form-actions pull-right-btn-16">
+        <button type="submit" class="btn btn-primary">Switch</button>      
+      </div>
+    </div>
+  </form>
+</script>
+<div name="ImageSet" class="font-homenaje-1-1">
+  <h1><a class="btn btn-default" ng-click="go_back()"><i class="icon icon-arrow-left"></i></a> Image Set Info</h1>
+  <div class="row">
+    <div class="col-sm-3 line-right">
+      <p><img ng-src="{{!imageset.image}}" class="img-responsive"></p>
+      <div class="meta-info">
+        <h4 class="h4inline">Image Set ID:</h4>
+        <h4 class="h4data">{{!imageset.id}}</h4>
+      </div>
+      <div class="meta-info">
+        <h4 class="h4inline">Lion Name:</h4>
+        <h4 class="h4data">
+          <a ng-click="(imageset.lion_id==null) || goto_lion(imageset.lion_id);">{{!imageset.name || '-'}}</a>
+        </h4>
+      </div>
+      <div class="meta-info">
+        <h4 class="h4inline">Lion ID:</h4>
+        <h4 class="h4data">{{!imageset.lion_id}}</h4>
+      </div>
+      <div class="meta-info" ng-show="imageset.dead">
+        <h4 class="h4inline">Dead:</h4>
+        <div class="div-dead-icon">
+          <span class="dead-icon"></span>
+        </div>
+      </div>
+      <div class="meta-info" ng-if="imageset.is_primary">
+        <h4 class="h4inline">Primary Image Set:</h4>
+        <h4 class="h4data">Yes</h4>
+      </div>
+      <div class="meta-info" ng-show="permissions.canDisassociate">
+        <button type="button" class="btn btn-primary btn-sm btn-minwidth-100" ng-click="Disassociate(imageset.id)">
+          Disassociate
+        </button>
+      </div>
+      <div class="meta-info">
+        <h4 class="h4inline">Organization:</h4>
+        <h4 class="h4data">{{!imageset.organization}}</h4>
+      </div>
+      <div class="meta-info">
+        <h4 class="h4inline">Verified:</h4>
+        <h4 ng-hide="!imageset.is_verified" class="h4data">Yes</h4>
+        <h4 ng-hide="imageset.is_verified" class="h4data">No</h4>
+      </div>
+      <div class="meta-info" ng-show="permissions.NeedVerify">
+        <button ng-if="!imageset.is_verified" type="button" class="btn btn-primary btn-sm btn-minwidth-100" ng-click="Verify(imageset)"> Verify </button>
+        <button ng-if="imageset.is_verified" type="button" class="btn btn-primary btn-sm btn-minwidth-100" ng-click="Disassociate(imageset.id)"> Disassociate </button>
+      </div>
+      <div class="meta-info">
+        <h4 class="h4inline">Date Stamp:</h4>
+        <h4 class="h4data">{{!imageset.date_stamp}}</h4>
+      </div>
+      <div class="meta-info">
+        <h4 class="h4inline">Date of Birth:</h4>
+        <h4 class="h4data">{{!imageset.date_of_birth}}</h4>
+      </div>
+      <div class="meta-info">
+        <h4 class="h4inline">Age:</h4>
+        <h4 class="h4data" ng-if="imageset.age!=null">{{!imageset.age}} y/o</h4>
+        <h4 class="h4data" ng-if="imageset.age==null"></h4>
+      </div>
+      <div class="meta-info" ng-if="permissions.showGeoPos">
+        <h4 class="h4inline">Latitude:</h4>
+        <h4 class="h4data">{{!imageset.latitude | number:4}}</h4>
+      </div>
+      <div class="meta-info" ng-if="permissions.showGeoPos">
+        <h4 class="h4inline">Longitude:</h4>
+        <h4 class="h4data">{{!imageset.longitude | number:4}}</h4>
+      </div>
+      <div class="meta-info" ng-if="permissions.showGeoPos && imageset.latitude && imageset.longitude && imageset.tag_location">
+        <h4 class="h4inline">Tag Location:</h4>
+        <h4 class="h4data">{{!tag_label(imageset.tag_location)}}</h4>
+      </div>
+      <div class="meta-info">
+        <h4 class="h4inline">Gender:</h4>
+        <h4 ng-show="imageset.gender" class="h4data">{{!imageset.gender}}</h4>
+        <h4 ng-show="!imageset.gender" class="h4data">Unknown</h4>
+      </div>
+      <div class="meta-info" ng-show="imageset.ear_marking">
+        <h4 class="h4inline">Ear Marking:</h4>
+        <h4 class="h4data">{{!imageset.ear_marking}}</h4>
+      </div>
+      <div class="meta-info" ng-show="imageset.mouth_marking">
+        <h4 class="h4inline">Mouth Marking:</h4>
+        <h4 class="h4data">{{!imageset.mouth_marking}}</h4>
+      </div>
+      <div class="meta-info" ng-show="imageset.tail_marking">
+        <h4 class="h4inline">Tail Marking /<br> Missing Tuft:</h4>
+        <h4 class="h4data">{{!imageset.tail_marking}}</h4>
+      </div>
+      <div class="meta-info" ng-show="imageset.nose_color">
+        <h4 class="h4inline">Nose Color:</h4>
+        <h4 class="h4data">{{!imageset.nose_color}}</h4>
+      </div>
+      <div class="meta-info" ng-show="imageset.scars">
+        <h4 class="h4inline">Scars:</h4>
+        <h4 class="h4data">{{!imageset.scars}}</h4>
+      </div>
+      <div class="meta-info" ng-show="imageset.eye_damage">
+        <h4 class="h4inline">Eye Damage /<br> Pigmentation:</h4>
+        <h4 class="h4data" >{{!imageset.eye_damage}}</h4>
+      </div>
+      <div class="meta-info" ng-show="imageset.broken_teet">
+        <h4 class="h4inline">Broken Teeth:</h4>
+        <h4 class="h4data">{{!imageset.broken_teet}}</h4>
+      </div>
+    </div>
+    <div class="col-sm-5">
+      <h4 class="h4inline">Notes:</h4>
+      <h4 class="h4data h4-notes"><br>{{!imageset.notes}}</h4>
+    </div>
+    <div class="col-sm-3 line-left padding-top-12">
+      <image-gallery ng-show="imageset" use-ctrl="ImageGalleryCtrl" use-template-url="image.gallery.html" 
+        form-size="lg" options-set="gallery_options" debug="debug" modal-is-open="is_modal_open" 
+        gallery-updated="Reload_Page()" show-privated="permissions.canShow">  
+      </image-gallery>
+      <location-history ng-if="imageset && permissions.showGeoPos" use-ctrl="LocationHistoryCtrl" 
+        use-template-url="location.history.html" form-size="lg" type="imageset" options="location_options" 
+        location-goto="location_goto(imageset_Id)" debug="debug" modal-is-open="is_modal_open">
+      </location-history>
+      <metadata ng-if="imageset && permissions.canShow" use-ctrl="MetadataCtrl" use-template-url="metadata.html"
+        form-size="lg" type="edit" options-set="metadata_options" update-action="update_imageset(data)"
+        debug="debug" modal-is-open="is_modal_open">
+      </metadata>
+      <div ng-if="imageset && permissions.canShow">
+        <cvresults use-ctrl="CVResultsCtrl" use-template-url="cvresults.html" form-size="lg" imageset="imageset"
+          cvresults-id="imageset.cvresults" cvrequest-id="imageset.cvrequest" ng-if="imageset.action == 'cvresults'"
+          cv-result-erased="CVResultsErased(imagesetId)" imageset-updated="UpdateImageset(data, imagesetId)"
+          debug="debug" modal-is-open="is_modal_open">
+        </cvresults>
+        <cvrequest use-ctrl="CVRequesCtrl" use-template-url="cvrequest.html" form-size="lg" imageset="imageset"
+          ng-if="imageset.action == 'cvrequest'" cv-request-success="CVReqSuccess(imageset_Id, request_Obj)" 
+          debug="debug" modal-is-open="is_modal_open">
+        </cvrequest>
+        <p ng-if="imageset.action == 'cvpending'">
+          <a class="btn btn-lg btn-default btn-block btn-minwidth-180" data-animation="am-fade-and-slide-top">
+            <i class="icon icon-clock"></i>CV Request Pending
+          </a>
+        </p>
+      </div>
+
+      <p ng-if="imageset && !imageset.is_primary && permissions.canShow">
+        <a class="btn btn-lg btn-default btn-block btn-minwidth-180" data-animation="am-fade-and-slide-top" 
+          ng-click="SwitchLion()"><i class="fa fa-exchange"></i> Switch To New Lion
+        </a>
+      </p>
+
+      <p ng-if="imageset && permissions.canShow">
+        <a class="btn btn-lg btn-default btn-block btn-minwidth-180" ng-click="permissions.canDelete && Delete()"
+          data-placement="auto top" data-trigger="hover" data-animation="am-fade-and-scale" data-html=true 
+          bs-tooltip="tooltip" bs-enabled="tooltip.checked"><i class="icon icon-trash"></i> DELETE IMAGE SET
+        </a>
+      </p>
+      <p ng-if="imageset && permissions.CanSetPrimary">
+        <a class="btn btn-lg btn-default btn-block btn-minwidth-180" ng-click="permissions.CanSetPrimary && SetPrimary()"
+          data-trigger="hover"><i class="icon icon-pencil"></i>SET AS PRIMARY
+        </a>
+      </p>
+    </div>
+  </div>
+  <hr>
+</div>

@@ -18,7 +18,7 @@
 // For more information or to contact visit linclion.org or email tech@linclion.org
 'use strict';
 
-angular.module('linc.upload.images.controller', ['linc.upload.images.directive', 'linc.thumbnail.directive'])
+angular.module('linc.upload.images.controller', [])
 
 .controller('UploadImagesCtrl', ['$scope', '$window', '$cookies', '$uibModalInstance', '$bsTooltip', 'FileUploader', 'NotificationFactory', 'options', function ($scope, $window, $cookies, $uibModalInstance, $bsTooltip, FileUploader, NotificationFactory, options) {
 
@@ -39,12 +39,40 @@ angular.module('linc.upload.images.controller', ['linc.upload.images.directive',
    $uibModalInstance.close('finish');
   };
 
-  $scope.Types = {'Images':[{"value":"cv","label":"CV Image"},{"value":"full-body","label":"Full Body"},
-                            {"value":"whisker","label":"Whisker"}, {"value":"main-id","label":"Main Id"}, 
-                            {"value":"marking","label":"Marking"}],
-              'Properties':[{"value":true,"label":"Public"},{"value":false,"label":"Private"}]
+  $scope.OnSelect = function($item, Tags, ListOfTags) {
+    UpdateTags(Tags, ListOfTags);
   };
-  $scope.Default = {isPublic: true, ImageType: 'cv', isCover: ''};
+  $scope.OnRemove = function($item, Tags, ListOfTags) {
+    UpdateTags(Tags, ListOfTags);
+  };
+
+  var UpdateTags = function (Tags, ListOfTags){
+    var disabled_tag = _.difference(['whisker', 'whisker-left','whisker-right'],
+      _.intersection(_.map(Tags,'value'), 
+          ['whisker', 'whisker-left','whisker-right']));
+    if (disabled_tag.length == 3)
+      disabled_tag = [];
+    _.forEach(ListOfTags, function(tag){
+        tag.disabled = _.includes(disabled_tag, tag.value);
+    });
+  };
+
+  $scope.ListOfTags = [
+      { disabled: false, id: 0, value: "cv", label: "CV Image" },
+      { disabled: false, id: 1, value: "main-id", label: "Main Id" },
+      { disabled: false, id: 3, value: "whisker-left", label: "Whisker Left" },
+      { disabled: false, id: 4, value: "whisker-right", label: "Whisker Right" },
+      { disabled: false, id: 2, value: "marking", label: "Marking" },
+      { disabled: false, id: 7, value: "whisker", label: "Whisker (No use in Algorithm)" },
+      { disabled: false, id: 6, value: "full-body", label: "Full Body" }
+  ];
+
+  $scope.Properties = [
+      { value: true, label: "Public" },
+      { value: false, label: "Private" }
+  ];
+
+  $scope.Default = {isPublic: true, Tags: [], isCover: ''};
 
   var uploader = $scope.uploader = new FileUploader({
     url: '/images/upload',
@@ -74,7 +102,8 @@ angular.module('linc.upload.images.controller', ['linc.upload.images.directive',
       fileItem.show_name = true;
       fileItem.tooltip = {'title': '', 'checked': true};
     }
-
+    fileItem.Tags = angular.copy($scope.Default.Tags);
+    fileItem.ListOfTags = angular.copy($scope.ListOfTags);
     console.info('onAfterAddingFile', fileItem);
   };
   $scope.enable_Upload = false;
@@ -89,7 +118,7 @@ angular.module('linc.upload.images.controller', ['linc.upload.images.directive',
     var xsrfcookie = $cookies.get('_xsrf');
     item.headers = {'X-XSRFToken' : xsrfcookie};
 
-    var formData = [{'image_type' : item.ImageType},
+    var formData = [{'image_tags' : _.map(item.Tags,'value')},
                     {'is_public': item.isPublic},
                     {'image_set_id': $scope.imagesetId},
                     {'iscover': ($scope.Default.isCover == item.$$hashKey)}];
@@ -244,3 +273,12 @@ angular.module('linc.upload.images.controller', ['linc.upload.images.directive',
       $scope.enable_Upload = false;
   };
 }])
+
+.filter('tag_filter', function(){
+  return function(input, organizations) {
+    var filtered = _.filter(input, function(value){
+        return (_.result(_.find(organizations, {'name': value.organization}), 'checked'));
+    });
+    return filtered;
+  };
+})

@@ -35,6 +35,11 @@ class LoginMainHandler(BaseHandler):
         self.render('login.html', xsrf=self.xsrf_token)
 
 
+class RequestAccessHandler(BaseHandler):
+    def get(self):
+        self.render('request.access.tpl.html', xsrf=self.xsrf_token)
+
+
 class HomeHandler(BaseHandler):
     @web_authenticated
     def get(self):
@@ -57,22 +62,22 @@ class LionMainHandler(BaseHandler):
         self.render('lion.html')
 
 
-class SearchLionHandler(BaseHandler):
+class ViewLionDatabaseHandler(BaseHandler):
     @web_authenticated
     def get(self):
-        self.render('search_lion.html')
+        self.render('view.lion.database.html')
 
 
 class ImageSetMainHandler(BaseHandler):
     @web_authenticated
     def get(self):
-        self.render('image_set.html')
+        self.render('imageset.html')
 
 
-class SearchImageSetHandler(BaseHandler):
+class ViewImageSetsHandler(BaseHandler):
     @web_authenticated
     def get(self):
-        self.render('search_image_set.html')
+        self.render('view.imagesets.html')
 
 
 class ConservationistsHandler(BaseHandler):
@@ -84,13 +89,13 @@ class ConservationistsHandler(BaseHandler):
 class ImageGalleryHandler(BaseHandler):
     @web_authenticated
     def get(self):
-        self.render('image_gallery.html')
+        self.render('image.gallery.html')
 
 
 class LocationHistoryHandler(BaseHandler):
     @web_authenticated
     def get(self):
-        self.render('location_history.html')
+        self.render('location.history.html')
 
 
 class EditMetadataHandler(BaseHandler):
@@ -182,4 +187,40 @@ class PageAdminCVResultsHandler(BaseHandler):
 class CompareImagesHandler(BaseHandler):
     @web_authenticated
     def get(self):
-        self.render('compare.images.tpl.html')
+        self.render('compare.images.html')
+
+
+class BoundaryMapHandler(BaseHandler):
+    @web_authenticated
+    def get(self):
+        self.render('boundary.map.tpl.html')
+
+
+class RelativesTplHandler(BaseHandler):
+    @web_authenticated
+    def get(self):
+        self.render('relatives.tpl.html')
+
+
+class MetadataBatchHandler(BaseHandler):
+    @web_authenticated
+    def get(self):
+        self.render('metadata.batch.html')
+
+
+class LocationOnMapHandler(BaseHandler):
+    @web_authenticated
+    def get(self):
+        self.render('location.on.map.tpl.html')
+
+
+class DeleteBatchHandler(BaseHandler):
+    @web_authenticated
+    def get(self):
+        self.render('delete.batch.tpl.html')
+
+
+class CarouselGalleryHandler(BaseHandler):
+    @web_authenticated
+    def get(self):
+        self.render('carousel.gallery.tpl.html')

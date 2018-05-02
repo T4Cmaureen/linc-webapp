@@ -1,0 +1,440 @@
+<!-- LINC is an open source shared database and facial recognition
+system that allows for collaboration in wildlife monitoring.
+Copyright (C) 2016  Wildlifeguardians
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+For more information or to contact visit linclion.org or email tech@linclion.org -->
+<script type="text/ng-template" id="Warning.org.tpl.html">
+	<div name="Warning" class="font-homenaje-1-1">
+		<div class="modal-header" ng-show="title">
+			<h4 class="modal-title" ng-bind-html="title"></h4>
+		</div>
+		<div class="modal-body" ng-bind-html="message">
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+			<button type="button" class="btn btn-primary" ng-click="ok()">OK</button>
+		</div>
+	</div>
+</script>
+<div name="metadataForm" class="font-homenaje metadata-batch">
+	<div class="modal-header" ng-show="title">
+		<button type="button" class="close" ng-click="Cancel()">&times;</button>
+		<h3 class="modal-title" ng-bind-html="title"></h3>
+	</div>
+	<div class="modal-body" ng-show="content">
+		<div class="row">
+			<div class="col-sm-6 line-right">
+				{{!TextCounts}}
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th class="text-center">index</th>
+							<th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': orderby.predicate === 'id'}">Id</a>
+								<span class="sortorder" ng-show="orderby.predicate === 'id'" ng-class="{reverse: orderby.reverse}"></span>
+							</th>
+							<th class="text-center">Photo</th>
+							<th class="text-center">
+								<a href="" ng-click="order('name')" ng-class="{'order_class': orderby.predicate === 'name'}">Name</a>
+								<span class="sortorder" ng-show="orderby.predicate === 'name'" ng-class="{reverse: orderby.reverse}"></span>
+							</th>
+							<th class="text-center" ng-if="metadata.type == 'imagesets'">
+								<a href="" ng-click="order('lion_id')" ng-class="{'order_class': predicate === 'lion_id'}">Lion Id</a>
+								<span class="sortorder" ng-show="predicate === 'lion_id'" ng-class="{reverse:reverse}"></span>
+							</th>
+							<th class="text-center" ng-if="metadata.type == 'lions'">
+								<a href="" ng-click="order('primary_image_set_id')" ng-class="{'order_class': orderby.predicate === 'primary_image_set_id'}">Imageset Id</a>
+								<span class="sortorder" ng-show="orderby.predicate === 'primary_image_set_id'" ng-class="{reverse: orderby.reverse}"></span>
+							</th>
+							<th class="text-center" ng-if="metadata.type == 'imagesets'">
+								<a href="" ng-click="order('is_primary')" ng-class="{'order_class': predicate === 'is_primary'}">Primary</a>
+								<span class="sortorder" ng-show="predicate === 'is_primary'" ng-class="{reverse:reverse}"></span>
+							</th>
+							<th class="text-center">
+								<a href="" ng-click="order('organization')" ng-class="{'order_class': orderby.predicate === 'organization'}">Organization</a>
+								<span class="sortorder" ng-show="orderby.predicate === 'organization'" ng-class="{reverse: orderby.reverse}"></span>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="link" ng-repeat="(key, lion) in metadata.selected | orderBy : orderby.predicate : orderby.reverse">
+							<td class="text-center">{{!key+1}}</td>
+							<td class="text-center">{{!lion.id}}</td>
+							<td class="text-center">
+								<img ng-src="{{!lion.thumbnail}}" width="40" height="40">
+							</td>
+							<td class="text-center">{{!lion.name}}</td>
+							<td class="text-center" ng-if="metadata.type == 'imagesets'">{{!lion.lion_id}}</td>
+							<td class="text-center" ng-if="metadata.type == 'lions'">{{!lion.primary_image_set_id}}</td>
+							<td class="text-center" ng-if="metadata.type == 'imagesets'">
+								<i ng-if="lion.is_primary" class="icon icon-check"></i>
+								<i ng-if="!lion.is_primary" class="icon icon-cross"></i>
+							</td>
+							<td class="text-center">{{!lion.organization}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-sm-6">
+				<form name="metadataForm" class="font-homenaje-1-1 metadata-batch" ng-submit="Submit(metadataForm)">
+					<div class="row">
+						<div class="col-sm-6 line-right">
+							<div ng-show="metadata.type === 'imagesets'" class="form-inline group-select"
+								ng-class="{'has-error': metadataForm.owner_organization_id.$dirty && metadataForm.owner_organization_id.$error.required }">
+								<label class="meta_label" for="owner_organization_id">
+									<input type="checkbox" ng-model="changed.owner_organization_id"
+										ng-change="clear_selection('owner_organization_id');"
+										class="batch-checkbox">Organization:
+								</label>
+								<select class="form-control custom-select" name="owner_organization_id"
+									ng-options="organization.id as organization.name for organization in organizations"
+									ng-model="selected.owner_organization_id"
+									ng-disabled="!changed.owner_organization_id"
+									ng-change="ChangeWarning(selected.owner_organization_id);"
+									ng-required="changed.owner_organization_id">
+									<option value="">Do not change</option>
+								</select>
+							</div>
+							<pre ng-show="debug">{{!selected.owner_organization_id}}</pre>
+
+							<div ng-show="metadata.type === 'lions'" class="form-inline group-select"
+								ng-class="{'has-error': metadataForm.organization_id.$dirty && metadataForm.organization_id.$error.required }">
+								<label class="meta_label" for="organization_id">
+									<input type="checkbox" ng-model="changed.organization_id" 
+										ng-change="clear_selection('organization_id');"
+										class="batch-checkbox">Organization:
+								</label>
+								<select class="form-control custom-select" name="organization_id"
+									ng-options="organization.id as organization.name for organization in organizations"
+									ng-model="selected.organization_id"
+									ng-disabled="!changed.organization_id"
+									ng-change="ChangeWarning(selected.organization_id);"
+									ng-required="changed.organization_id">
+									<option value="">Do not change</option>
+								</select>
+							</div>
+							<pre ng-show="debug">{{!selected.organization_id}}</pre>
+							<hr class="style-line">
+							<div class="form-inline group-input" ng-class="{'has-error': datepickerForm.date.$invalid}">
+								<label class="control-label meta_label">
+								<input type="checkbox" ng-model="changed.date_stamp" ng-change="clear_selection('date_stamp');"
+									class="batch-checkbox">Date Stamp:
+								</label>
+								<input type="text" class="form-control meta_input" ng-model="selected.date_stamp"
+									data-date-format="yyyy-MM-dd" data-date-type="date" data-timezone="UTC"
+									data-min-date="02/10/86" data-max-date="today" data-autoclose="1"
+									placeholder="Do not change" ng-disabled="!changed.date_stamp"
+									name="date" bs-datepicker placement="bottom-left"
+									ng-required="changed.date_stamp">
+							</div>
+							<pre ng-show="debug">{{!selected.date_stamp}}</pre>
+							<hr class="style-line">
+							<div class="form-group group-input">
+								<label class="location" for="location">
+									<input type="checkbox" ng-model="changed.location" ng-change="clear_selection('location');"
+										class="batch-checkbox">Location:
+								</label>
+								<div class="form-inline">
+									<div class="form-group control div-width-100"
+										ng-class="{'has-error': metadataForm.latitude.$dirty && (metadataForm.latitude.$error.pattern || metadataForm.latitude.$error.limlatlng)}">
+										<label class="meta_label" for="latitude">Latitude: </label>
+										<div class="input-group width-100">
+											<input data-lpignore="true" class="form-control meta_input" type="text"
+												placeholder="{{!changed.location ? 'Please enter a latitude number' : 'Do not change'}}" ng-disabled="!changed.location"
+												pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-model="selected.location.latitude"
+												name="latitude" oninvalid="this.setCustomValidity('Please enter a valid latitude number')"
+												oninput="setCustomValidity('')" limlatlng="90" ng-required="changed.location">
+											<span class="input-group-addon" id="basic-addon2">
+												<location-on-map use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html" update-location="UpdateLocation(location)"
+													ng-disabled="!changed.location" form-size="lg" modal-is-open="is_modal_open" meta-data="selected.location">
+												</location-on-map>
+											</span>
+										</div>
+										<span class="icon icon-cross" ng-click="submitted=false;" ng-show="metadataForm.latitude.$error.limlatlng && submitted"></span>
+										<div class="error-messages" ng-messages="metadataForm.latitude.$error" ng-if="submitted">
+											<div ng-message="limlatlng">
+												<div class="row">
+													<div class="col-sm-2">
+														<i class="icon icon-error icon-notification"></i>
+													</div>
+													<div class="col-sm-10 error-msg-col">
+														choose a latitude value between -90 and 90.
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-inline">
+									<div class="form-group control div-width-100"
+										ng-class="{'has-error': metadataForm.longitude.$dirty && (metadataForm.longitude.$error.pattern || metadataForm.longitude.$error.limlatlng)}">
+										<label class="meta_label" for="longitude">Longitude: </label>
+										<div class="input-group width-100">
+											<input data-lpignore="true" class="form-control meta_input" type="text"
+												placeholder="{{!changed.location ? 'Please enter a longitude number' : 'Do not change'}}" ng-disabled="!changed.location"
+												pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-model="selected.location.longitude"
+												name="longitude" oninvalid="this.setCustomValidity('Please enter a valid longitude number')"
+												oninput="setCustomValidity('')" limlatlng="180" ng-required="changed.location">
+											<span class="input-group-addon" id="basic-addon2">
+												<location-on-map use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html" update-location="UpdateLocation(location)"
+													ng-disabled="!changed.location" form-size="lg" modal-is-open="is_modal_open" meta-data="selected.location">
+												</location-on-map>
+											</span>
+										</div>
+										<span class="icon icon-cross" ng-click="submitted=false;" ng-show="!metadataForm.latitude.$error.limlatlng && metadataForm.longitude.$error.limlatlng && submitted"></span>
+										<div class="error-messages" ng-messages="metadataForm.longitude.$error" ng-if="!metadataForm.latitude.$error.limlatlng && submitted">
+											<div ng-message="limlatlng">
+												<div class="row">
+													<div class="col-sm-2">
+														<i class="icon icon-error icon-notification"></i>
+													</div>
+													<div class="col-sm-10 error-msg-col">
+														choose a longitude value between -180 and 180.
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-inline group-select"
+								 	ng-class="{'has-error': metadataForm.isTagLocation.$dirty && metadataForm.isTagLocation.$error.required }">
+									<label class="meta_label" for="isTagLocation">Tag Location: </label>
+									<div class="input-group width-100">
+										<input data-lpignore="true" class="form-control meta_input" type="text"
+										ng-model="selected.location.tag_location.text" name="tag_location" ng-readonly="true">
+										<span class="input-group-addon" id="basic-addon2">
+											<location-on-map use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html" update-location="UpdateLocation(location)"
+												form-size="lg" modal-is-open="is_modal_open" meta-data="selected.location">
+											</location-on-map>
+										</span>
+									</div>
+								</div>
+							</div>
+							<pre ng-show="debug">{{!selected.location.latitude}} {{!selected.location.longitude}}</pre>
+							<hr class="style-line">
+							<div class="form-group group-select2">
+								<label class="meta_label" for="geopos_private">
+									<input type="checkbox" ng-model="changed.geopos_private" ng-change="clear_selection('geopos_private');"
+										class="batch-checkbox">GPS Private:
+								</label>
+								<label ng-hide="changed.geopos_private" class="h-label">
+									Do not change</label>
+								<button type="button" id="geopos_private" placeholder="Unknown"
+									class="btn btn-default btn-sm select_btn"
+									ng-model="selected.geopos_private"
+									data-html="1" bs-options="is.value as is.label for is in [{value: true, label:'Are Private'},{value: false, label:'Are Public'}]"
+									placement="bottom-right" bs-select ng-disabled="!changed.geopos_private">
+								Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.geopos_private}}</pre>
+							<hr class="style-line">
+							<div class="form-inline group-input" ng-class="{'has-error': datepickerForm.date1.$invalid}">
+								<label class="control-label">
+									<input type="checkbox" ng-model="changed.date_of_birth" ng-change="clear_selection('date_of_birth');"
+										class="batch-checkbox">Date of Birth:
+								</label>
+								<input type="text" class="form-control meta_input" ng-model="selected.date_of_birth"
+									data-date-format="yyyy-MM-dd" data-date-type="date" data-timezone="UTC"
+									data-max-date="today" data-autoclose="1" name="date1" bs-datepicker
+									placeholder="{{!changed.date_of_birth ? 'Please enter the Date of Birth' : 'Do not change'}}"
+									ng-disabled="!changed.date_of_birth" placement="bottom-right" ng-required="changed.date_of_birth">
+							</div>
+							<pre ng-show="debug">{{!selected.date_of_birth}}</pre>
+							<hr class="style-line">
+							<div class="form-group group-select2">
+								<label class="meta_label" for="id_gender">
+									<input type="checkbox" ng-model="changed.gender" ng-change="clear_selection('gender');"
+										class="batch-checkbox">Gender:
+								</label>
+								<label ng-hide="changed.gender" class="h-label">
+									Do not change</label>
+								<button type="button" id="id_gender" placeholder="Unknown"
+									class="btn btn-default btn-sm select_btn"
+									ng-model="selected.gender"
+									data-html="1" bs-options="gen.value as gen.label for gen in genders"
+									placement="bottom-right" bs-select ng-disabled="!changed.gender">
+								Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.gender}}</pre>
+							<hr class="style-line">
+							<div class="form-group group-select2" ng-if="metadata.type =='lions'">
+								<label class="meta_label" for="is_dead">
+									<input type="checkbox" ng-model="changed.is_dead" ng-change="clear_selection('is_dead');"
+										class="batch-checkbox">Dead:
+								</label>
+								<label ng-hide="changed.is_dead" class="h-label">
+									Do not change</label>
+								<button type="button" id="is_dead"
+									class="btn btn-default btn-sm select_btn"
+									ng-model="selected.is_dead"
+									data-html="1" bs-options="is.value as is.label for is in [{value: true, label:'Dead'},{value: false, label:'Alive'}]"
+									placement="bottom-right" bs-select ng-disabled="!changed.is_dead">
+								Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.is_dead}}</pre>
+							<hr class="style-line" ng-if="metadata.type == 'lions'">
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group group-select2">
+								<label class="location text-right" for="location">
+								<input type="checkbox" ng-model="changed.tags" ng-change="clear_selection('tags');"
+									class="batch-checkbox">Tags:
+								</label>
+							</div>
+							<div class="form-group group-select2">
+								<label class="meta_label" for="id_ear_marking">Ear Markings: </label>
+								<label ng-hide="changed.tags" class="h-label">
+									Do not change</label>
+								<button type="button" name="id_ear_marking" placeholder="Unknown"
+									class="btn btn-default btn-sm select_btn"
+									ng-model="selected.tags.ear_marking"
+									all-none-buttons="true" all-text="All Ear Markings" all-button="true"
+									none-button="false" none-text="" unknown-text="Unknown" unknown-button="true"
+									data-html="1" data-multiple="1" max-length="2" ng-disabled="!changed.tags"
+									bs-options="mark.value as mark.label for mark in all_tags.ear_marking"
+									data-template-url="custom-select.tpl.html" placement="bottom-right" bs-select="">
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.tags.ear_marking}}</pre>
+							<div class="form-group group-select2">
+								<label class="meta_label" for="id_mouth_marking">Mouth Markings: </label>
+								<label ng-hide="changed.tags" class="h-label">
+									Do not change</label>
+								<button type="button" name="id_mouth_marking" placeholder="Unknown"
+									class="btn btn-default btn-sm select_btn"
+									ng-model="selected.tags.mouth_marking"
+									all-none-buttons="true" all-Text="All Mouth Markings" all-button="false"
+									none-button="false" none-Text="" unknown-Text="Unknown" unknown-button="true"
+									data-html="1" data-multiple="1" max-length="2" ng-disabled="!changed.tags"
+									bs-options="mark.value as mark.label for mark in all_tags.mouth_marking"
+									data-template-url='custom-select.tpl.html'
+									placement="bottom-right" bs-select>
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.tags.mouth_marking}}</pre>
+							<div class="form-group group-select2">
+								<label class="meta_label" for="id_nose_color">Nose Color: </label>
+								<label ng-hide="changed.tags" class="h-label">
+									Do not change</label>
+								<button type="button" id="id_nose_color" placeholder="Unknown"
+									class="btn btn-default btn-sm select_btn"
+									ng-model="selected.tags.nose_color"
+									all-none-buttons="false" all-button="false"
+									none-button="false" unknown-button="false"
+									data-html="1" data-multiple="0" ng-disabled="!changed.tags"
+									bs-options="color.value as color.label for color in all_tags.nose_color"
+									data-template-url='custom-select.tpl.html'
+									placement="bottom-right" bs-select>
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.tags.nose_color}}</pre>
+							<div class="form-group group-select2">
+								<label class="meta_label" for="id_scars">Scars: </label>
+								<label ng-hide="changed.tags" class="h-label">
+									Do not change</label>
+								<button type="button" id="id_scars" placeholder="Unknown"
+									class="btn btn-default btn-sm select_btn"
+									ng-model="selected.tags.scars"
+									all-none-buttons="true" all-Text="All Type of Scars" all-button="true"
+									none-button="false" none-Text="" unknown-button="true" unknown-Text="Unknown"
+									data-html="1" data-multiple="1" max-length="2" ng-disabled="!changed.tags"
+									bs-options="scar.value as scar.label for scar in all_tags.scars"
+									data-template-url='custom-select.tpl.html'
+									placement="bottom-right" bs-select>
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.tags.scars}}</pre>
+							<div class="form-group group-select2">
+								<label class="meta_label" for="id_broken_teeth">Broken Teeth: </label>
+								<label ng-hide="changed.tags" class="h-label">
+									Do not change</label>
+								<button type="button" id="id_broken_teeth" placeholder="Unknown"
+									class="btn btn-default btn-sm select_btn"
+									ng-model="selected.tags.broken_teeth"
+									all-none-buttons="true" all-Text="All Broken Teeth" all-button="true"
+									none-button="false" none-Text="" unknown-button="true" unknown-Text="Unknown"
+									data-html="1" data-multiple="1" ng-disabled="!changed.tags"
+									bs-options="teeth.value as teeth.label for teeth in all_tags.broken_teeth"
+									data-template-url='custom-select.tpl.html'
+									placement="bottom-right" bs-select>
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.tags.broken_teeth}}</pre>
+							<div class="form-group group-select2">
+								<label class="meta_label" for="id_tail_marking">Tail Markings/Missing Tuft: </label>
+								<label ng-hide="changed.tags" class="h-label h-label2">
+									Do not change</label>
+								<button type="button" name="id_tail_marking" placeholder="Unknown"
+									class="btn btn-default btn-sm select_btn"
+									ng-model="selected.tags.tail_marking"
+									all-none-buttons="true" all-Text="All Tail Markings" all-button="false"
+									none-button="false" none-Text="" unknown-button="true" unknown-Text="Unknown"
+									data-html="1" data-multiple="1" max-length="2" ng-disabled="!changed.tags"
+									bs-options="mark.value as mark.label for mark in all_tags.tail_marking"
+									data-template-url='custom-select.tpl.html'
+									placement="bottom-right" bs-select>
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.tags.tail_marking}}</pre>
+							<div class="form-group group-select2">
+								<label class="meta_label" for="id_eye_damage">Eye Damage/Pigmentation: </label>
+								<label ng-hide="changed.tags" class="h-label2">
+									Do not change</label>
+								<button type="button" id="id_eye_damage" placeholder="Unknown"
+									class="btn btn-default btn-sm select_btn"
+									ng-model="selected.tags.eye_damage"
+									all-none-buttons="true" all-Text="All Eye Damages" all-button="false"
+									none-button="false" none-Text="" unknown-button="true" unknown-Text="Unknown"
+									data-html="1" data-multiple="1" ng-disabled="!changed.tags"
+									bs-options="damage.value as damage.label for damage in all_tags.eye_damage"
+									data-template-url='custom-select.tpl.html'
+									placement="bottom-right" bs-select>
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.tags.eye_damage}}</pre>
+							<hr class="style-line">
+							<div class="form-group group-select2">
+								<label class="meta_label" for="notes">
+									<input type="checkbox" ng-model="changed.notes" ng-change="clear_selection('notes');"
+										class="batch-checkbox">Notes:
+								</label>
+								<textarea class="form-control" rows="3" ng-model="selected.notes" ng-disabled="!changed.notes"
+									placeholder="{{! !changed.notes ? 'Do not change':'Notes here'}}" ></textarea>
+							</div>
+							<pre ng-show="debug">{{!selected.notes}}</pre>
+							<hr class="style-line">
+						</div>
+					</div>
+					<div class="form-group user-actions text-right">
+						<button ng-disabled="!metadataForm.modified" type="submit" class="btn btn-primary btn-min-120">Save</button>
+						<span ng-if="dataloading" class="text-right text-danger span-preloader">
+							<img src="/static/images/loading.gif" class="preloader" />Updating &hellip;
+						</span>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

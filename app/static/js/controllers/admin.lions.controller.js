@@ -230,15 +230,11 @@ angular.module('linc.admin.lions.controller', [])
   $scope.Delete_Lion = function() {
     $scope.DialogDelete('Lions')
     .then(function (result) {
-      var lions_id = _.pluck(_.map($scope.Selecteds, function (lion){
-        return {'id': lion.id};
-      }), 'id');
+      var lions_id = _.map($scope.Selecteds, 'id');
 
       $scope.LincApiServices.Lions({'method': 'delete', 'lions_id': lions_id}).then(function(response){
         if(response.error.length>0){
-          var data = _.pluck(_.map(response.error, function (lion){
-            return {'id': lion.id};
-          }), 'id');
+          var data = _.map(response.error, 'id');
           var msg = (data.length>1) ? 'Unable to delete lions ' + data : 'Unable to delete lion ' + data;
           $scope.Notification.error({
             title: "Delete", 

@@ -31,7 +31,6 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       <script type="text/ng-template" id="tooltip.password.tpl.html">
         <div class="tooltip in tooltip-password" ng-show="title">
           <div class="tooltip-arrow"></div>
-          <div class="tooltip-arrow custom-arrow"></div>
           <div class="tooltip-inner" ng-bind-html="title | unsafe"></div>
         </div>
       </script>
@@ -118,65 +117,80 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         </ul>
       </script>
       <!-- Main hero unit for a primary marketing message or call to action -->
-      <nav class="navbar navbar-default navbar-fixed-top" role="navigation" bs-navbar>
+      <nav ng-if="show_navbar" class="navbar navbar-default navbar-fixed-top" role="navigation" bs-navbar>
         <div class="container-fluid">
           <div class="navbar-header">
-            <a class="navbar-brand" ng-disabled="!Auth.user.logged" ui-sref="home"><img src="static/logo.png" alt="logo" ></a>
+            <a class="navbar-brand" ng-click="goto_home()" uib-tooltip="Disable Batch Mode"
+              tooltip-placement="bottom" tooltip-trigger="'mouseenter'" tooltip-enable="isBatchMode" >
+              <img src="static/logo.png" alt="logo" >
+            </a>
           </div>
+
           <ul class="nav navbar-nav navbar-right" ng-show="Auth.user.logged">
             <sidemenu change-password="changePWD(user)" debug="debug"></sidemenu>
           </ul>
         </div>
       </nav>
       <div id="main">
-        <div ui-view class="ffont-homenaje"></div>
+        <div ui-view class="font-homenaje"></div>
       </div>
 
   {% end %}
 
   {% block include_js %}
-    <script src="{{ static_url("js/app.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/controllers.js") }}" ></script>
-    <script src="{{ static_url("js/directives/directives.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/admin.controller.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/home.controller.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/login.controller.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/lion.controllers.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/search.lion.controllers.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/image.set.controllers.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/search.image.set.controllers.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/conservationists.controller.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/side.menu.controller.js") }}" ></script>
-    <script src="{{ static_url("js/directives/side.menu.directive.js") }}" ></script>
 
-    <script src="{{ static_url("js/controllers/image.gallery.controller.js") }}" ></script>
-    <script src="{{ static_url("js/directives/image.gallery.directive.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/location.history.controller.js") }}" ></script>
-    <script src="{{ static_url("js/directives/location.history.directive.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/metadata.controller.js") }}" ></script>
-    <script src="{{ static_url("js/directives/metadata.directive.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/cvresults.controller.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/compare.images.controller.js") }}" ></script>
-    <script src="{{ static_url("js/directives/cvresults.directive.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/cvrequest.controller.js") }}" ></script>
-    <script src="{{ static_url("js/directives/cvrequest.directive.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/upload.images.controller.js") }}" ></script>
-    <script src="{{ static_url("js/directives/upload.images.directive.js") }}" ></script>
-    <script src="{{ static_url("js/services/linc.services.js") }}" ></script>
-    <script src="{{ static_url("js/services/linc.api.services.js") }}" ></script>
-    <script src="{{ static_url("js/services/notification.factory.js") }}" ></script>
-    <script src="{{ static_url("js/directives/ng-thumb-directive.js") }}" ></script>
-    <script src="{{ static_url("js/services/linc.data.factory.js") }}" ></script>
-    <script src="{{ static_url("js/services/linc.interceptor.factory.js") }}" ></script>
-    <script src="{{ static_url("js/services/linc.auth.services.js") }}" ></script>
-
-    <script src="{{ static_url("js/controllers/admin.users.controller.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/admin.organizations.controller.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/admin.lions.controller.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/admin.imagesets.controller.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/admin.images.controller.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/admin.cvrequests.controller.js") }}" ></script>
-    <script src="{{ static_url("js/controllers/admin.cvresults.controller.js") }}" ></script>
-
+    <script type="text/javascript" src="{{ static_url("js/app.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/controllers.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/admin.controllers.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/admin.cvrequests.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/admin.cvresults.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/admin.images.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/admin.imagesets.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/admin.lions.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/admin.organizations.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/admin.users.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/compare.images.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/conservationists.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/cvrequest.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/cvresults.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/home.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/image.gallery.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/imageset.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/lion.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/location.history.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/login.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/metadata.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/relatives.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/view.imagesets.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/view.lion.database.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/side.menu.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/upload.images.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/boundary.map.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/request.access.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/metadata.batch.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/delete.batch.controller.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/controllers/location.on.map.controller.js") }}" ></script>
+    
+    <script type="text/javascript" src="{{ static_url("js/directives/directives.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/directives/cvrequest.directive.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/directives/cvresults.directive.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/directives/image.gallery.directive.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/directives/location.history.directive.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/directives/metadata.directive.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/directives/relatives.directive.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/directives/side.menu.directive.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/directives/thumbnail.directive.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/directives/upload.images.directive.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/directives/request.access.directive.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/directives/metadata.batch.directive.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/directives/location.on.map.directive.js") }}" ></script>
+    
+    <script type="text/javascript" src="{{ static_url("js/services/linc.services.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/services/linc.api.services.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/services/notification.factory.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/services/linc.data.factory.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/services/linc.interceptor.factory.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/services/linc.auth.services.js") }}" ></script>
+    <script type="text/javascript" src="{{ static_url("js/services/modal.page.service.js") }}" ></script>
 
   {% end %}

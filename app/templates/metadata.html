@@ -17,319 +17,410 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 For more information or to contact visit linclion.org or email tech@linclion.org -->
 <script type="text/ng-template" id="Warning.tpl.html">
-  <div name="Warning" class="font-homenaje-1-1">
-    <div class="modal-header" ng-show="title">
-      <h4 class="modal-title" ng-bind-html="title"></h4>
-    </div>
-    <div class="modal-body" ng-bind-html="message">
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
-      <button type="button" class="btn btn-primary" ng-click="ok()">OK</button>
-    </div>
-  </div>
+	<div name="Warning" class="font-homenaje-1-1">
+		<div class="modal-header" ng-show="title">
+			<h4 class="modal-title" ng-bind-html="title"></h4>
+		</div>
+		<div class="modal-body" ng-bind-html="message">
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+			<button type="button" class="btn btn-primary" ng-click="ok()">OK</button>
+		</div>
+	</div>
 </script>
-<form name="metadataForm" class="font-homenaje-1-1">
-  <div class="modal-header" ng-show="title">
-    <button type="button" class="close" ng-click="Cancel()">&times;</button>
-    <h3 class="modal-title" ng-bind-html="title"></h3>
-  </div>
-  <div class="modal-body" ng-show="content">
-    <div class="row">
-      <div class="col-sm-6 line-right">
-        <div class="row">
-          <div class="col-sm-6">
-            <div ng-show="optionsSet.type === 'imageset'" class="form-inline group-select"  ng-class="{'has-error': metadataForm.owner_organization_id.$dirty && metadataForm.owner_organization_id.$error.required }">
-              <label class="meta_label" for="owner_organization_id">Organization:</label>
-              <select class="form-control custom-select" name="owner_organization_id" ng-options="organization.id as organization.name for organization in organizations" ng-model="selected.owner_organization_id" ng-disabled="!Editable" oninvalid="this.setCustomValidity('Please select an Organization in this list')" oninput="setCustomValidity('')" ng-change="ChangeWarning($event);" required><option value="">Select Organization</option>
-              </select>
-            </div>
-            <pre ng-show="debug">{{!selected.owner_organization_id}}</pre>
+<div name="metatada" class="font-homenaje-1-1" ng-keyup="KeyEvent($event)">
+	<form name="vm.form">
+		<div class="modal-header" ng-show="title">
+			<button type="button" class="close" ng-click="Cancel()">&times;</button>
+			<h3 class="modal-title" ng-bind-html="title"></h3>
+		</div>
+		<div class="modal-body" ng-show="content">
+			<div class="row">
+				<div class="col-sm-6 line-right">
+					<div class="row">
+						<div class="col-sm-6">
+							<!--IMAGESET - Owner Organization Id -->
+							<div ng-if="optionsSet.type === 'imageset'" class="form-inline group-select"
+									ng-class="{'has-error': vm.form.owner_organization_id.$dirty && vm.form.owner_organization_id.$error.required }"
+									data-placement="auto bottom" data-trigger="hover" data-animation="am-fade-and-scale" data-html=true
+									bs-tooltip="tooltip.organization" bs-enabled="tooltip.organization.checked">
+								<label class="meta_label" for="owner_organization_id">Organization:</label>
+								<select class="form-control custom-select" ng-options="organization.id as organization.name for organization in organizations"
+									name="owner_organization_id" ng-model="selected.owner_organization_id" ng-disabled="!(Editable && Editable2)"
+									oninvalid="this.setCustomValidity('Please select an Organization in this list')"
+									oninput="setCustomValidity('')" ng-change="ChangeWarning($event);" required>
+										<option value="">Select Organization</option>
+								</select>
+							</div>
+							<pre ng-if="debug">{{!selected.owner_organization_id}}</pre>
+							<!--LION - Organization Id -->
+							<div ng-if="optionsSet.type === 'lion'" class="form-inline group-select"
+								ng-class="{'has-error': vm.form.organization_id.$dirty && vm.form.organization_id.$error.required }">
+								<label class="meta_label" for="organization_id">Organization:</label>
+								<select class="form-control custom-select" ng-options="organization.id as organization.name for organization in organizations"
+									 name="organization_id" ng-model="selected.organization_id" ng-required="lion_required" ng-disabled="!Editable"
+									 oninvalid="this.setCustomValidity('Please select an Organization in this list')"
+									 oninput="setCustomValidity('')" ng-change="ChangeWarning($event);">
+										<option value="">Select Organization</option>
+								</select>
+							</div>
+							<pre ng-if="debug">{{!selected.organization_id}}</pre>
+							<!-- DATE STAMP -->
+							<hr class="style-line">
+							<div class="form-inline group-input" ng-class="{'has-error': datepickerForm.date.$invalid}">
+								<label class="control-label meta_label"><i class="fa fa-calendar"></i>Date Stamp: </label>
+								<input type="text" class="form-control meta_input" ng-model="selected.date_stamp" data-date-format="yyyy-MM-dd"
+									data-date-type="date" data-timezone="UTC" data-min-date="02/10/86" data-max-date="today" data-autoclose="1"
+									name="date" bs-datepicker placement="bottom-left">
+							</div>
+							<pre ng-if="debug">{{!selected.date_stamp}}</pre>
+							<hr class="style-line">
+							<!-- LOCATION / TAG LOCATION -->
+							<div class="form-group group-input">
+								<!-- LATITUDE -->
+								<div class="form-inline">
+									<div class="form-group control div-width-100"
+										ng-class="{'has-error': vm.form.latitude.$dirty && (vm.form.latitude.$error.pattern || vm.form.latitude.$error.limlatlng)}">
+										<label class="meta_label" for="latitude">Latitude: </label>
+										<div class="input-group width-100">
+											<input data-lpignore="true" class="form-control meta_input" type="text" pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?"
+												ng-model="selected.latitude" name="latitude"
+												oninvalid="this.setCustomValidity('Please enter a valid latitude number')"
+												oninput="setCustomValidity('')" limlatlng="90">
+											<span class="input-group-addon" id="basic-addon2">
+												<location-on-map use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html"
+													update-location="UpdateLocation(location)"
+													form-size="lg" modal-is-open="is_modal_open" meta-data="selected">
+												</location-on-map>
+											</span>
+										</div>
+										<span class="icon icon-cross" ng-click="submitted=false;" ng-show="vm.form.latitude.$error.limlatlng && submitted"></span>
+										<div class="error-messages" ng-messages="vm.form.latitude.$error" ng-if="submitted">
+											<div ng-message="limlatlng">
+												<div class="row">
+													<div class="col-sm-2">
+														<i class="icon icon-error icon-notification"></i>
+													</div>
+													<div class="col-sm-10 error-msg-col">
+														choose a latitude value between -90 and 90.
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- LONGITUDE -->
+								<div class="form-inline">
+									<div class="form-group control div-width-100"
+										ng-class="{'has-error': vm.form.longitude.$dirty && (vm.form.longitude.$error.pattern || vm.form.longitude.$error.limlatlng)}">
+										<label class="meta_label" for="longitude">Longitude: </label>
+										<div class="input-group width-100">
+											<input data-lpignore="true" class="form-control meta_input" type="text" pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?"
+												ng-model="selected.longitude" name="longitude" oninvalid="this.setCustomValidity('Please enter a valid longitude number')"
+												oninput="setCustomValidity('')" limlatlng="180">
+											<span class="input-group-addon" id="basic-addon2">
+												<location-on-map use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html" update-location="UpdateLocation(location)"
+												form-size="lg" modal-is-open="is_modal_open" meta-data="selected">
+												</location-on-map>
+											</span>
+										</div>
+										<span class="icon icon-cross" ng-click="submitted=false;"
+											ng-show="!vm.form.latitude.$error.limlatlng && vm.form.longitude.$error.limlatlng && submitted"></span>
+										<div class="error-messages" ng-messages="vm.form.longitude.$error"
+											ng-if="!vm.form.latitude.$error.limlatlng && submitted">
+											<div ng-message="limlatlng">
+												<div class="row">
+													<div class="col-sm-2">
+														<i class="icon icon-error icon-notification"></i>
+													</div>
+													<div class="col-sm-10 error-msg-col">
+														choose a longitude value between -180 and 180.
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- TAG LOCATION -->
+								<div class="form-group control div-width-100">
+									<label class="meta-label" for="isTagLocation">Tag Location: </label>
+									<div class="input-group width-100">
+										<input data-lpignore="true" class="form-control meta_input" type="text"
+											ng-model="selected.tag_location.text" name="tag_location" ng-readonly="true">
+										<span class="input-group-addon" id="basic-addon2">
+											<location-on-map use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html" update-location="UpdateLocation(location)"
+											form-size="lg" modal-is-open="is_modal_open" meta-data="selected">
+											</location-on-map>
+										</span>
+									</div>
+								</div>
+							</div>
+							<pre ng-if="debug">{{!selected.latitude}} {{!selected.longitude}}</pre>
+						</div><!-- End Col 1 -->
+						<div class="col-sm-6">
+							<!-- LION NAME -->
+							<div ng-if="isLion">
+								<div class="form-inline group-input" ng-class="{'has-error': vm.form.lion_name.$dirty && vm.form.lion_name.$error.required }">
+									<label class="meta_label" for="lion_name">Lion Name:</label>
+									<input type="text" class="form-control meta_input" name="lion_name" ng-model="selected.name"
+										placeholder="Lion Name" ng-required="lion_required" oninput="setCustomValidity('')"
+										oninvalid="this.setCustomValidity('please fill out this field with Lion\'s Name')">
+									<label ng-show="!isNew"><small>(id: {{!selected.id}})</small></label>
+								</div>
+							</div>
+							<hr ng-if="isLion" class="style-line">
+							<!-- IMAGESET NAME -->
+							<div ng-if="!isLion">
+								<!-- Show only Edit -->
+								<div ng-if="!isNew">
+									<!--Has Lion-->
+									<div ng-if="selected.lion_id !== null" class="form-inline group-input">
+										<label class="meta_label" for="lion_name2">Lion: </label>
+										<a ui-sref="lion({id: selected.lion_id})" target="_blank" name="lion_name2"
+											bs-tooltip="tooltip.lion_page" data-placement="auto bottom" data-trigger="hover"
+											data-animation="am-fade-and-scale" data-html=true bs-enabled="tooltip.lion_page.checked">
+											<input type="text" class="form-control meta_input_name" name="lion_name2"
+										 readonly ng-model="selected.label">
+										</a>
+									</div>
+									<!--Associate button-->
+									<div ng-if="selected.lion_id === null">
+										<!--Associate Button-->
+										<div ng-if="!lion_association.show" class="form-group group-select">
+											<label class="meta_label" for="lion_name1" >Lion: - </label>
+											<button class="btn btn-default btn-sm select_btn select_btn_1" ng-click="set_lion_list(true)"> {{!lion_association.label}} </button>
+										</div>
+										<!--Show Select Lion List-->
+										<div ng-if="lion_association.show" class="form-group group-input">
+											<label class="meta_label" for="lion_name3">Lion:</label>
+											<ui-select class="lion-ui-select custom-select" name="lion_name3" ng-model="selected.new_lion" theme="bootstrap">
+												<ui-select-match placeholder="Select a Lion...">
+													<div ng-bind-html="$select.selected.label | highlight: $select.search"></div>
+												</ui-select-match>
+												<ui-select-choices repeat="item in (ListLions | filter: $select.search) track by item.index">
+													<div ng-bind-html="item.choice | highlight: $select.search"></div>
+												</ui-select-choices>
+											</ui-select>
+										</div>
+									</div>
+								</div>
+								<pre ng-if="debug">{{!selected.name}}</pre>
+							</div>
+							<hr ng-if="!isLion && !isNew" class="style-line">
+							<!-- DATE OF BIRTH -->
+							<div class="form-inline group-input" ng-class="{'has-error': datepickerForm.date1.$invalid}">
+								<label class="control-label"><i class="fa fa-calendar"></i>Date of Birth: </label>
+								<input type="text" class="form-control meta_input" ng-model="selected.date_of_birth" ng-change='Calc_Age()'
+									data-date-format="yyyy-MM-dd" data-date-type="date" data-timezone="UTC" data-max-date="today"
+									data-autoclose="1" name="date1" bs-datepicker placement="bottom-right">
+							</div>
+							<pre ng-show="debug">{{!selected.date_of_birth}}</pre>
+							<!-- LION AGE -->
+							<div class="form-inline group-input-center">
+								<label for="id_age">Age: {{!lion_age}} <small>(years)</small></label>
+							</div>
+							<pre ng-show="debug">{{!lion_age}}</pre>
+							<hr class="style-line">
+							<!-- GENDER -->
+							<div class="form-group group-select">
+								<label class="meta_label" for="id_gender" >Gender:</label>
+								<button type="button" id="id_gender" placeholder="Select Gender" class="btn btn-default btn-sm select_btn"
+									ng-model="selected.gender" data-html="1" bs-options="gen.value as gen.label for gen in genders"
+									placement="bottom-right" bs-select>
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.gender}}</pre>
 
-            <div ng-show="optionsSet.type === 'lion'" class="form-inline group-select"  ng-class="{'has-error': metadataForm.organization_id.$dirty && metadataForm.organization_id.$error.required }">
-              <label class="meta_label" for="organization_id">Organization:</label>
-              <select class="form-control custom-select" name="organization_id" ng-options="organization.id as organization.name for organization in organizations" ng-model="selected.organization_id" ng-required="lion_required" ng-disabled="!Editable" oninvalid="this.setCustomValidity('Please select an Organization in this list')" oninput="setCustomValidity('')" ng-change="ChangeWarning($event);"><option value="">Select Organization</option>
-              </select>
-            </div>
-            <pre ng-show="debug">{{!selected.organization_id}}</pre>
+						</div><!--End Col 2 -->
+					</div><!-- End Row -->
+				</div><!-- End Col Left -->
+				<div class="col-sm-6">
+					<div class="row">
+						<!-- TAGS -->
+						<div class="col-sm-6">
+							<!-- EAR MARKINGS -->
+							<div class="form-group group-select">
+								<label for="id_ear_marking">Ear Markings: </label>
+								<button type="button" name="id_ear_marking" placeholder="Unknown"
+												class="btn btn-default btn-sm select_btn" ng-model="selected.ear_marking"
+												data-html="1" data-multiple="1" max-length="2"
+												all-none-buttons="true" all-Text="All Ear Markings" all-button="true"
+												none-button="false" none-Text=""
+												unknown-button="true" unknown-Text="Unknown"
+												bs-options="mark.value as mark.label for mark in tags.ear_marking"
+												data-template-url='custom-select.tpl.html'
+												placement="bottom-right" bs-select>
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.ear_marking}}</pre>
+							<!-- MOUTH MARKINGS -->
+							<div class="form-group group-select">
+								<label for="id_mouth_marking">Mouth Markings: </label>
+								<button type="button" name="id_mouth_marking" placeholder="Unknown"
+												class="btn btn-default btn-sm select_btn" ng-model="selected.mouth_marking"
+												data-html="1" data-multiple="1" max-length="2"
+												all-none-buttons="true" all-Text="All Mouth Markings" all-button="false"
+												none-button="false" none-Text=""
+												unknown-button="true" unknown-Text="Unknown"
+												bs-options="mark.value as mark.label for mark in tags.mouth_marking"
+												data-template-url='custom-select.tpl.html'
+												placement="bottom-right" bs-select>
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.mouth_marking}}</pre>
+							<!-- NOSE COLOR -->
+							<div class="form-group group-select">
+								<label for="id_nose_color">Nose Color: </label>
+								<button type="button" id="id_nose_color" placeholder="Unknown" 
+												class="btn btn-default btn-sm select_btn" ng-model="selected.nose_color"
+												data-html="1" data-multiple="0"
+												all-none-buttons="false" all-button="false"
+												none-button="false"
+												unknown-button="false"
+												bs-options="color.value as color.label for color in tags.nose_color"
+												data-template-url='custom-select.tpl.html'
+												placement="bottom-right" bs-select>
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.nose_color}}</pre>
+							<!-- SCARS -->
+							<div class="form-group group-select">
+								<label for="id_scars">Scars: </label>
+								<button type="button" id="id_scars" placeholder="Unknown"
+												class="btn btn-default btn-sm select_btn" ng-model="selected.scars"
+												data-html="1" data-multiple="1" max-length="2"
+												all-none-buttons="true" all-Text="All Type of Scars" all-button="true"
+												none-button="false" none-Text=""
+												unknown-button="true" unknown-Text="Unknown"
+												bs-options="scar.value as scar.label for scar in tags.scars"
+												data-template-url='custom-select.tpl.html'
+												placement="bottom-right" bs-select>
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.scars}}</pre>
+						</div><!-- End Col 3 -->
+						<div class="col-sm-6">
+							<!-- BROKEN TEETH -->
+							<div class="form-group group-select">
+								<label for="id_broken_teeth">Broken Teeth: </label>
+								<button type="button" id="id_broken_teeth" placeholder="Unknown"
+												class="btn btn-default btn-sm select_btn" ng-model="selected.broken_teeth"
+												data-html="1" data-multiple="1"
+												all-none-buttons="true" all-Text="All Broken Teeth" all-button="true"
+												none-button="false" none-Text=""
+												unknown-button="true" unknown-Text="Unknown"
+												bs-options="teeth.value as teeth.label for teeth in tags.broken_teeth"
+												data-template-url='custom-select.tpl.html'
+												placement="bottom-right" bs-select>
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.broken_teeth}}</pre>
+							<!-- TAIL MARKING / MISSING TUFT -->
+							<div class="form-group group-select">
+								<label for="id_tail_marking" >Tail Markings / Missing Tuft: </label>
+								<button type="button" name="id_tail_marking" placeholder="Unknown"
+												class="btn btn-default btn-sm select_btn" ng-model="selected.tail_marking"
+												data-html="1" data-multiple="1" max-length="2"
+												all-none-buttons="true" all-Text="All Tail Markings" all-button="false"
+												none-button="false" none-Text=""
+												unknown-button="true" unknown-Text="Unknown"
+												bs-options="mark.value as mark.label for mark in tags.tail_marking"
+												data-template-url='custom-select.tpl.html'
+												placement="bottom-right" bs-select>
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.tail_marking}}</pre>
+							<!-- EYE DAMAGE / PIGMANTATION -->
+							<div class="form-group group-select">
+								<label for="id_eye_damage">Eye Damage / Pigmentation: </label>
+								<button type="button" id="id_eye_damage" placeholder="Unknown"
+												class="btn btn-default btn-sm select_btn" ng-model="selected.eye_damage"
+												data-html="1" data-multiple="1"
+												all-none-buttons="true" all-Text="All Eye Damages" all-button="false"
+												none-button="false" none-Text=""
+												unknown-button="true" unknown-Text="Unknown"
+												bs-options="damage.value as damage.label for damage in tags.eye_damage"
+												data-template-url='custom-select.tpl.html'
+												placement="bottom-right" bs-select>
+									Action <span class="caret"></span>
+								</button>
+							</div>
+							<pre ng-show="debug">{{!selected.eye_damage}}</pre>
+						</div><!-- End Col 4 -->
+					</div><!-- End Row -->     
+				</div><!-- End Col Right -->
+			</div><!-- End Row -->
+			<hr class="style-line">
+			<div class="row">
+				<div class="col-sm-7">
+					<!-- NOTES -->
+					<div class="form-group">
+						<textarea class="form-control" rows="5" ng-model="selected.notes" placeholder="Notes here" ></textarea>
+					</div>
+					<pre ng-show="debug">{{!selected.notes}}</pre>
+				</div>
+				<div class="col-sm-5">
+					<!-- GEO PRIVATE -->
+					<div class="checkbox">
+						<label class="checkbox-inline">
+							<input type="checkbox" class="form-input" ng-model="selected.isPrivate">
+							<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+							GPS points and Location on map are Private
+						</label>
+					</div>
+					<pre ng-show="debug">{{!selected.isPrivate}}</pre>
+					<!-- DEAD LION-->
+					<div class="checkbox" ng-show="(isLion && isNew) || !isNew">
+						<label class="checkbox-inline">
+							<input type="checkbox" ng-disabled="!isLion" class="form-input" ng-model="selected.isDead">
+							<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+							Dead Lion
+						</label>
+					</div>
+					<pre ng-show="debug">{{!selected.isDead}}</pre>
+				</div>
+			</div>
+		</div><!-- End Modal Body -->
+		<div class="modal-footer">
+			
+			<button ng-disabled="!vm.form.modified && !selected.new_lion" ng-show="!isNew" type="submit"
+				class="btn btn-primary btn-min-120" ng-click="submit(vm.form) && vm.form.$valid && SaveMetadata()">Save
+			</button>
 
-            <hr class="style-line">
-            <div class="form-inline group-input" ng-class="{'has-error': datepickerForm.date.$invalid}">
-              <label class="control-label meta_label"><i class="fa fa-calendar"></i>Date Stamp: </label>
-              <input type="text" class="form-control meta_input" ng-model="selected.date_stamp" data-date-format="yyyy-MM-dd" data-date-type="date" data-timezone="UTC" data-min-date="02/10/86" data-max-date="today" data-autoclose="1" name="date" bs-datepicker placement="bottom-left">
-            </div>
-            <pre ng-show="debug">{{!selected.date_stamp}}</pre>
-            <hr class="style-line">
+			<div ng-if="isLion">
+			
+				<button ng-disabled="!vm.form.modified" ng-show="isNew" type="submit"
+					class="btn btn-primary btn-min-120" ng-click="submit(vm.form) && vm.form.$valid && CreateClose()">Create
+				</button>
+			
+				<upload-images disable-upload="!vm.form.modified" btn-submit="submit(vm.form)" ng-show="isNew"
+					use-ctrl="UploadImagesCtrl" use-template-url="uploadimages.html" form-size="lg" type="new"
+					save-metadata-action="CreateUpload()" close-action="Close()" debug="debug">
+				</upload-images>
+			
+			</div>
+			
+			<div ng-if="!isLion">
+			
+				<button ng-disabled="!vm.form.modified" ng-show="isNew" type="submit" class="btn btn-primary btn-min-120"
+					ng-click="submit(vm.form) &&  vm.form.$valid && CreateClose()">Create
+				</button>
 
-            <div class="form-group group-input">
-              <div class="form-inline">
-                <div class="form-group control div-width-100" ng-class="{'has-error': metadataForm.latitude.$dirty && (metadataForm.latitude.$error.pattern || metadataForm.latitude.$error.limlatlng)}">
-                  <label class="meta_label" for="latitude">Latitude: </label>
-                  <input class="form-control meta_input" type="text" pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-model="selected.latitude" name="latitude" oninvalid="this.setCustomValidity('Please enter a valid latitude number')" oninput="setCustomValidity('')" limlatlng="90">
-                  <span class="icon icon-cross" ng-click="submitted=false;" ng-show="metadataForm.latitude.$error.limlatlng && submitted"></span>
-                  <div class="error-messages" ng-messages="metadataForm.latitude.$error" ng-if="submitted">
-                    <div ng-message="limlatlng">
-                      <div class="row">
-                        <div class="col-sm-2">
-                          <i class="icon icon-error icon-notification"></i>
-                        </div>
-                        <div class="col-sm-10 error-msg-col">
-                          choose a latitude value between -90 and 90.
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="form-inline">
-                <div class="form-group control div-width-100" ng-class="{'has-error': metadataForm.longitude.$dirty && (metadataForm.longitude.$error.pattern || metadataForm.longitude.$error.limlatlng)}">
-                  <label class="meta_label" for="longitude">Longitude: </label>
-                  <input class="form-control meta_input" type="text" pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-model="selected.longitude" name="longitude" oninvalid="this.setCustomValidity('Please enter a valid longitude number')" oninput="setCustomValidity('')" limlatlng="180">
-                  <span class="icon icon-cross" ng-click="submitted=false;" ng-show="!metadataForm.latitude.$error.limlatlng && metadataForm.longitude.$error.limlatlng && submitted"></span>
-                  <div class="error-messages" ng-messages="metadataForm.longitude.$error" ng-if="!metadataForm.latitude.$error.limlatlng && submitted">
-                    <div ng-message="limlatlng">
-                      <div class="row">
-                        <div class="col-sm-2">
-                          <i class="icon icon-error icon-notification"></i>
-                        </div>
-                        <div class="col-sm-10 error-msg-col">
-                          choose a longitude value between -180 and 180.
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <pre ng-show="debug">{{!selected.latitude}} {{!selected.longitude}}</pre>
-          </div><!-- End Col 1 -->
-          <div class="col-sm-6">
-            <!--Lion of Lion-->
-            <div ng-show="isLion">
-              <div class="form-inline group-input" ng-class="{'has-error': metadataForm.lion_name.$dirty && metadataForm.lion_name.$error.required }">
-                <label class="meta_label" for="lion_name">Lion Name:</label>
-                <input type="text" class="form-control meta_input" name="lion_name" ng-model="selected.name" placeholder="Lion Name" ng-required="lion_required" oninput="setCustomValidity('')"
-                oninvalid="this.setCustomValidity('please fill out this field with Lion\'s Name')">
-                <label ng-show="!isNew"><small>(id: {{!selected.id}})</small></label>
-              </div>
-            </div>
-            <!--Lion of Image Set-->
-            <div ng-show="!isLion">
-              <!-- Show only Edit -->
-              <div ng-show="!isNew">
-                <!--Has Lion-->
-                <div ng-if="selected.lion_id !== null" class="form-inline group-input">
-                  <label class="meta_label" for="lion_name2">Lion: </label>
-                  <a ui-sref="lion({id: selected.lion_id})" target="_blank" name="lion_name2" data-animation="am-flip-x" placement="bottom-right" bs-tooltip="tooltip">
-                    <input type="text" class="form-control meta_input_name" name="lion_name2"
-                   readonly ng-model="selected.label">
-                  </a>
-                </div>
-                <!--Associate button-->
-                <div ng-if="selected.lion_id === null">
-                  <!--Associate Button-->
-                  <div ng-if="!lion_association.show" class="form-group group-select">
-                    <label class="meta_label" for="lion_name1" >Lion: - </label>
-                    <button class="btn btn-default btn-sm select_btn select_btn_1" ng-click="set_lion_list(true)"> {{!lion_association.label}} </button>
-                  </div>
-                  <!--Show Select Lion List-->
-                  <div ng-if="lion_association.show" class="form-group group-input">
-                    <label class="meta_label" for="lion_name3">Lion:</label>
-                    <ui-select class="lion-ui-select custom-select" name="lion_name3" ng-model="selected.new_lion" theme="bootstrap">
-                      <ui-select-match placeholder="Select a Lion...">
-                        <div ng-bind-html="$select.selected.label | highlight: $select.search"></div>
-                      </ui-select-match>
-                      <ui-select-choices repeat="item in (ListLions | filter: $select.search) track by item.index">
-                        <div ng-bind-html="item.choice | highlight: $select.search"></div>
-                      </ui-select-choices>
-                    </ui-select>
-                  </div>
-                </div>
-              </div>
-              <pre ng-show="debug">{{!selected.name}}</pre>
-            </div>
-            <hr ng-show="showLionName" class="style-line">
+				<upload-images disable-upload="!vm.form.modified" btn-submit="submit(vm.form)" ng-show="isNew"
+					use-ctrl="UploadImagesCtrl" use-template-url="uploadimages.html" form-size="lg" type="new"
+					save-metadata-action="CreateUpload()" close-action="Close()" debug="debug">	
+				</upload-images>
 
-            <div class="form-inline group-input" ng-class="{'has-error': datepickerForm.date1.$invalid}">
-              <label class="control-label"><i class="fa fa-calendar"></i>Date of Birth: </label>
-              <input type="text" class="form-control meta_input" ng-model="selected.date_of_birth" ng-change='Calc_Age()' data-date-format="yyyy-MM-dd" data-date-type="date" data-timezone="UTC" data-max-date="today" data-autoclose="1" name="date1" bs-datepicker placement="bottom-right">
-            </div>
-            <pre ng-show="debug">{{!selected.date_of_birth}}</pre>
-
-            <div class="form-inline group-input-center">
-              <label for="id_age">Age: {{!lion_age}} <small>(years)</small></label>
-            </div>
-            <pre ng-show="debug">{{!lion_age}}</pre>
-
-            <hr class="style-line">
-
-            <div class="form-group group-select">
-              <label class="meta_label" for="id_gender" >Gender:</label>
-              <button type="button" id="id_gender" placeholder="Select Gender" class="btn btn-default btn-sm select_btn" ng-model="selected.gender" data-html="1" bs-options="gen.value as gen.label for gen in genders" placement="bottom-right" bs-select>
-                Action <span class="caret"></span>
-              </button>
-            </div>
-
-            <pre ng-show="debug">{{!selected.gender}}</pre>
-          </div><!--End Col 2 -->
-        </div><!-- End Row -->
-      </div><!-- End Col Left -->
-      <div class="col-sm-6">
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="form-group group-select">
-              <label for="id_ear_marking">Ear Markings: </label>
-              <button type="button" name="id_ear_marking" placeholder="Unknown" 
-                      class="btn btn-default btn-sm select_btn" ng-model="selected.ear_marking" 
-                      data-html="1" data-multiple="1" max-length="2" 
-                      all-none-buttons="true" all-Text="All Ear Markings" all-button="true"
-                      none-button="false" none-Text=""
-                      unknown-button="true" unknown-Text="Unknown" 
-                      bs-options="mark.value as mark.label for mark in tags.ear_marking" 
-                      data-template-url='custom-select.tpl.html'
-                      placement="bottom-right" bs-select>
-                Action <span class="caret"></span>
-              </button>
-            </div>
-            <pre ng-show="debug">{{!selected.ear_marking}}</pre>
-            <div class="form-group group-select">
-              <label for="id_mouth_marking">Mouth Markings: </label>
-              <button type="button" name="id_mouth_marking" placeholder="Unknown" 
-                      class="btn btn-default btn-sm select_btn" ng-model="selected.mouth_marking" 
-                      data-html="1" data-multiple="1" max-length="2" 
-                      all-none-buttons="true" all-Text="All Mouth Markings" all-button="false"
-                      none-button="false" none-Text=""
-                      unknown-button="true" unknown-Text="Unknown" 
-                      bs-options="mark.value as mark.label for mark in tags.mouth_marking" 
-                      data-template-url='custom-select.tpl.html'
-                      placement="bottom-right" bs-select>
-                Action <span class="caret"></span>
-              </button>
-            </div>
-            <pre ng-show="debug">{{!selected.mouth_marking}}</pre>
-            <div class="form-group group-select">
-              <label for="id_nose_color">Nose Color: </label>
-              <button type="button" id="id_nose_color" placeholder="Unknown" 
-                      class="btn btn-default btn-sm select_btn" ng-model="selected.nose_color" 
-                      data-html="1" data-multiple="0"
-                      all-none-buttons="false" all-button="false"
-                      none-button="false" 
-                      unknown-button="false"
-                      bs-options="color.value as color.label for color in tags.nose_color" 
-                      data-template-url='custom-select.tpl.html'
-                      placement="bottom-right" bs-select>
-                Action <span class="caret"></span>
-              </button>
-            </div>
-            <pre ng-show="debug">{{!selected.nose_color}}</pre>
-            <div class="form-group group-select">
-              <label for="id_scars">Scars: </label>
-              <button type="button" id="id_scars" placeholder="Unknown" 
-                      class="btn btn-default btn-sm select_btn" ng-model="selected.scars" 
-                      data-html="1" data-multiple="1" max-length="2" 
-                      all-none-buttons="true" all-Text="All Type of Scars" all-button="true"
-                      none-button="false" none-Text=""
-                      unknown-button="true" unknown-Text="Unknown" 
-                      bs-options="scar.value as scar.label for scar in tags.scars" 
-                      data-template-url='custom-select.tpl.html'
-                      placement="bottom-right" bs-select>
-                Action <span class="caret"></span>
-              </button>
-            </div>
-            <pre ng-show="debug">{{!selected.scars}}</pre>
-          </div><!-- End Col 3 -->
-          <div class="col-sm-6">
-            <div class="form-group group-select">
-              <label for="id_broken_teeth">Broken Teeth: </label>
-              <button type="button" id="id_broken_teeth" placeholder="Unknown" 
-                      class="btn btn-default btn-sm select_btn" ng-model="selected.broken_teeth" 
-                      data-html="1" data-multiple="1" 
-                      all-none-buttons="true" all-Text="All Broken Teeth" all-button="true"
-                      none-button="false" none-Text=""
-                      unknown-button="true" unknown-Text="Unknown" 
-                      bs-options="teeth.value as teeth.label for teeth in tags.broken_teeth" 
-                      data-template-url='custom-select.tpl.html'
-                      placement="bottom-right" bs-select>
-                Action <span class="caret"></span>
-              </button>
-            </div>
-            <pre ng-show="debug">{{!selected.broken_teeth}}</pre>
-            <div class="form-group group-select">
-              <label for="id_tail_marking" >Tail Markings / Missing Tuft: </label>
-              <button type="button" name="id_tail_marking" placeholder="Unknown" 
-                      class="btn btn-default btn-sm select_btn" ng-model="selected.tail_marking" 
-                      data-html="1" data-multiple="1" max-length="2" 
-                      all-none-buttons="true" all-Text="All Tail Markings" all-button="false"
-                      none-button="false" none-Text=""
-                      unknown-button="true" unknown-Text="Unknown" 
-                      bs-options="mark.value as mark.label for mark in tags.tail_marking" 
-                      data-template-url='custom-select.tpl.html'
-                      placement="bottom-right" bs-select>
-                Action <span class="caret"></span>
-              </button>
-            </div>
-            <pre ng-show="debug">{{!selected.tail_marking}}</pre>
-            <div class="form-group group-select">
-              <label for="id_eye_damage">Eye Damage / Pigmentation: </label>
-              <button type="button" id="id_eye_damage" placeholder="Unknown" 
-                      class="btn btn-default btn-sm select_btn" ng-model="selected.eye_damage" 
-                      data-html="1" data-multiple="1" 
-                      all-none-buttons="true" all-Text="All Eye Damages" all-button="false"
-                      none-button="false" none-Text=""
-                      unknown-button="true" unknown-Text="Unknown" 
-                      bs-options="damage.value as damage.label for damage in tags.eye_damage" 
-                      data-template-url='custom-select.tpl.html'
-                      placement="bottom-right" bs-select>
-                Action <span class="caret"></span>
-              </button>
-            </div>
-            <pre ng-show="debug">{{!selected.eye_damage}}</pre>
-          </div><!-- End Col 4 -->
-        </div><!-- End Row -->     
-      </div><!-- End Col Right -->
-    </div><!-- End Row -->
-    <hr class="style-line">
-    <div class="row">
-      <div class="col-sm-7">
-        <div class="form-group">
-          <textarea class="form-control" rows="5" ng-model="selected.notes" placeholder="Notes here" ></textarea>
-        </div>
-        <pre ng-show="debug">{{!selected.notes}}</pre>
-      </div>
-      <div class="col-sm-5">
-        <div class="checkbox">
-          <label class="checkbox-inline">
-            <input type="checkbox" class="form-input" ng-model="selected.isPrivate">
-            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-            GPS points and Location on map are Private
-          </label>
-        </div>
-        <pre ng-show="debug">{{!selected.isPrivate}}</pre>
-        <div class="checkbox" ng-show="(isLion && isNew) || !isNew">
-          <label class="checkbox-inline">
-            <input type="checkbox" ng-disabled="!isLion" class="form-input" ng-model="selected.isDead">
-            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-            Dead Lion
-          </label>
-        </div>
-        <pre ng-show="debug">{{!selected.isDead}}</pre>
-      </div>
-    </div>
-  </div><!-- End Modal Body -->
-  <div class="modal-footer">
-    <!--<button type="button" class="btn btn-default" ng-click="Cancel()">Close</button>-->
-    <button ng-disabled="!metadataForm.modified && !selected.new_lion" ng-show="!isNew" type="submit" class="btn btn-primary" ng-click="submit(metadataForm) && metadataForm.$valid && SaveMetadata()">Save</button>
-
-    <div ng-if="isLion">
-      <button ng-disabled="!metadataForm.modified" ng-show="isNew" type="submit" class="btn btn-primary" ng-click="submit(metadataForm) &&  metadataForm.$valid && CreateClose()">Create</button>
-
-      <upload-images disable-upload="!metadataForm.modified" btn-submit="submit(metadataForm)" ng-show="isNew" use-ctrl="UploadImagesCtrl" use-template-url="uploadimages.html" form-size="lg" type="new" save-metadata-action="CreateUpload()" close-action="Close()" debug="debug"></upload-images>
-    </div>
-    <div ng-if="!isLion">
-      <button ng-show="isNew" type="submit" class="btn btn-primary" ng-click="submit(metadataForm) &&  metadataForm.$valid && CreateClose()">Create</button>
-
-      <upload-images btn-submit="submit(metadataForm)" ng-show="isNew" use-ctrl="UploadImagesCtrl" use-template-url="uploadimages.html" form-size="lg" type="new" save-metadata-action="CreateUpload()" close-action="Close()" debug="debug"></upload-images>
-    </div>
-    <br>
-  </div>
-</form>
+			</div>
+			<br>
+		</div>
+	</form>
+</div>

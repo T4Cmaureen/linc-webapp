@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 For more information or to contact visit linclion.org or email tech@linclion.org -->
-<div name="UpLoadImages" class="font-homenaje-1-1">
+<div name="UpLoadImages" class="upload-images font-homenaje-1-1">
   <div class="modal-header" ng-show="title">
     <button type="button" class="close" ng-click="Finish()">&times;</button>
     <h4 class="modal-title" ng-bind-html="title"></h4>
@@ -26,24 +26,37 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     <div ng-show="uploader.isHTML5">
       <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
         <span class="btn btn-default btn-file">
-           Drag & Drop Images here OR click to Select<input type="file" class="uploader" nv-file-select="" uploader="uploader" multiple/>
+           Drag &#38; Drop Images here OR click to Select<input type="file" class="uploader" nv-file-select="" uploader="uploader" multiple/>
         </span>
       </div>
     </div>
     <h3>Upload queue</h3>
-
     <table class="table">
       <thead>
         <tr>
           <th width="12%" class="text-left"><p>Queue length: {{! uploader.queue.length }}</p></th>
-          <th width="13%" class="text-right"><p>Default Values:</p></th>
-          <th width="10%" class="text-center">
-            <button type="button" class="btn btn-default" ng-model="Default.ImageType" ng-disabled="uploader.isUploading" ng-init="Default.ImageType = 'cv'" data-html="1" bs-options="itype.value as itype.label for itype in Types['Images']" bs-select>
-            Action <span class="caret"></span>
-            </button>
+          <th width="5%" class="text-right"><p>Tags:</p></th>
+          <th width="30%" class="wrap-withespace text-center">
+            <ui-select class="select-tags" multiple ng-model="Default.Tags" theme="bootstrap" sortable="true" 
+              ng-disabled="uploader.isUploading" close-on-select="false" 
+              search-enabled="false"
+              on-select="OnSelect($item, Default.Tags, ListOfTags)" on-remove="OnRemove($item, Default.Tags, ListOfTags)"
+              remove-selected="false">
+              <ui-select-match placeholder="Select Image Tags...">
+                {{! $item.label}}
+              </ui-select-match>
+              <ui-select-choices repeat="tag in ListOfTags | filter: $select.search" ui-disable-choice="tag.disabled">
+                <div ng-bind-html="tag.label | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </th>
+          <th width="10%" class="properties text-center">
+            Propertie:
           </th>
           <th width="10%" class="text-center">
-            <button type="button" class="btn btn-default" ng-model="Default.isPublic" ng-disabled="uploader.isUploading" ng-init="Default.isPublic = true" data-html="1" bs-options="property.value as property.label for property in Types['Properties']" bs-select>
+            <button type="button" class="btn btn-default btn-action" ng-model="Default.isPublic" 
+              ng-disabled="uploader.isUploading" ng-init="Default.isPublic = true" data-html="1" 
+              bs-options="property.value as property.label for property in Properties" bs-select>
               Action <span class="caret"></span>
             </button>
           </th>
@@ -56,7 +69,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         <tr>
           <th width="8%" class="text-center">Image</th>
           <th width="20%" class="text-center">Name</th>
-          <th width="10%" class="text-center">Image type</th>
+          <th width="10%" class="text-center">Image Tags</th>
           <th width="10%" class="text-center">Properties</th>
           <th width="10%" class="text-center">Cover Image</th>
           <th width="8%" ng-show="uploader.isHTML5">Size</th>
@@ -74,20 +87,36 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             <strong>{{! item.file.name }}</strong>
           </td>
           <td ng-show="!item.show_name" class="text-center">
-            <strong><a class="upload-name" data-animation="am-flip-x" placement="top-left" bs-tooltip="item.tooltip">{{! item.nickname}}</a></strong>
+            <strong><a class="upload-name" data-animation="am-flip-x" placement="top-left" 
+              bs-tooltip="item.tooltip">{{! item.nickname}}</a></strong>
           </td>
+          
           <td class="text-center">
-            <button type="button" class="btn btn-default" ng-model="item.ImageType" ng-init="item.ImageType = Default.ImageType" data-html="1" bs-options="itype.value as itype.label for itype in Types['Images']" bs-select ng-disabled="item.isSuccess || uploader.isUploading">
+            <ui-select class="select-tags" multiple ng-model="item.Tags" theme="bootstrap" sortable="true" 
+              ng-disabled="item.isSuccess || uploader.isUploading" close-on-select="false" search-enabled="false"
+              on-select="OnSelect($item, item.Tags, item.ListOfTags)" on-remove="OnSelect($item, item.Tags, item.ListOfTags)"
+              remove-selected="false">
+              <ui-select-match placeholder="Select Image Tags...">
+                {{! $item.label}}
+              </ui-select-match>
+              <ui-select-choices repeat="tag in item.ListOfTags | filter: $select.search" ui-disable-choice="tag.disabled">
+                <div ng-bind-html="tag.label | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </td>
+
+          <td class="text-center">
+            <button type="button" class="btn btn-default" ng-model="item.isPublic" 
+              ng-init="item.isPublic = Default.isPublic" data-html="1" 
+              bs-options="property.value as property.label for property in Properties" bs-select 
+              ng-disabled="item.isSuccess || uploader.isUploading">
               Action <span class="caret"></span>
             </button>
           </td>
           <td class="text-center">
-            <button type="button" class="btn btn-default" ng-model="item.isPublic" ng-init="item.isPublic = Default.isPublic" data-html="1" bs-options="property.value as property.label for property in Types['Properties']" bs-select ng-disabled="item.isSuccess || uploader.isUploading">
-              Action <span class="caret"></span>
-            </button>
-          </td>
-          <td class="text-center">
-            <input type="radio" ng-disabled="item.isPublic==false || item.isSuccess || uploader.isUploading"  ng-checked="!(item.isPublic==false) && 0" ng-model="Default.isCover" name="radio-cover" ng-value="item.$$hashKey"/>
+            <input type="radio" ng-disabled="item.isPublic==false || item.isSuccess || uploader.isUploading"  
+              ng-checked="!(item.isPublic==false) && 0" ng-model="Default.isCover" name="radio-cover" 
+              ng-value="item.$$hashKey"/>
           </td>
 
           <td ng-show="uploader.isHTML5" nowrap>{{! item.file.size/1024/1024|number:2 }} MB</td>
@@ -108,22 +137,10 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             <button type="button" class="btn btn-default btn-xs" ng-click="remove_item(item)" ng-disabled="item.isUploading" ng-show="!item.isSuccess">
               <span class="icon icon-trash"></span> Remove
             </button>
-            <!--<button type="button" class="btn btn-primary btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess" ng-show="!item.isSuccess">
-              <span class="icon icon-cloud_upload"></span> Upload
-            </button>-->
           </td>
         </tr>
       </tbody>
     </table>
-    <!--
-    <div>
-      <div>
-        <p>Queue progress: {{! uploader.progress}} %</p>
-      </div>
-      <div class="progress">
-        <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
-      </div>
-    </div>-->
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">

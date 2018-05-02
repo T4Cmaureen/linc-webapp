@@ -103,9 +103,6 @@ angular.module('linc.admin.imagesets.controller', [])
     modalScope.organizations = angular.copy($scope.$parent.organizations);
     modalScope.lions = angular.copy($scope.$parent.lions);
     modalScope.images = angular.copy($scope.$parent.images);
-    //modalScope.images = _.filter($scope.$parent.images, function(image){
-    //  return (image.imageset_id == modalScope.imageset.id);
-    //});
 
     modalScope.imageset = { 
       'lion_id': undefined, 
@@ -156,17 +153,11 @@ angular.module('linc.admin.imagesets.controller', [])
         var tail_marking = _.includes(modalScope.imageset.tail_marking,'NONE') ? ['TAIL_MARKING_MISSING_TUFT_NONE'] : _.intersection(modalScope.imageset.tail_marking,['TAIL_MARKING_MISSING_TUFT_YES']);
         var scars = _.includes(modalScope.imageset.scars,'NONE')? ['SCARS_NONE'] : _.intersection(modalScope.imageset.scars,TAGS_CONST['SCARS']);
 
-        var concat = _([]).concat(eye_dam);
-        concat = _(concat).concat(broken_teeth);
-        concat = _(concat).concat(ear_marking);
-        concat = _(concat).concat(tail_marking);
-        concat = _(concat).concat(mouth_marking);
+        var concat = _.concat(eye_dam, broken_teeth, ear_marking, tail_marking, mouth_marking, scars);
         if(modalScope.imageset.nose_color != undefined)
-          concat = _(concat).concat([modalScope.imageset.nose_color]);
-        concat = _(concat).concat(scars);
-
-        var TAGS = JSON.stringify(concat.value());
-        //if(!concat.value().length) TAGS = "null";
+          concat = _.concat(concat, modalScope.imageset.nose_color);
+        var TAGS = JSON.stringify(concat);
+        if(!concat.length) TAGS = "null";
 
         var latitude = isNaN(parseFloat(modalScope.imageset.latitude)) ? null : parseFloat(modalScope.imageset.latitude);
         var longitude = isNaN(parseFloat(modalScope.imageset.longitude)) ? null : parseFloat(modalScope.imageset.longitude);
@@ -187,7 +178,7 @@ angular.module('linc.admin.imagesets.controller', [])
           'geopos_private': modalScope.imageset.geopos_private
         };
         if(data.lion_id){
-          if(data.owner_organization_id == _.result(_.findWhere(modalScope.lions, {'id': data.lion_id}),'organization_id')){
+          if(data.owner_organization_id == _.result(_.find(modalScope.lions, {'id': data.lion_id}),'organization_id')){
             data['is_verified'] = true;
           }
         }else{
@@ -318,17 +309,10 @@ angular.module('linc.admin.imagesets.controller', [])
           var tail_marking = _.includes(modalScope.imageset.tail_marking,'NONE') ? ['TAIL_MARKING_MISSING_TUFT_NONE'] : _.intersection(modalScope.imageset.tail_marking,['TAIL_MARKING_MISSING_TUFT_YES']);
           var scars = _.includes(modalScope.imageset.scars,'NONE')? ['SCARS_NONE'] : _.intersection(modalScope.imageset.scars,TAGS_CONST['SCARS']);
 
-          var concat = _([]).concat(eye_dam);
-          concat = _(concat).concat(broken_teeth);
-          concat = _(concat).concat(ear_marking);
-          concat = _(concat).concat(tail_marking);
-          concat = _(concat).concat(mouth_marking);
+          var concat = _.concat(eye_dam, broken_teeth, ear_marking, tail_marking, mouth_marking, scars);
           if(modalScope.imageset.nose_color != undefined)
-            concat = _(concat).concat([modalScope.imageset.nose_color]);
-          concat = _(concat).concat(scars);
-
-          var TAGS = JSON.stringify(concat.value());
-          //if(!concat.value().length) TAGS = "null";
+            concat = _.concat(concat, modalScope.imageset.nose_color);
+          var TAGS = JSON.stringify(concat);
 
           var latitude = isNaN(parseFloat(modalScope.imageset.latitude)) ? null : parseFloat(modalScope.imageset.latitude);
           var longitude = isNaN(parseFloat(modalScope.imageset.longitude)) ? null : parseFloat(modalScope.imageset.longitude);
@@ -349,7 +333,7 @@ angular.module('linc.admin.imagesets.controller', [])
             'geopos_private': modalScope.imageset.geopos_private
           };
           if(data.lion_id){
-            if(data.owner_organization_id == _.result(_.findWhere(modalScope.lions, {'id': data.lion_id}),'organization_id')){
+            if(data.owner_organization_id == _.result(_.find(modalScope.lions, {'id': data.lion_id}),'organization_id')){
               data['is_verified'] = true;
             }
           }else{
@@ -412,15 +396,11 @@ angular.module('linc.admin.imagesets.controller', [])
   $scope.Delete_ImageSet = function() {
     $scope.DialogDelete('Image Sets')
     .then(function (result) {
-      var imagesets_id = _.pluck(_.map($scope.Selecteds, function (imageset){
-        return {'id': imageset.id};
-      }), 'id');
+      var imagesets_id = _.map($scope.Selecteds, 'id');
 
       $scope.LincApiServices.ImageSets({'method': 'delete', 'imagesets_id': imagesets_id}).then(function(response){
         if(response.error.length>0){
-          var data = _.pluck(_.map(response.error, function (imageset){
-            return {'id': imageset.id};
-          }), 'id');
+          var data = _.map(response.error, 'id');
           var msg = (data.length>1) ? 'Unable to delete imagesets ' + data : 'Unable to delete imageset ' + data;
           $scope.Notification.error({
             title: "Delete", 
