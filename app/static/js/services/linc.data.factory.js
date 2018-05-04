@@ -51,7 +51,27 @@ angular.module('linc.data.factory', [])
 	var options = {
 		lions: angular.copy(default_options),
 		imagesets: angular.copy(default_options),
-		cvrequests: angular.copy(default_options)
+		cvrequests: angular.copy(default_options),
+		relatives: {
+			orderby : { reverse: false, predicate: 'id' },
+			orderby2 : { reverse: false, predicate: 'id_to' },
+			is_Collaped: {
+				Filter: true,
+				Notes: true,
+			},
+			isCollapsed: {
+				Age: true,
+				NameOrId: true,
+				Organization: true,
+				Gender: true
+			},
+			filters:{
+				Ages: { min: 0, max: 32, options: {ceil: 32, floor: 0 }},
+				NameOrId: '',
+				Organizations: [],
+				Genders: [{name: 'male', label: 'Male', checked: true}, {name: 'female', label: 'Female', checked: true}, {name: 'unknown', label: 'Unknown', checked: true}]
+			}
+		}
 	};
 
 	var default_organizations =[];
@@ -65,6 +85,7 @@ angular.module('linc.data.factory', [])
 			options.lions.filters.Organizations = angular.copy(default_organizations);
 			options.imagesets.filters.Organizations = angular.copy(default_organizations);
 			options.cvrequests.filters.Organizations = angular.copy(default_organizations);
+			options.relatives.filters.Organizations = angular.copy(default_organizations);
 
 			if($localStorage.boundarys){
 				options.lions.filters.Boundarys = $localStorage.boundarys;
@@ -77,9 +98,10 @@ angular.module('linc.data.factory', [])
 				deferred.resolve(options.imagesets);
 			else if(type=='cvrequests')
 				deferred.resolve(options.cvrequests);
-			else{
+			else if(type=='relatives')
+				deferred.resolve(options.relatives);
+			else
 				deferred.resolve(default_options);
-			}
 		},function(err){
 			deferred.reject(err);
 		});
@@ -93,8 +115,7 @@ angular.module('linc.data.factory', [])
 			else
 				return (default_options);
 		},
-		get_lions_options: function () {
-			console.log('Load Lions Sets Options')
+		get_lions: function () {
 			if($localStorage.lions){
 				var lions = $localStorage.lions;
 				if($localStorage.boundarys)
@@ -111,14 +132,12 @@ angular.module('linc.data.factory', [])
 				return (lions);
 			}
 		},
-		set_lions_options: function (opt) {
-			console.log('Save Lions Options');
+		set_lions: function (opt) {
 			options.lions = opt;
 			$localStorage.lions = opt;
 			$localStorage.boundarys = opt.filters.Boundarys;
 		},
-		get_imagesets_options: function () {
-			console.log('Load Image Sets Options')
+		get_imagesets: function () {
 			if($localStorage.imagesets){
 				var imagesets = $localStorage.imagesets;
 				if($localStorage.boundarys)
@@ -135,24 +154,36 @@ angular.module('linc.data.factory', [])
 				return imagesets;
 			}
 		},
-		set_imagesets_options: function (opt) {
-			console.log('Save Image Sets Options')
+		set_imagesets: function (opt) {
 			options.imagesets = opt;
 			$localStorage.imagesets = opt;
 			$localStorage.boundarys = opt.filters.Boundarys;
 		},
-		get_cvrequests_options: function () {
+		get_cvrequests: function () {
 			if($localStorage.cvrequests)
 				return $localStorage.cvrequests;
 			else if(!default_organizations.length)
 				return init_organizations('cvrequests');
 			else
-				return (options.cvrequests);
+				return options.cvrequests;
 		},
-		set_cvrequests_options: function (opt) {
+		set_cvrequests: function (opt) {
 			options.cvrequests = opt;
 			$localStorage.cvrequests = opt;
+		},
+		get_relatives: function () {
+			if($localStorage.relatives)
+				return $localStorage.relatives;
+			else if(!default_organizations.length)
+				return init_organizations('relatives');
+			else
+				return options.relatives;
+		},
+		set_relatives: function (opt) {
+			options.relatives = opt;
+			$localStorage.relatives = opt;
 		}
+		
 	};
 }])
 

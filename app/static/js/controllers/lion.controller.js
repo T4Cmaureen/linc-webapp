@@ -31,6 +31,7 @@ angular.module('linc.lion.controller', [])
     $scope.orderby.predicate = predicate;
   };
 
+  $scope.ChangeStatus = $rootScope.ChangeStatus;
   $scope.is_modal_open = false;
   $scope.lion = lion;
   $scope.relatives = relatives;

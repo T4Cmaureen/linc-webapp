@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 For more information or to contact visit linclion.org or email tech@linclion.org -->
-<div name="ViewImageSets" class="font-homenaje ViewImagesets">
+<div name="ViewImageSets" class="view-imagesets font-homenaje">
   <button type="button" class="btn-help pull-right btn btn-icon" data-placement="left" title="" data-content="View Image Sets to search and view summaries of name, age, organization, and CV status. Select a result row to view an image set's primary image, to create a lion from an image set, disassociate a lion from an image set, or run or view a CV." data-trigger="focus" bs-popover><i class="icon icon-help-with-circle"></i></button>
 
   <h1>
@@ -26,15 +26,24 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       tooltip-trigger="'mouseenter'"
       tooltip-enable="isBatchMode" >
       <i class="icon icon-arrow-left"></i>
+      <span ng-if="ChangeStatus.loading" class="loading text-center">
+        <img src="/static/images/loading.gif" width="40px;"/>
+      </span>
     </a> View Image Sets
   </h1>
+
   <div class="row main-row">
     <div class="col-sm-2 line-right">
       <h3 class="text-muted">Refine by</h3>
       <div class="tablist" data-allow-multiple="true" role="tablist" aria-multiselectable="true" bs-collapse>
+
         <div role="tab">
           <h4>
-            <a bs-collapse-toggle ng-click="collapse('NameOrId')"><i class="pull-right icon icon-select-arrows"></i> Name or ID</a>
+            <a bs-collapse-toggle ng-click="collapse('NameOrId')">
+              <i ng-if="isCollapsed.NameOrId" class="pull-right fa fa-expand" aria-hidden="true"></i>
+              <i ng-if="!isCollapsed.NameOrId" class="pull-right fa fa-compress" aria-hidden="true"></i>  
+              Name or ID
+            </a>
           </h4>
         </div>
         <div uib-collapse="isCollapsed.NameOrId">
@@ -42,9 +51,14 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             <input ng-change="change('NameOrId')" type="text" class="form-control input-sm" ng-model="filters.NameOrId">
           </div>
         </div>
+
         <div role="tab">
           <h4 >
-            <a bs-collapse-toggle ng-click="collapse('Organization')"><i class="pull-right icon icon-select-arrows"></i> Organization</a>
+            <a bs-collapse-toggle ng-click="collapse('Organization')">
+              <i ng-if="isCollapsed.Organization" class="pull-right fa fa-expand" aria-hidden="true"></i>
+              <i ng-if="!isCollapsed.Organization" class="pull-right fa fa-compress" aria-hidden="true"></i>  
+              Organization
+            </a>
           </h4>
         </div>
         <div uib-collapse="isCollapsed.Organization">
@@ -56,9 +70,14 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             </label>
           </div>
         </div>
+
         <div role="tab">
           <h4 >
-            <a bs-collapse-toggle ng-click="refreshSlider(); collapse('Age')"><i class="pull-right icon icon-select-arrows"></i> Age</a>
+            <a bs-collapse-toggle ng-click="refreshSlider(); collapse('Age')">
+              <i ng-if="isCollapsed.Age" class="pull-right fa fa-expand" aria-hidden="true"></i>
+              <i ng-if="!isCollapsed.Age" class="pull-right fa fa-compress" aria-hidden="true"></i>  
+              Age
+            </a>
           </h4>
         </div>
         <div uib-collapse="isCollapsed.Age">
@@ -73,9 +92,14 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             </rzslider>
           </div>
         </div>
+
         <div role="tab">
           <h4 >
-            <a bs-collapse-toggle ng-click="collapse('Gender')""><i class="pull-right icon icon-select-arrows"></i> Gender</a>
+            <a bs-collapse-toggle ng-click="collapse('Gender')"">
+              <i ng-if="isCollapsed.Gender" class="pull-right fa fa-expand" aria-hidden="true"></i>
+              <i ng-if="!isCollapsed.Gender" class="pull-right fa fa-compress" aria-hidden="true"></i>  
+              Gender
+            </a>
           </h4>
         </div>
         <div uib-collapse="isCollapsed.Gender">
@@ -87,20 +111,30 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             </label>
           </div>
         </div>
-        <div role="tab" data-placement="auto top" data-trigger="hover" data-animation="am-fade-and-scale" bs-tooltip="tooltip.features">
+
+        <div role="tab">
           <h4>
-            <a bs-collapse-toggle ng-click="collapse('TagFeatures')"><i class="pull-right icon icon-select-arrows"></i>Features</a>
+            <a bs-collapse-toggle ng-click="collapse('TagFeatures')">
+              <i ng-if="isCollapsed.TagFeatures" class="pull-right fa fa-expand" aria-hidden="true"></i>
+              <i ng-if="!isCollapsed.TagFeatures" class="pull-right fa fa-compress" aria-hidden="true"></i>  
+              Features
+            </a>
           </h4>
         </div>
         <div uib-collapse="isCollapsed.TagFeatures">
-          <div class="panel-body">
+          <div class="panel-body" data-placement="auto top" data-trigger="hover"
+            data-animation="am-fade-and-scale" bs-tooltip="tooltip.features">
             <input ng-change="change('TagFeatures')" type="text" class="form-control input-sm" ng-model="filters.TagFeatures">
           </div>
         </div>
 
         <div role="tab">
           <h4 >
-            <a bs-collapse-toggle ng-click="collapse('Primary')""><i class="pull-right icon icon-select-arrows"></i> Primary</a>
+            <a bs-collapse-toggle ng-click="collapse('Primary')"">
+              <i ng-if="isCollapsed.Primary" class="pull-right fa fa-expand" aria-hidden="true"></i>
+              <i ng-if="!isCollapsed.Primary" class="pull-right fa fa-compress" aria-hidden="true"></i>  
+              Primary
+            </a>
           </h4>
         </div>
         <div uib-collapse="isCollapsed.Primary">
@@ -115,7 +149,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 
         <div role="tab">
           <h4>
-            <a bs-collapse-toggle ng-click="collapse('Location')"><i class="pull-right icon icon-select-arrows"></i>Location</a>
+            <a bs-collapse-toggle ng-click="collapse('Location')">
+              <i ng-if="isCollapsed.Location" class="pull-right fa fa-expand" aria-hidden="true"></i>
+              <i ng-if="!isCollapsed.Location" class="pull-right fa fa-compress" aria-hidden="true"></i>
+              Location
+            </a>
           </h4>
         </div>
         <div uib-collapse="isCollapsed.Location">
@@ -195,9 +233,14 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             </form>
           </div>
         </div>
+
         <div role="tab">
           <h4>
-            <a bs-collapse-toggle ng-click="collapse('Boundarys')"><i class="pull-right icon icon-select-arrows"></i>Geographical</a>
+            <a bs-collapse-toggle ng-click="collapse('Boundarys')">
+              <i ng-if="isCollapsed.Boundarys" class="pull-right fa fa-expand" aria-hidden="true"></i>
+              <i ng-if="!isCollapsed.Boundarys" class="pull-right fa fa-compress" aria-hidden="true"></i>
+              Geographical
+            </a>
           </h4>
         </div>
         <div uib-collapse="isCollapsed.Boundarys">
@@ -217,6 +260,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
            </div>
           </div>
         </div>
+
       </div>
     </div>
     <div class="col-sm-10">
@@ -225,20 +269,19 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           <h3>{{! viewer_label()}}</h3>
         </div>
         <div class="col-sm-8 text-right form-group">
+
           <div class="pull-right per-page">
             <label for="items_page">Imagesets per page:</label>
             <select class="form-control" id="items_page" name="items_page" ng-options="itemspage.index as itemspage.label for itemspage in PerPages" ng-model="pages.PerPage" ng-change="changeItensPerPage()" >
             </select>
           </div>
+
           <div class="pull-right btn-batch">
-            <button type="button" class="btn btn-default batch-mode-btn"
-              ng-class="{active: isBatchMode}"
-              ng-click="Select_BatchMode();">
-              <span ng-if="batch.loading" class="text-center">
-                <img src="/static/images/loading.gif"/>
-              </span>Batch Mode
+            <button type="button" class="btn btn-default batch-mode-btn" ng-class="{active: isBatchMode}" ng-click="Select_BatchMode();">
+              <span ng-if="batch.loading" class="text-center"><img src="/static/images/loading.gif"/></span>Batch Mode
             </button>
           </div>
+
           <div ng-show="isBatchMode" class="pull-right batch-item-btn">
             <label class="selected" ng-class="{'disabled': !Selecteds.length }">Selected:</label>
             <metadata-batch use-ctrl="MetadataBatchCtrl" use-template-url="metadata.batch.html"
@@ -254,49 +297,55 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 ng-click="BatchDelete()" >Delete</button>
             </div>
           </div>
+
         </div>
       </div>
-      <div class="message_select_all" ng-show="message_select_all.show">
-         {{!message_select_all.message.selected}}
-        <a ng-click="check_all(imagesets, true, 'all')">
-          {{!message_select_all.message.select}}
-          <span ng-if="loading" class="text-center">
-            <img src="/static/images/loading.gif"/>
-          </span>
+      <div class="message_select_all" ng-show="message_select_all.show">{{!message_select_all.message.selected}}
+        <a ng-click="check_all(imagesets, true, 'all')">{{!message_select_all.message.select}}
+          <span ng-if="loading" class="text-center"><img src="/static/images/loading.gif"/></span>
         </a>
       </div>
       <div>
         <table class="table table-hover">
           <thead>
             <tr>
+
               <th class="text-center" ng-if="isBatchMode">
                 <i class="icon icon-check icon-border" ng-class="{active:selection.paginated.allSel}" ng-click="check_all(paginated_image_sets, true, 'paginated')"></i>
                 <i class="icon icon-cross icon-border" ng-class="{active:selection.paginated.allUnSel}" ng-click="check_all(imagesets, false, 'paginated')"></i>
               </th>
+
               <th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': predicate === 'id'}">Id</a>
                 <span class="sortorder" ng-show="predicate === 'id'" ng-class="{reverse:reverse}"></span>
               </th>
+
               <th class="text-center">Photo</th>
+
               <th class="text-center">
                 <a href="" ng-click="order('name')" ng-class="{'order_class': predicate === 'name'}">Lion Name</a>
                 <span class="sortorder" ng-show="predicate === 'name'" ng-class="{reverse:reverse}"></span>
               </th>
+
               <th class="text-center">
                 <a href="" ng-click="order('lion_id')" ng-class="{'order_class': predicate === 'lion_id'}">Lion Id</a>
                 <span class="sortorder" ng-show="predicate === 'lion_id'" ng-class="{reverse:reverse}"></span>
               </th>
+
               <th class="text-center">
                 <a href="" ng-click="order('age')" ng-class="{'order_class': predicate === 'age'}">Age</a>
                 <span class="sortorder" ng-show="predicate === 'age'" ng-class="{reverse:reverse}"></span>
               </th>
+
               <th class="text-center">
                 <a href="" ng-click="order('is_dead')" ng-class="{'order_class': predicate === 'is_dead'}">Dead</a>
                 <span class="sortorder" ng-show="predicate === 'is_dead'" ng-class="{reverse:reverse}"></span>
               </th>
+
               <th class="text-center">
                 <a href="" ng-click="order('organization')" ng-class="{'order_class': predicate === 'organization'}">Organization</a>
                 <span class="sortorder" ng-show="predicate === 'organization'" ng-class="{reverse:reverse}"></span>
               </th>
+
               <th class="text-center">
                 <a href="" ng-click="order('gender')" ng-class="{'order_class': predicate === 'gender'}">Gender</a>
                 <span class="sortorder" ng-show="predicate === 'gender'" ng-class="{reverse:reverse}"></span>
@@ -305,63 +354,77 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               <th class="text-center"><a ng-click="order('latitude')" ng-class="{'order_class': predicate === 'latitude'}">Latitude</a>
                 <span class="sortorder" ng-show="predicate === 'latitude'" ng-class="{reverse:reverse}"></span>
               </th>
+
               <th class="text-center"><a ng-click="order('longitude')" ng-class="{'order_class': predicate === 'longitude'}">Longitude</a>
                 <span class="sortorder" ng-show="predicate === 'longitude'" ng-class="{reverse:reverse}"></span>
               </th>
+
               <th class="text-center"><a ng-click="order('tag_location')" ng-class="{'order_class': orderby.predicate === 'tag_location'}">Tag Location</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'tag_location'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
+
               <th class="text-center"><a ng-click="order('geopos_private')" ng-class="{'order_class': predicate === 'geopos_private'}">GPS Points<br>Private</a>
                 <span class="sortorder" ng-show="predicate === 'geopos_private'" ng-class="{reverse:reverse}"></span>
+              </th>
+
+              <th class="text-center">
+                <a href="" ng-click="order('features')" ng-class="{'order_class': predicate === 'features'}">Features</a>
+                <span class="sortorder" ng-show="predicate === 'features'" ng-class="{reverse:reverse}"></span>
               </th>
 
               <th class="text-center"><a ng-click="order('date_stamp')" ng-class="{'order_class': predicate === 'date_stamp'}">Time Stamp</a>
                 <span class="sortorder" ng-show="predicate === 'date_stamp'" ng-class="{reverse:reverse}"></span>
               </th>
-              <th class="text-center">
-                <a href="" ng-click="order('features')" ng-class="{'order_class': predicate === 'features'}">Features</a>
-                <span class="sortorder" ng-show="predicate === 'features'" ng-class="{reverse:reverse}"></span>
-              </th>
+
               <th class="text-center">
                 <a href="" ng-click="order('is_verified')" ng-class="{'order_class': predicate === 'is_verified'}">Verified</a>
                 <span class="sortorder" ng-show="predicate === 'is_verified'" ng-class="{reverse:reverse}"></span>
               </th>
+
               <th class="text-center">
                 <a href="" ng-click="order('is_primary')" ng-class="{'order_class': predicate === 'is_primary'}">Primary</a>
                 <span class="sortorder" ng-show="predicate === 'is_primary'" ng-class="{reverse:reverse}"></span>
               </th>
+
               <th colspan="3" class="text-center" ng-hide="isBatchMode">
                 <a href="" ng-click="order('action')" ng-class="{'order_class': predicate === 'action'}">Actions</a>
                 <span class="sortorder" ng-show="predicate === 'action'" ng-class="{reverse:reverse}"></span>
               </th>
-              <th class="text-center">
-              </th>
+
+              <th class="text-center"></th>
+
             </tr>
           </thead>
           <tbody>
+
               <tr class="link" ng-repeat="imageset in paginated_image_sets = (filtered_image_sets =
                 ((mine_imagesets = (imagesets | filter:BatchFilter)) | nameid_filter: filters.NameOrId : 'lion_id' |
                   age_filter: filters.Ages | organization_filter: filters.Organizations |
                   features_filter: filters.TagFeatures | gender_filter: filters.Genders | primary_filter: filters.Primary |
                   LatLngFilter: filters.Location : true | geographical: GeoBounds) | orderBy: orderby.predicate : orderby.reverse | 
                   offset: pages.currentPage*itemsPerPage | limitTo: itemsPerPage)">
+              
               <td class="text-center" ng-if="isBatchMode">
-                <input type="checkbox" ng-model="imageset.selected" 
-                  ng-click="Select_Imageset($event, imageset, 'checkbox-click');$event.stopPropagation();">
+                <input type="checkbox" ng-model="imageset.selected" ng-click="Select_Imageset($event, imageset, 'checkbox-click');$event.stopPropagation();">
               </td>
+              
               <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">{{!imageset.id}}</td>
+
               <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);" ng-right-click="!isBatchMode && show_photo(imageset.image)">
                 <img ng-src="{{!imageset.thumbnail}}" width="40" height="40">
               </td>
 
               <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">{{!imageset.name}}</td>
+
               <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">{{!imageset.lion_id}}</td>
+
               <td ng-if="imageset.age!=null" class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">{{!imageset.age}} y/o</td>
               <td ng-if="imageset.age==null" class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);"></td>
-              <td class="text-center">
-                <i ng-if="imageset.dead" class="search-icon-dead"></i>
-              </td>
+
+              <td class="text-center"><i ng-if="imageset.dead" class="search-icon-dead"></i></td>
+
               <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">{{!imageset.organization}}</td>
+
               <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">{{!imageset.gender}}</td>
 
               <td ng-if="imageset.permissions.canLocate" class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">{{!imageset.latitude | number:6}}</td>
@@ -378,25 +441,25 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 <i ng-if="imageset.geopos_private" class="icon icon-check"></i>
                 <i ng-if="!imageset.geopos_private" class="icon icon-cross"></i>
               </td>
-              <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">
-                <div class="div-date_stamp">{{!imageset.date_stamp | date:'yyyy-MM-dd'}}</div>
-              </td>
-              
+
               <td ng-if="imageset.features" class="text-center">
                 <a ng-click="!isBatchMode && goto_imageset(imageset);" 
-                  uib-tooltip="{{!imageset.tooltip.features.title}}"
-                  tooltip-placement="auto left"
-                  tooltip-trigger="'mouseenter'"
-                  tooltip-enable="imageset.tooltip.features.checked">
+                  uib-tooltip="{{!imageset.tooltip.features.title}}" tooltip-placement="auto left"
+                  tooltip-trigger="'mouseenter'" tooltip-enable="imageset.tooltip.features.checked">
                   <i class="icon icon-notification"></i>
                 </a>
               </td>
               <td ng-if="!imageset.features" class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);"></td>
+
+              <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">
+                <div class="div-date_stamp">{{!imageset.date_stamp | date:'yyyy-MM-dd'}}</div>
+              </td>
+
               <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">
                 <i ng-if="imageset.is_verified" class="icon icon-check"></i>
                 <i ng-if="!imageset.is_verified" class="icon icon-cross"></i>
               </td>
-              
+
               <td class="text-center">
                 <i ng-if="imageset.is_primary" class="icon icon-check"></i>
                 <i ng-if="!imageset.is_primary" class="icon icon-cross"></i>
@@ -408,11 +471,13 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                   <i class="icon icon-flash"></i>Disassociate
                 </button>
               </td>
+
               <td ng-if="imageset.permissions.NeedVerify && !isBatchMode">
                 <button ng-if="!imageset.is_verified" class="btn btn-primary btn-sm btn-verify" 
                   data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Verify(imageset)">
                   <i class="icon icon-flash"></i>Verify
                 </button>
+
                 <button ng-if="imageset.is_verified && !isBatchMode" class="btn btn-primary btn-sm" 
                   data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Disassociate(imageset)">
                   <i class="icon icon-flash"></i>Disassociate
@@ -424,6 +489,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                   data-animation="am-fade-and-slide-top">Set Primary
                 </button>
               </td>
+
               <td ng-if="imageset.permissions.canShow && !isBatchMode">
                 <cvresults ng-if="imageset.action == 'cvresults'" 
                   use-ctrl="CVResultsCtrl" use-template-url="cvresults.html" form-size="lg" imageset="imageset" 
@@ -443,7 +509,9 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 <span ng-if="!imageset.action">
                 </span>
               </td>
+
               <td></td>
+
             </tr>
           </tbody>
         </table>

@@ -20,15 +20,16 @@
 
 angular.module('linc.cvrequest.controller', [])
 
-.controller('CVRequesCtrl', ['$scope', '$window', '$state', '$timeout', '$uibModalInstance', 'LincServices', 'NotificationFactory', 
-  'imageset', 'lions', 'cvrequests_options', 'AuthService', 'TAG_LABELS', 'TOOL_TITLE', function ($scope, $window, $state, $timeout, 
-  $uibModalInstance, LincServices, NotificationFactory, imageset, lions, cvrequests_options, AuthService, TAG_LABELS, TOOL_TITLE) {
+.controller('CVRequesCtrl', ['$scope', '$state', '$timeout', '$bsTooltip', '$uibModalInstance', 'LincServices', 'LincDataFactory',
+  'NotificationFactory', 'imageset', 'lions', 'cvrequests_options', 'AuthService', 'TAG_LABELS', 'TOOL_TITLE', 
+  function ($scope, $state, $timeout, $bsTooltip, $uibModalInstance, LincServices, LincDataFactory, NotificationFactory,
+  imageset, lions, cvrequests_options, AuthService, TAG_LABELS, TOOL_TITLE) {
 
   $scope.title = 'CV Search';
   $scope.content = 'Search';
   $scope.imageset = imageset;
 
-  $scope.title_tooltip = {'title': 'tips: ' + TOOL_TITLE, 'checked': true};
+  $scope.tooltip = { features: { title: 'tips: ' + TOOL_TITLE, checked: true } };
 
   var GET_FEATURES = function (lbls, TAGS){
     var label = "";
@@ -62,6 +63,7 @@ angular.module('linc.cvrequest.controller', [])
   $scope.lions = _.map(lions, function(element, index) {
 
     element['permissions'] = get_permissions($scope.user, element);
+    element['age'] = isNaN(parseInt(element['age'])) ? null : element['age'];
 
     var elem = {};
     var TAGS = [];
@@ -72,7 +74,7 @@ angular.module('linc.cvrequest.controller', [])
     if(TAGS==null) TAGS = [];
 
     var tag_features = GET_FEATURES(TAG_LABELS, TAGS);
-    elem['features_tooltip'] = {'title': tag_features, 'checked': true};
+    elem['tooltip'] = { features: {title: tag_features, checked: true} };
     elem['features'] = (tag_features.length > 0) ? true : false;
     elem['tag_features'] = tag_features;
 
@@ -93,19 +95,29 @@ angular.module('linc.cvrequest.controller', [])
 
   $scope.change = function(type){
     cvrequests_options.filters[type] = $scope.filters[type];
+    LincDataFactory.set_cvrequests(cvrequests_options);
   };
 
   // Click Collapse
   $scope.collapse = function(type){
     cvrequests_options.isCollapsed[type] = $scope.isCollapsed[type] = !$scope.isCollapsed[type];
+    LincDataFactory.set_cvrequests(cvrequests_options);
   };
 
   $scope.order = function(predicate) {
     $scope.orderby.reverse = ($scope.orderby.predicate === predicate) ? !$scope.orderby.reverse : false;
     $scope.orderby.predicate = predicate;
-    lion_options.orderby = $scope.orderby;
+    cvrequests_options.orderby = $scope.orderby;
+    LincDataFactory.set_cvrequests(cvrequests_options);
   };
 
+  $scope.isCollapsed.NameOrId = $scope.filters.NameOrId ? false : true;
+  $scope.isCollapsed.Organization = _.every($scope.filters.Organizations, {checked: true});
+  $scope.isCollapsed.Age = (($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
+  $scope.isCollapsed.Gender = _.every($scope.filters.Genders, {checked: true});
+  $scope.isCollapsed.TagFeatures = $scope.filters.TagFeatures ? false : true;
+  $scope.isCollapsed.Location = ($scope.filters.Location.latitude && $scope.filters.Location.longitude && $scope.filters.Location.radius) ? false : true;
+  
   $scope.viewer_label = function(){
     var label = "0 lions found";
     if($scope.filtered_lions != undefined && $scope.filtered_lions.length){

@@ -70,7 +70,7 @@ angular.module('linc.cvrequest.directive', [])
               return LincServices.Lions();
             }],
             cvrequests_options: ['LincDataFactory', function(LincDataFactory) {
-              return LincDataFactory.get_cvrequests_options();
+              return LincDataFactory.get_cvrequests();
             }]
           }
         });

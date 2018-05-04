@@ -37,7 +37,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 	$scope.debug = false;
 	$scope.show_navbar = true;
 	// this'll be called on every state change in the app
-	$scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+	$rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
 		$scope.cancel_Poller();
 		if (toState.data != undefined && angular.isDefined(toState.data.bodyClasses)) {
 			$scope.bodyClasses = toState.data.bodyClasses;

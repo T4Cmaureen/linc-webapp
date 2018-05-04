@@ -20,22 +20,72 @@
 
 angular.module('linc.relatives.controller', [])
 
-.controller('RelativesCtrl', ['$scope', '$q', '$filter', '$timeout', '$uibModalInstance', 'NotificationFactory', 
-  'lions', 'relatives', 'animal', 'AuthService', 'LincServices', function ($scope, $q, $filter, $timeout, 
-  	$uibModalInstance, NotificationFactory, lions, relatives, animal, AuthService, LincServices) {
+.controller('RelativesCtrl', ['$scope', '$q', '$filter', '$uibModal', '$timeout', '$uibModalInstance', 'NotificationFactory', 
+  'lions', 'relatives', 'animal', 'relatives_options', 'AuthService', 'LincServices', 'LincDataFactory',
+  function ($scope, $q, $filter, $uibModal, $timeout, $uibModalInstance, NotificationFactory, lions, relatives, animal,
+  relatives_options, AuthService, LincServices, LincDataFactory) {
 
-	$scope.orderby = {predicate: 'id', reserve: false};
+  	$scope.filters = relatives_options.filters;
+  	$scope.isCollapsed = relatives_options.isCollapsed;
+  	$scope.is_Collaped = relatives_options.is_Collaped;
+	$scope.orderby = relatives_options.orderby;
+	$scope.orderby2 = relatives_options.orderby2;
+
 	$scope.order = function(predicate) {
 		$scope.orderby.reverse = ($scope.orderby.predicate === predicate) ? !$scope.orderby.reverse : false;
 		$scope.orderby.predicate = predicate;
+		relatives_options.orderby = $scope.orderby;
+		LincDataFactory.set_relatives(relatives_options);
 	};
-	$scope.orderby2 = {predicate: 'id', reserve: false};
+
+	// $scope.orderby2 = {predicate: 'id', reserve: false};
+	$scope.orderby2 = relatives_options.orderby2;
 	$scope.order2 = function(predicate) {
 		$scope.orderby2.reverse = ($scope.orderby2.predicate === predicate) ? !$scope.orderby2.reverse : false;
 		$scope.orderby2.predicate = predicate;
+		relatives_options.orderby2 = $scope.orderby2;
+		LincDataFactory.set_relatives(relatives_options);
 	};
 
-	$scope.filters = { NameOrId: '' };
+	// Click Collapse
+	$scope.collapse_base = function(type){
+		var val = !$scope.is_Collaped[type];
+		var all = val ? val : true;
+		$scope.is_Collaped = _.mapValues($scope.is_Collaped, function(value){return value = all});
+		$scope.is_Collaped[type] = val;
+		relatives_options.is_Collaped = $scope.is_Collaped;
+		LincDataFactory.set_relatives(relatives_options);
+	};
+
+	$scope.collapse = function(type){
+		var val = !$scope.isCollapsed[type];
+		var all = val ? val : true;
+		$scope.isCollapsed = _.mapValues($scope.isCollapsed, function(value){return value = all});
+		$scope.isCollapsed[type] = val;
+		relatives_options.isCollapsed = $scope.isCollapsed;
+		LincDataFactory.set_relatives(relatives_options);
+	};
+
+	$scope.change = function(type){
+		relatives_options.filters[type] = $scope.filters[type];
+		LincDataFactory.set_relatives(relatives_options);
+	};
+
+	$scope.isCollapsed.NameOrId = $scope.filters.NameOrId ? false : true;
+	$scope.isCollapsed.Organization = _.every($scope.filters.Organizations, {checked: true});
+	$scope.isCollapsed.Age = (($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
+	$scope.isCollapsed.Gender = _.every($scope.filters.Genders, {checked: true});
+	$scope.is_Collaped.Filter = !(_.values($scope.isCollapsed).some(function(item){return item===false;}));
+	
+	$scope.refreshSlider = function () {
+		$timeout(function () {
+			$scope.$broadcast('rzSliderForceRender');
+		});
+	};
+
+	$scope.refreshSlider();
+
+	//$scope.filters = { NameOrId: '' };
 	$scope.selected = { name: null, id: null, relation: '' };
 	$scope.selection = { modified: false };
 
@@ -55,6 +105,7 @@ angular.module('linc.relatives.controller', [])
 		cub : 'Cub'
 	};
 	$scope.Labels = Labels;
+
 	$scope.allrelatives = [
 		{type: 'mother', disabled: false},
 		{type: 'suspected_father',disabled: false},
@@ -70,6 +121,8 @@ angular.module('linc.relatives.controller', [])
 	var Set_LionList = function(lions, lion_id){
 		var list = _.map(_.reject(lions, {id: lion_id}), function(element){
 			var elem = {};
+			element['age'] = isNaN(parseInt(element['age'])) ? null : element['age'];
+			if(!element.gender) element.gender = 'unknown';
 			elem['show_image'] = false;
 			return _.extend({}, element, elem);
 		});
@@ -79,6 +132,29 @@ angular.module('linc.relatives.controller', [])
 		return list;
 	};
 	$scope.lions_list = Set_LionList(lions, $scope.animal.id);
+
+
+	$scope.Warning = function ($event){
+		var modalScope = $scope.$new();
+		modalScope.title = 'Warning';
+		modalScope.message = 'This lion does not have a defined gender, so you can not select the MOTHER, SUSPECT FATHER, and CUB options';
+		var modalInstance = $uibModal.open({
+			templateUrl: 'Warning.Gender.tpl.html',
+			scope: modalScope
+		});
+
+		modalInstance.result.then(function (result) {
+		}, function (){
+		});
+
+		modalScope.Close = function (){
+			modalInstance.close();
+		};
+	};
+	$uibModalInstance.rendered.then(function(){
+		if (!$scope.animal.gender)
+			$scope.Warning();
+	});
 
 	var old_selected_id = null;
 	// Switch Big/small Lions image

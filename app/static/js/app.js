@@ -93,6 +93,7 @@ app.run(['$rootScope', '$state', '$stateParams', 'AuthService', function ($rootS
     // to active whenever 'contacts.list' or one of its decendents is active.
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
+    $rootScope.ChangeStatus = {loading: false};
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
       var authorized = toState.data.authorized;
@@ -109,17 +110,27 @@ app.run(['$rootScope', '$state', '$stateParams', 'AuthService', function ($rootS
 
     var history = [];
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+        console.log('push' + toState.name);
         history.push({name: toState.name, param: toParams});
+        console.log(_.map(history,function(h){return h.name}).join([separador = ':']));
+        $rootScope.ChangeStatus.loading = false;
+        console.log($rootScope.ChangeStatus.loading);
     });
 
     $rootScope.go_back = function() {
+      $rootScope.ChangeStatus.loading = true;
+      console.log(_.map(history,function(h){return h.name}).join([separador = ':']));
+      console.log('splice' + history);
       var prevUrl = history.length > 1 ? history.splice(-2)[0] : {'name': 'home', 'param': {}};
+      console.log(_.map(history,function(h){return h.name}).join([separador = ':']));
       $state.go(prevUrl.name, prevUrl.param);
     };
     $rootScope.remove_history = function(name, id) {
       var find = _.find(history, {'name': name, 'param' : {'id': id}});
+      console.log('remove' + find);
       var result = _.without(history,find);
       history = result;
+      console.log(_.map(history,function(h){return h.name}).join([separador = ':']));
     }
 }]);
 
@@ -296,7 +307,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', functio
           return LincServices.Lions();
         }],
         lion_options: ['LincDataFactory', function(LincDataFactory) {
-          return LincDataFactory.get_lions_options();
+          return LincDataFactory.get_lions();
         }],
         default_options: ['LincDataFactory', function(LincDataFactory) {
           return LincDataFactory.get_defaults();
@@ -318,7 +329,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', functio
           return LincServices.ImageSets();
         }],
         imagesets_options: ['LincDataFactory', function(LincDataFactory) {
-          return LincDataFactory.get_imagesets_options();
+          return LincDataFactory.get_imagesets();
         }],
         default_options: ['LincDataFactory', function(LincDataFactory) {
           return LincDataFactory.get_defaults();

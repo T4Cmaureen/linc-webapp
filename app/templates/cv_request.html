@@ -32,9 +32,14 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       <div class="line-right Left-Panel">
         <h3 class="text-muted">Refine by</h3>
         <div class="tablist" data-allow-multiple="true" role="tablist" aria-multiselectable="true" bs-collapse>
+
           <div role="tab">
             <h4>
-              <a bs-collapse-toggle ng-click="collapse('NameOrId')"><i class="pull-right icon icon-select-arrows"></i> Name or ID</a>
+              <a bs-collapse-toggle ng-click="collapse('NameOrId')">
+                <i ng-if="isCollapsed.NameOrId" class="pull-right fa fa-expand" aria-hidden="true"></i>
+                <i ng-if="!isCollapsed.NameOrId" class="pull-right fa fa-compress" aria-hidden="true"></i>  
+                Name or ID
+              </a>
             </h4>
           </div>
           <div uib-collapse="isCollapsed.NameOrId">
@@ -42,9 +47,14 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               <input ng-change="change('NameOrId')" type="text" class="form-control" ng-model="filters.NameOrId">
             </div>
           </div>
+
           <div role="tab">
             <h4 >
-              <a bs-collapse-toggle ng-click="collapse('Organization')"><i class="pull-right icon icon-select-arrows"></i> Organization</a>
+              <a bs-collapse-toggle ng-click="collapse('Organization')">
+                <i ng-if="isCollapsed.Organization" class="pull-right fa fa-expand" aria-hidden="true"></i>
+                <i ng-if="!isCollapsed.Organization" class="pull-right fa fa-compress" aria-hidden="true"></i>  
+                Organization
+              </a>
             </h4>
           </div>
           <div uib-collapse="isCollapsed.Organization">
@@ -56,14 +66,19 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               </label>
             </div>
           </div>
+
           <div role="tab">
             <h4 >
-              <a bs-collapse-toggle ng-click="refreshSlider(); collapse('Age')"><i class="pull-right icon icon-select-arrows"></i> Age</a>
+              <a bs-collapse-toggle ng-click="refreshSlider(); collapse('Age')">
+                <i ng-if="isCollapsed.Age" class="pull-right fa fa-expand" aria-hidden="true"></i>
+                <i ng-if="!isCollapsed.Age" class="pull-right fa fa-compress" aria-hidden="true"></i>  
+                Age
+              </a>
             </h4>
           </div>
           <div uib-collapse="isCollapsed.Age">
             <div class="panel-body">
-              <rzslider
+              <rzslider class="age-slider"
                 rz-slider-model="filters.Ages.min"
                 rz-slider-high="filters.Ages.max"
                 rz-slider-options="filters.Ages.options"
@@ -73,9 +88,14 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               </rzslider>
             </div>
           </div>
+
           <div role="tab">
             <h4 >
-              <a bs-collapse-toggle ng-click="collapse('Gender')"><i class="pull-right icon icon-select-arrows"></i> Gender</a>
+              <a bs-collapse-toggle ng-click="collapse('Gender')">
+                <i ng-if="isCollapsed.Gender" class="pull-right fa fa-expand" aria-hidden="true"></i>
+                <i ng-if="!isCollapsed.Gender" class="pull-right fa fa-compress" aria-hidden="true"></i>  
+                Gender
+              </a>
             </h4>
           </div>
           <div uib-collapse="isCollapsed.Gender">
@@ -87,19 +107,30 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               </label>
             </div>
           </div>
-          <div role="tab" data-placement="auto top" data-trigger="hover" data-animation="am-fade-and-scale" bs-tooltip="title_tooltip">
+
+          <div role="tab">
             <h4>
-              <a bs-collapse-toggle ng-click="collapse('TagFeatures')"><i class="pull-right icon icon-select-arrows"></i>Features</a>
+              <a bs-collapse-toggle ng-click="collapse('TagFeatures')">
+                <i ng-if="isCollapsed.TagFeatures" class="pull-right fa fa-expand" aria-hidden="true"></i>
+                <i ng-if="!isCollapsed.TagFeatures" class="pull-right fa fa-compress" aria-hidden="true"></i>  
+                Features
+              </a>
             </h4>
           </div>
           <div uib-collapse="isCollapsed.TagFeatures">
-            <div class="panel-body">
+            <div class="panel-body"  data-placement="auto top" data-trigger="hover"
+              data-animation="am-fade-and-scale" bs-tooltip="tooltip.features">
               <input ng-change="change('TagFeatures')" type="text" class="form-control" ng-model="filters.TagFeatures">
             </div>
           </div>
+
           <div role="tab">
             <h4>
-              <a bs-collapse-toggle ng-click="collapse('Location')"><i class="pull-right icon icon-select-arrows"></i>Location</a>
+              <a bs-collapse-toggle ng-click="collapse('Location')">
+                <i ng-if="isCollapsed.Location" class="pull-right fa fa-expand" aria-hidden="true"></i>
+                <i ng-if="!isCollapsed.Location" class="pull-right fa fa-compress" aria-hidden="true"></i>
+                Location
+               </a>
             </h4>
           </div>
           <div uib-collapse="isCollapsed.Location">
@@ -178,7 +209,9 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 </div>
               </form>
             </div>
+
           </div>
+
         </div>
         <div class="form-group custom-padding">
           <button type="button" class="btn btn-primary" ng-click="requestCV()">
@@ -243,7 +276,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 </tr>
               </thead>
               <tbody>
-                <tr class="link" ng-repeat="lion in filtered_lions = (lions | filter: {dead: false} | orderBy: orderby.predicate : orderby.reverse | nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages | organization_filter: filters.Organizations | features_filter: filters.TagFeatures | gender_filter: filters.Genders | LatLngFilter: filters.Location : true)">
+                <tr class="link" ng-repeat="lion in filtered_lions = (lions | filter: {dead: false} |
+                  nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages | 
+                  organization_filter: filters.Organizations | features_filter: filters.TagFeatures | 
+                  gender_filter: filters.Genders | LatLngFilter: filters.Location : true) |
+                  orderBy: orderby.predicate : orderby.reverse">
                   <td class="text-center">
                     <a ui-sref="lion({id: lion.id})" target="_blank">{{!lion.id}}</a>
                   </td>
@@ -278,7 +315,13 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                   </td> 
 
                   <td ng-if="lion.features" class="text-center">
-                    <a ui-sref="lion({id: lion.id})" data-animation="am-flip-x" placement="top-center" bs-tooltip="lion.features_tooltip"><i class="icon icon-notification"></i></a>
+                    <a ui-sref="lion({id: lion.id})" 
+                      uib-tooltip="{{!lion.tooltip.features.title}}"
+                      tooltip-placement="auto left"
+                      tooltip-trigger="'mouseenter'"
+                      tooltip-enable="lion.tooltip.features.checked">
+                      <i class="icon icon-notification"></i>
+                    </a>
                   </td>
                   <td ng-if="!lion.features" class="text-center"></td>
                   <td class="text-center">

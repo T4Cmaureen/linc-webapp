@@ -20,17 +20,19 @@
 
 angular.module('linc.view.imagesets.controller', [])
 
-.controller('ViewImageSetsCtrl', ['$scope', '$state', '$timeout', '$q', '$interval', '$uibModal', '$stateParams', 
-  '$bsTooltip', 'NotificationFactory', 'LincServices', 'AuthService', 'PollerService', 'imagesets_options', 
-  'default_options', 'imagesets', '$ModalPage', 'NgMap', 'LincDataFactory', 'TAG_LABELS', 'TOOL_TITLE', 
-  function ($scope, $state, $timeout, $q, $interval, $uibModal, $stateParams, $bsTooltip, NotificationFactory, 
-  LincServices, AuthService, PollerService, imagesets_options, default_options, imagesets, $ModalPage, NgMap,
-  LincDataFactory, TAG_LABELS, TOOL_TITLE) {
+.controller('ViewImageSetsCtrl', ['$scope', '$rootScope', '$state', '$timeout', '$q', '$interval', '$uibModal', 
+  '$stateParams', '$bsTooltip', 'NotificationFactory', 'LincServices', 'AuthService', 'PollerService',
+  'imagesets_options', 'default_options', 'imagesets', '$ModalPage', 'NgMap', 'LincDataFactory', 'TAG_LABELS', 
+  'TOOL_TITLE', function ($scope, $rootScope, $state, $timeout, $q, $interval, $uibModal, $stateParams, $bsTooltip, 
+  NotificationFactory, LincServices, AuthService, PollerService, imagesets_options, default_options, imagesets,
+  $ModalPage, NgMap, LincDataFactory, TAG_LABELS, TOOL_TITLE) {
 
 	$scope.user = AuthService.user;
+	
+	$scope.ChangeStatus = $rootScope.ChangeStatus;
 
 	$scope.is_modal_open = false;
-	$scope.tooltip = {'features' :{'title': 'tips: ' + TOOL_TITLE, 'checked': true}};
+	$scope.tooltip = { features: { title: 'tips: ' + TOOL_TITLE, checked: true} };
 
 	var count = 0;
 	var cvrequest_pendings = [];
@@ -149,7 +151,7 @@ angular.module('linc.view.imagesets.controller', [])
 			if(TAGS==null) TAGS = [];
 
 			var tag_features = GET_FEATURES(TAG_LABELS, TAGS);
-			elem['tooltip'] = {features: {'title': tag_features, 'checked': true}};
+			elem['tooltip'] = {features: {title: tag_features, checked: true}};
 			elem['features'] = (tag_features.length > 0) ? true : false;
 			elem['tag_features'] = tag_features;
 			elem['selected'] = false;
@@ -193,14 +195,14 @@ angular.module('linc.view.imagesets.controller', [])
 	// Click collapse
 	$scope.collapse = function(type){
 		imagesets_options.isCollapsed[type] = $scope.isCollapsed[type] = !$scope.isCollapsed[type];
-		LincDataFactory.set_imagesets_options(imagesets_options);
+		LincDataFactory.set_imagesets(imagesets_options);
 	}
 
 	$scope.order = function(predicate) {
 		$scope.orderby.reverse = ($scope.orderby.predicate === predicate) ? !$scope.orderby.reverse : false;
 		$scope.orderby.predicate = predicate;
 		imagesets_options.orderby = $scope.orderby;
-		LincDataFactory.set_imagesets_options(imagesets_options);
+		LincDataFactory.set_imagesets(imagesets_options);
 	};
 
 	$scope.PerPages = [
@@ -240,7 +242,7 @@ angular.module('linc.view.imagesets.controller', [])
 				$scope.itemsPerPage = $scope.PerPages[5].value;
 				imagesets_options.pages.PerPage = $scope.PerPages[5].index;
 		};
-		LincDataFactory.set_imagesets_options(imagesets_options);
+		LincDataFactory.set_imagesets(imagesets_options);
 	};
 
 	$scope.setPage = function(n) {
@@ -493,21 +495,21 @@ angular.module('linc.view.imagesets.controller', [])
 	if(Object.keys($scope.pfilters).length){
 		console.log('View Imagesets - has filter params');
 		$scope.filters.NameOrId = $scope.pfilters.hasOwnProperty('NameOrId') ? $scope.pfilters.NameOrId : default_options.filters.NameOrId;
-		$scope.filters.TagFeatures = $scope.pfilters.hasOwnProperty('TagFeatures') ? $scope.pfilters.TagFeatures : default_options.filters.TagFeatures;
 		$scope.filters.Organizations = $scope.pfilters.hasOwnProperty('Organizations') ? $scope.pfilters.Organizations : default_options.filters.Organizations;
-		$scope.filters.Genders = $scope.pfilters.hasOwnProperty('Genders') ? $scope.pfilters.Genders : default_options.filters.Genders;
-		$scope.filters.Primary = $scope.pfilters.hasOwnProperty('Primary') ? $scope.pfilters.Primary : default_options.filters.Primary;
 		$scope.filters.Ages = $scope.pfilters.hasOwnProperty('Ages') ? $scope.pfilters.Ages : default_options.filters.Ages;
+		$scope.filters.Genders = $scope.pfilters.hasOwnProperty('Genders') ? $scope.pfilters.Genders : default_options.filters.Genders;
+		$scope.filters.TagFeatures = $scope.pfilters.hasOwnProperty('TagFeatures') ? $scope.pfilters.TagFeatures : default_options.filters.TagFeatures;
+		$scope.filters.Primary = $scope.pfilters.hasOwnProperty('Primary') ? $scope.pfilters.Primary : default_options.filters.Primary;
 		$scope.filters.Location = $scope.pfilters.hasOwnProperty('Location') ? $scope.pfilters.Location : default_options.filters.Ages;
 		$scope.filters.Boundarys = $scope.pfilters.hasOwnProperty('Boundarys') ? $scope.pfilters.Boundarys : default_options.filters.Boundarys;
 
 		$scope.isCollapsed.NameOrId = $scope.pfilters.hasOwnProperty('NameOrId') ? false : ($scope.filters.NameOrId ? false : true);
-		$scope.isCollapsed.TagFeatures = $scope.pfilters.hasOwnProperty('TagFeatures') ? false : ($scope.filters.TagFeatures ? false : true);
 		$scope.isCollapsed.Organization = $scope.pfilters.hasOwnProperty('Organization') ? false : _.every($scope.filters.Organizations, {checked: true});
-		$scope.isCollapsed.Gender = $scope.pfilters.hasOwnProperty('Genders') ? false : _.every($scope.filters.Genders, {checked: true});
-		$scope.isCollapsed.Primary = $scope.pfilters.hasOwnProperty('Primary') ? false : _.every($scope.filters.Primary, {checked: true});
 		$scope.isCollapsed.Age = $scope.pfilters.hasOwnProperty('Ages') ? false : 
 			(($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
+		$scope.isCollapsed.Gender = $scope.pfilters.hasOwnProperty('Genders') ? false : _.every($scope.filters.Genders, {checked: true});
+		$scope.isCollapsed.TagFeatures = $scope.pfilters.hasOwnProperty('TagFeatures') ? false : ($scope.filters.TagFeatures ? false : true);
+		$scope.isCollapsed.Primary = $scope.pfilters.hasOwnProperty('Primary') ? false : _.every($scope.filters.Primary, {checked: true});
 		$scope.isCollapsed.Location = $scope.pfilters.hasOwnProperty('Location') ? false : 
 			(($scope.filters.Location.latitude && $scope.filters.Location.longitude && $scope.filters.Location.radius) ? false : true);
 		$scope.isCollapsed.Boundarys = $scope.pfilters.hasOwnProperty('Boundarys') ? false : ($scope.filters.Boundarys.length ? false : true);
@@ -521,11 +523,11 @@ angular.module('linc.view.imagesets.controller', [])
 		$scope.pages.currentPage = cur_per_page;
 
 		$scope.isCollapsed.NameOrId = $scope.filters.NameOrId ? false : true;
-		$scope.isCollapsed.TagFeatures = $scope.filters.TagFeatures ? false : true;
 		$scope.isCollapsed.Organization = _.every($scope.filters.Organizations, {checked: true});
-		$scope.isCollapsed.Gender = _.every($scope.filters.Genders, {checked: true});
-		$scope.isCollapsed.Primary = _.every($scope.filters.Primary, {checked: true});
 		$scope.isCollapsed.Age = (($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
+		$scope.isCollapsed.Gender = _.every($scope.filters.Genders, {checked: true});
+		$scope.isCollapsed.TagFeatures = $scope.filters.TagFeatures ? false : true;
+		$scope.isCollapsed.Primary = _.every($scope.filters.Primary, {checked: true});
 		$scope.isCollapsed.Location = ($scope.filters.Location.latitude && $scope.filters.Location.longitude && $scope.filters.Location.radius) ? false : true;
 		$scope.isCollapsed.Boundarys = ($scope.filters.Boundarys.length ? false : true);
 	}
@@ -740,7 +742,7 @@ angular.module('linc.view.imagesets.controller', [])
 		.then(function(response) {
 			console.log(response);
 			$scope.filters.Boundarys = response.boundarys;
-			LincDataFactory.set_imagesets_options(imagesets_options);
+			LincDataFactory.set_imagesets(imagesets_options);
 			$scope.Update_Boundarys();
 		}, function (error) {
 			console.log(error);
@@ -759,7 +761,7 @@ angular.module('linc.view.imagesets.controller', [])
 		});
 		modalInstance.result.then(function (result) {
 			_.remove($scope.filters.Boundarys, {'index': boundary.index});
-			LincDataFactory.set_imagesets_options(imagesets_options);
+			LincDataFactory.set_imagesets(imagesets_options);
 			$scope.Update_Boundarys();
 		}, function(result){
 		});

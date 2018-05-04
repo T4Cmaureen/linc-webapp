@@ -36,8 +36,14 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     </div>
   </form>
 </script>
-<div name="ImageSet" class="font-homenaje-1-1">
-  <h1><a class="btn btn-default" ng-click="go_back()"><i class="icon icon-arrow-left"></i></a> Image Set Info</h1>
+<div name="ImageSet" class="imageset-page font-homenaje-1-1">
+  <h1><a class="btn btn-default" ng-click="go_back()">
+        <i class="icon icon-arrow-left"></i>
+        <span ng-if="ChangeStatus.loading" class="loading text-center">
+          <img src="/static/images/loading.gif" width="40px;"/>
+        </span>
+      </a> Image Set Info
+  </h1>
   <div class="row">
     <div class="col-sm-3 line-right">
       <p><img ng-src="{{!imageset.image}}" class="img-responsive"></p>

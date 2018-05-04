@@ -1080,7 +1080,7 @@ hr.style-line {
 .cv-request{
 	.Container-Panel-1 { display: flex; overflow: hidden; height: 75vh; position: relative; width: 100%; backface-visibility: hidden; will-change: overflow; }
 	.Container-Panel-2 { display: flex; overflow: hidden; height: 75vh; position: relative; width: 100%; backface-visibility: hidden; will-change: overflow; }
-	.Left-Panel { overflow: auto; width: 20%; min-width: 200px; height: auto; padding: .5rem; }
+	.Left-Panel { overflow: auto; width: 20%; min-width: 200px; height: auto; padding: .5rem; .tablist{ .fa-expand, .fa-compress{ font-size: 16px; padding-top: 3px; margin-right: 6px; } } }
 	.Right-Panel { overflow: auto; width: 80%; height: auto;}
 	.Right-Top-Panel { display: flex; justify-content: left;  position: fixed; width: 70%; z-index: 10; height: auto;}
 	.Scroll-Panel { overflow: auto; height: auto; padding: .1rem; margin-top:4rem; margin-left:1rem;}
@@ -1891,7 +1891,7 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 			thead, tbody, tr, td, th { display: block; }
 			tr:after { content: ' '; display: block; visibility: hidden; clear: both; }
 			thead th { height: 30px; }
-			tbody { height: 450px; overflow-y: auto; }
+			
 			tbody td, thead th { width: 16.6%; float: left; }
 			tf { padding: 3px;}
 			td.lion-image{
@@ -1900,34 +1900,41 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 					width: 100%;
 				}
 			}
-		}
-		.div-filter{
-			float: right!important; 
-			width: 50%;
-			input{
-				display: inline-block; 
-				width: 80%; 
-				margin-left: 6px;
+			span.sortorder{
+				font-size: 12px;
 			}
 		}
+		.table-lions{
+			tbody { height: 450px; overflow-y: auto; }
+		}
+		.table-animals{
+			margin-bottom: 0px;
+		}
 		.right-relatives{
-			 max-height: 550px; 
-			 overflow-y: auto;
+			max-height: 550px; 
+			overflow-y: auto;
+			padding:12px;
+			h5.title{ font-size: 16px; color:$orange; }
+			a.collapse-filter>span{
+				padding: 3px 6px;
+			}
+			.filter-pannel{
+				padding: 0px 12px;
+				label.organization{
+					min-width: 170px;
+				}
+				label.gender{
+					min-width: 100px;
+				}
+			}
 			.add-relatives{
 				input[disabled]{
 					background-color: #fdfbfb;
 				}
 				.btn-add-relative{
-					margin-top: 20px;
-					padding: 5px;
+					margin-top: 21px;
 				}
-				.big-img{
-					margin-top: 10px;
-					padding-right: 0px;
-				}
-				img{
-					width: 100%;
-				}
+				
 				.label-margin-bottom-0{
 					margin-bottom: 0px;
 				}
@@ -1940,9 +1947,6 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 		}
 		.container-relatives{
 			background-color: #fff;
-			// padding: 26px;
-			// box-shadow: 0 8px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 rgba(0,0,0,.19);
-			// border-radius: 2px;
 			.relatives-select.ui-select-container {
 				.ui-select-match{
 					.ui-select-toggle{
@@ -2008,9 +2012,21 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 	background-color: #f7eadf;
 }
 
-.ViewLionDatabase, .ViewImagesets{
+.view-lion-database, .view-imagesets{
+	h1{
+		span.loading{
+			position: absolute;left: 6px;top: 12px;
+		}
+	}
 	.main-row{
 		padding-bottom: 20px;
+		.tablist{
+			.fa-expand, .fa-compress{
+				font-size: 16px;
+				padding-top: 3px;
+				margin-right: 6px;
+			}
+		}
 	}
 	.batch-mode-btn{
 		margin: 10px 5px; height: 54px;
@@ -2238,8 +2254,16 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 	}
 }
 .lion-page{
+	span.loading{
+		position: absolute;left: 6px;top: 12px;
+	}
 	.container-relatives{
 		margin-top: 12px;
+	}
+}
+.imageset-page{
+	span.loading{
+		position: absolute;left: 6px;top: 12px;
 	}
 }
 

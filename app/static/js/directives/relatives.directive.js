@@ -66,6 +66,9 @@ angular.module('linc.relatives.directive', [])
             },
             lions: ['LincServices', function(LincServices) {
               return LincServices.Lions();
+            }],
+            relatives_options: ['LincDataFactory', function(LincDataFactory) {
+              return LincDataFactory.get_relatives();
             }]
           }
         });
