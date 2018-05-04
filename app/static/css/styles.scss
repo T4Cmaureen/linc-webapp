@@ -1080,7 +1080,7 @@ hr.style-line {
 .cv-request{
 	.Container-Panel-1 { display: flex; overflow: hidden; height: 75vh; position: relative; width: 100%; backface-visibility: hidden; will-change: overflow; }
 	.Container-Panel-2 { display: flex; overflow: hidden; height: 75vh; position: relative; width: 100%; backface-visibility: hidden; will-change: overflow; }
-	.Left-Panel { overflow: auto; width: 20%; min-width: 200px; height: auto; padding: .5rem; .tablist{ .fa-expand, .fa-compress{ font-size: 16px; padding-top: 3px; margin-right: 6px; } } }
+	.Left-Panel { overflow: auto; width: 20%; min-width: 200px; height: auto; padding: .5rem; .tablist{ a { padding: 0px 12px; .fa-expand, .fa-compress{ font-size: 16px; padding-top: 3px; margin-right: 15px; } } } }
 	.Right-Panel { overflow: auto; width: 80%; height: auto;}
 	.Right-Top-Panel { display: flex; justify-content: left;  position: fixed; width: 70%; z-index: 10; height: auto;}
 	.Scroll-Panel { overflow: auto; height: auto; padding: .1rem; margin-top:4rem; margin-left:1rem;}
@@ -2024,7 +2024,7 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 			.fa-expand, .fa-compress{
 				font-size: 16px;
 				padding-top: 3px;
-				margin-right: 6px;
+				margin-right: 15px;
 			}
 		}
 	}
