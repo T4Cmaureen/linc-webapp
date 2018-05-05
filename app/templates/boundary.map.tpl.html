@@ -47,21 +47,6 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 		<div class="row">
 			<div class="col-sm-3">
 				<label class="label-boundary">Search Areas:</label>
-				<!-- <div class="wrapper well" ng-show="GeoBounds.length">
-					<div ng-repeat="boundary in GeoBounds">
-						<label>
-							<input type="checkbox" 
-								ng-model="boundary.selected" ng-checked="boundary.selected" 
-								ng-change="SelectBoundary(boundary)">
-							{{! boundary.label.text}}
-						</label>
-					</div>
-				</div>
-				<div class="form-group user-actions text-center">
-					<button ng-disabled="!boundary.modified" class="btn btn-raised btn-default btn-update" ng-click="Submit()">
-						Update Boundarys
-					</button>
-				</div> -->
 				<div class="wrapper well" ng-show="GeoBounds.length">
 					
 						<div class="checkbox" ng-repeat="boundary in GeoBounds">
@@ -81,25 +66,40 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 					</div>
 				</div>
 				<div class="form-group">
-					Total Filtered: {{!filtered_markers.length}}
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th class="text-center">Id</th>
-								<th class="text-center">Photo</th>
-								<th class="text-center">Name</th>
+								<th class="text-center p15"><a ng-click="order('id')" ng-class="{'order_class': orderby.predicate === 'id'}">Id</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'id'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+								<th class="text-center p20">Photo</th>
+								<th class="text-center p30">
+									<a href="" ng-click="order('name')" ng-class="{'order_class': orderby.predicate === 'name'}">Name</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'name'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+								<th class="text-center p35">Tag Location</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr class="link" ng-repeat="marker in filtered_markers = ( markers | geographical2: GeoBounds ) track by $index">
-								<td class="text-center">{{!marker.entitie.id}}</td>
-								<td class="text-center">
-									<img ng-src="{{!marker.entitie.thumbnail}}" width="30" height="30">
+							<tr ng-class="{'tag-location': marker.tag_location}" class="link" ng-click="AnimateMarker(marker.marker);"
+								ng-dblclick="CenterMarker(marker.marker);"
+								ng-repeat="marker in filtered_markers = ( markers | geographical2: GeoBounds | orderBy : orderby.predicate : orderby.reverse)">
+								<td class="text-center p15">{{!marker.id}}</td>
+								<td class="text-center p20">
+									<img ng-src="{{!marker.thumbnail}}" width="30" height="30">
 								</td>
-								<td class="text-center">{{!marker.entitie.name}}</td>
+								<td class="text-center p50">{{!marker.name}}</td>
+								<td class="text-center p15"
+									uib-tooltip-html="marker.tooltip.title | unsafe" tooltip-placement="auto left"
+                  					tooltip-trigger="'mouseenter'" tooltip-enable="marker.tooltip.enabled"
+								>
+									<i ng-if="marker.tag_location" class="icon icon-check"></i>
+									<i ng-if="!marker.tag_location" class="icon icon-cross"></i>
+								</td>
 							</tr>
 						</tbody>
 					</table>
+					Total Filtered: {{!filtered_markers.length}}
 				</div>
 			</div>
 			<div class="col-sm-9 line-right">

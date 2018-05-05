@@ -448,7 +448,7 @@ angular.module('linc.view.lion.database.controller', [])
 		{
 			templateUrl: 'boundary.map.tpl.html',
 			controller: 'BoundaryMapCtrl',
-			controllerAs: 'vm',
+			controllerAs: 'vm', windowClass: 'Boundary-Modal',
 			size: 'lg', backdrop  : 'static', keyboard: false,
 			animation: true, transclude: true, replace: true
 		})
