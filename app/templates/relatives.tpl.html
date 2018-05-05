@@ -1,0 +1,280 @@
+<!-- LINC is an open source shared database and facial recognition
+system that allows for collaboration in wildlife monitoring.
+Copyright (C) 2016  Wildlifeguardians
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+For more information or to contact visit linclion.org or email tech@linclion.org -->
+
+<script type="text/ng-template" id="Warning.Gender.tpl.html">
+	<div name="Warning" class="font-homenaje-1-1">
+		<div class="modal-header" ng-show="title">
+			<h4 class="modal-title" ng-bind-html="title"></h4>
+		</div>
+		<div class="modal-body" ng-bind-html="message">
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-primary" ng-click="Close()">Close</button>
+		</div>
+	</div>
+</script>
+
+<div name="Relatives" class="modal-relatives font-homenaje-1-1">
+	<div class="modal-header" ng-show="title">
+		<button type="button" class="close" ng-click="Close()">&times;</button>
+		<h3 class="modal-title modal-title-image" ng-bind-html="title"></h3>
+	</div>
+	<div class="modal-body body-relatives">
+		<div class="row">
+			<div class="col-sm-6 line-right">
+				Total: {{!lions.length}} / Filtered: {{!filtered_lions.length}} / Relatives: {{!relatives.length}}
+				<table class="table table-hover table-lions">
+					<thead>
+						<tr>
+							<th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': orderby.predicate === 'id'}">Id</a>
+								<span class="sortorder" ng-show="orderby.predicate === 'id'" ng-class="{reverse: orderby.reverse}"></span>
+							</th>
+							<th class="text-center">Photo</th>
+							<th class="text-center">
+								<a href="" ng-click="order('name')" ng-class="{'order_class': orderby.predicate === 'name'}">Name</a>
+								<span class="sortorder" ng-show="orderby.predicate === 'name'" ng-class="{reverse: orderby.reverse}"></span>
+							</th>
+							<th class="text-center">
+								<a href="" ng-click="order('gender')" ng-class="{'order_class': orderby.predicate === 'gender'}">Gender</a>
+								<span class="sortorder" ng-show="orderby.predicate === 'gender'" ng-class="{reverse: orderby.reverse}"></span>
+							</th>
+							<th class="text-center">
+								<a href="" ng-click="order('age')" ng-class="{'order_class': orderby.predicate === 'age'}">Age</a>
+								<span class="sortorder" ng-show="orderby.predicate === 'age'" ng-class="{reverse: orderby.reverse}"></span>
+							</th>
+							<th class="text-center">
+								<a href="" ng-click="order('organization')" ng-class="{'order_class': orderby.predicate === 'organization'}">Organization</a>
+								<span class="sortorder" ng-show="orderby.predicate === 'organization'" ng-class="{reverse: orderby.reverse}"></span>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="link" ng-click="SetActiveLion(lion)" ng-repeat="(key, lion) in filtered_lions = 
+							(lions_list | nameid_filter: filters.NameOrId: 'primary_image_set_id' | organization_filter: filters.Organizations | 
+							gender_filter: filters.Genders | age_filter: filters.Ages) | orderBy : orderby.predicate : orderby.reverse">
+							<td class="text-center lion-image" ng-show="lion.show_image" ng-click="SwitchImage(lion, false)">
+								<img ng-src="{{!lion.image}}">
+							</td>
+							<td class="text-center" ng-show="!lion.show_image">{{!lion.id}}</td>
+							<td class="text-center" ng-show="!lion.show_image" ng-click="SwitchImage(lion, true)">
+								<img ng-src="{{!lion.thumbnail}}" width="40" height="40">
+							</td>
+							<td class="text-center" ng-show="!lion.show_image">{{!lion.name}}</td>
+							<td class="text-center" ng-show="!lion.show_image">{{!lion.gender}}</td>
+							<td ng-if="lion.age!=null" class="text-center" ng-show="!lion.show_image">{{!lion.age}} y/o</td>
+							<td ng-if="lion.age==null" class="text-center" ng-show="!lion.show_image"></td>
+							<td class="text-center" ng-show="!lion.show_image">{{!lion.organization}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-sm-6 right-relatives">
+
+				<table class="table table-hover table-animals">
+					<thead ng-show="!show_big">
+						<tr>
+							<th class="text-center">Id</th>
+							<th class="text-center">Photo</th>
+							<th class="text-center">Name</th>
+							<th class="text-center">Gender</th>
+							<th class="text-center">Age</th>
+							<th class="text-center">Organization</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="text-center lion-image" ng-show="show_big" ng-click="show_big=!show_big;">
+								<img ng-src="{{!animal.image}}">
+							</td>
+							<td class="text-center" ng-show="!show_big">{{!animal.id}} {{!show_big}}</td>
+							<td class="text-center" ng-show="!show_big" ng-click="show_big=!show_big;">
+								<img ng-src="{{!animal.thumbnail}}" width="40" height="40">
+							</td>
+							<td class="text-center" ng-show="!show_big">{{!animal.name}}</td>
+							<td class="text-center" ng-show="!show_big">{{!animal.gender}}</td>
+							<td ng-if="animal.age!=null" class="text-center" ng-show="!show_big">{{!animal.age}} y/o</td>
+							<td ng-if="animal.age==null" class="text-center" ng-show="!show_big"></td>
+							<td class="text-center" ng-show="!show_big">{{!animal.organization}}</td>
+						</tr>
+					</tbody>
+				</table>
+				<hr class="style-line">
+
+				<a class="collapse-filter" ng-click="collapse_base('Notes')">Notes:
+					<span>
+						<i ng-if="is_Collaped.Notes" class="fa fa-expand" aria-hidden="true"></i>
+						<i ng-if="!is_Collaped.Notes" class="fa fa-compress" aria-hidden="true"></i>
+					</span>
+				</a>
+				<a class="collapse-filter" ng-click="collapse_base('Filter')">Filters:
+					<span>
+						<i ng-if="is_Collaped.Filter" class="fa fa-expand" aria-hidden="true"></i>
+						<i ng-if="!is_Collaped.Filter" class="fa fa-compress" aria-hidden="true"></i>
+					</span>
+				</a>
+				<div class="filter-pannel" uib-collapse="is_Collaped.Notes">
+					<h5 class="h4data h4-notes">{{!lion.notes}}</h5>
+				</div>
+				<div class="filter-pannel" uib-collapse="is_Collaped.Filter">
+
+					<a class="collapse-filter" ng-click="collapse('NameOrId')">Name or ID
+						<span>
+							<i ng-if="isCollapsed.NameOrId" class="fa fa-expand" aria-hidden="true"></i>
+							<i ng-if="!isCollapsed.NameOrId" class="fa fa-compress" aria-hidden="true"></i>
+						</span>
+					</a>
+					<a class="collapse-filter" ng-click="collapse('Organization')">Organization
+						<span>
+							<i ng-if="isCollapsed.Organization" class="fa fa-expand" aria-hidden="true"></i>
+							<i ng-if="!isCollapsed.Organization" class="fa fa-compress" aria-hidden="true"></i>
+						</span>
+					</a>
+					<a class="collapse-filter" ng-click="collapse('Gender')">Gender
+						<span>
+							<i ng-if="isCollapsed.Gender" class="fa fa-expand" aria-hidden="true"></i>
+							<i ng-if="!isCollapsed.Gender" class="fa fa-compress" aria-hidden="true"></i>
+						</span>
+					</a>
+					<a class="collapse-filter"  ng-click="refreshSlider(); collapse('Age')">Age
+						<span>
+							<i ng-if="isCollapsed.Age" class="fa fa-expand" aria-hidden="true"></i>
+							<i ng-if="!isCollapsed.Age" class="fa fa-compress" aria-hidden="true"></i>  
+						</span>				
+					</a>
+
+					<div class="filter-pannel" uib-collapse="isCollapsed.NameOrId">
+						<div class="panel-body">
+							<input ng-change="change('NameOrId')" type="text" class="form-control input-sm" 
+								ng-model="filters.NameOrId" placeholder="Enter Name or ID to filter">
+						</div>
+					</div>					
+					<div class="filter-pannel" uib-collapse="isCollapsed.Organization">
+						<div class="panel-body checkbox">
+							<label class="organization" ng-repeat="organization in filters.Organizations">
+								<input ng-click="change('Organizations')" type="checkbox" ng-model="organization.checked" ng-checked="organization.checked">
+								<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+								{{! organization.name}}
+							</label>
+						</div>
+					</div>
+					<div class="filter-pannel" uib-collapse="isCollapsed.Gender">
+						<div class="panel-body checkbox">
+							<label class="gender" ng-repeat="gender in filters.Genders">
+								<input type="checkbox" ng-model="gender.checked" ng-checked="gender.checked">
+								<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+								{{! gender.label}}
+							</label>
+						</div>
+					</div>
+					<div class="filter-pannel" uib-collapse="isCollapsed.Age">
+						<div class="panel-body">
+							<rzslider class="age-slider"
+								rz-slider-model="filters.Ages.min"
+								rz-slider-high="filters.Ages.max"
+								rz-slider-options="filters.Ages.options"
+								rz-slider-step="1"
+								rz-slider-on-change="change('Ages')"
+								rz-slider-tpl-url="rzSliderTpl.html">
+							</rzslider>
+						</div>
+					</div>
+				</div>
+				<hr class="style-line">
+				<h5 class="title">Selected:</h5>
+				<div class="row add-relatives">
+
+					<div class="col-sm-5 form-group">
+						<label class="meta_label label-margin-bottom-0" for="name">Name: </label>
+						<input data-lpignore="true" class="form-control" ng-readonly="true"
+							ng-model="selected.name" name="name"
+							placeholder="Select a lion in the left panel">
+					</div>
+					<div class="col-sm-5 form-group">
+						<label class="label-margin-bottom-0" for="type" data-abm-label>Relation</label>
+						<ui-select class="lion-ui-select custom-select" ng-disabled="!selected.id"
+							name="relation" ng-model="selected.relation" theme="bootstrap">
+							<ui-select-match placeholder="Select a relation...">
+								<div ng-bind-html="$select.selected.type | highlight: $select.search"></div>
+							</ui-select-match>
+							<ui-select-choices repeat="item.type as item in (allrelatives | filter: $select.search) track by $index"
+								 ui-disable-choice="item.disabled">
+								<div ng-bind-html="Labels[item.type] | highlight: $select.search"></div>
+							</ui-select-choices>
+						</ui-select>
+					</div>
+					<div class="col-sm-2 form-group btn-add-relative">
+						<button class="btn btn-default" type="button" ng-click="AddRelative()"
+						ng-disabled="!selected.relation || !selected.id" >Add</button>
+					</div>
+				</div>
+				<hr class="style-line">
+				<form name="form" ng-submit="submit()">
+					<div class="wrapper container-relatives well well-lg">
+						<table class="table table-hover1">
+							<thead>
+								<tr>
+									<th class="text-center">
+										<a ng-click="order2('id_to')" ng-class="{'order_class': orderby2.predicate === 'id_to'}">Id</a>
+										<span class="sortorder" ng-show="orderby2.predicate === 'id_to'" ng-class="{reverse: orderby2.reverse}"></span>
+									</th>
+									<th class="text-center">
+										<a href="" ng-click="order2('name_to')" ng-class="{'order_class': orderby2.predicate === 'name_to'}">Lion</a>
+										<span class="sortorder" ng-show="orderby2.predicate === 'name_to'" ng-class="{reverse: orderby2.reverse}"></span>
+									</th>
+									<th class="text-center">
+										<a href="" ng-click="order2('type')" ng-class="{'order_class': orderby2.predicate === 'type'}">Relation</a>
+										<span class="sortorder" ng-show="orderby2.predicate === 'type'" ng-class="{reverse: orderby2.reverse}"></span>
+									</th>
+									<th class="text-center">
+										Remove
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="link" ng-dblclick="SetBackActiveLion(relative)" ng-repeat="relative in relatives | orderBy : orderby2.predicate : orderby2.reverse track by $index">
+									<td class="text-center">{{!relative.id_to}}</td>
+									<td class="text-center">{{!relative.name_to}}</td>
+									<td class="text-center">{{!Labels[relative.relation]}}</td>
+									<td class="cr text-center" ng-click="DelRelative(relative)">
+										<i class="cr-icon fa fa-times"></i>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="form-group user-actions text-right">
+							<button ng-disabled="!selection.modified" 
+								class="btn btn-default" ng-click="Reset()">Reset</button>
+							</button>
+							<button ng-disabled="!selection.modified" 
+								type="submit" class="btn btn-raised btn-primary">Update</button>
+							<span ng-if="dataloading" class="text-right text-danger span-preloader">
+								<img src="/static/images/loading.gif" class="preloader" />updating&hellip;
+							</span>
+						</div>
+					</div>
+				</form>
+				<div class="warning" ng-if="genderWarning">
+					<p>The "suspect father", "mother" and "cub" options are disabled because the lion does not have a defined gender.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+

@@ -33,7 +33,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           </ui-select-match>
           <ui-select-choices repeat="cvreq.id as cvreq in cvrequests | filter: {'id': $select.search}">
             <small>
-            <div ng-bind-html="cvreq.id | highlight: $select.search" style="padding-right: 5px"></div>
+            <div class="display-inline padding-right-5" ng-bind-html="cvreq.id | highlight: $select.search"></div>
             (Image Set <div class="display-inline" ng-bind-html="cvreq.image_set_id | highlight: $select.search"></div>)
             </small>
           </ui-select-choices>

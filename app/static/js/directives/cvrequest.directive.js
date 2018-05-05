@@ -27,16 +27,21 @@ angular.module('linc.cvrequest.directive', [])
     template: function(element, attrs) {
       switch (attrs.type) { //view selection. Put type='new' or type='search'
         case 'search':
-          return '<button class="btn btn-default btn-sm" data-animation="am-fade-and-slide-top" ng-click="show()"><i class="icon icon-flash"></i>Request CV</button>';
+          return '<button class="btn btn-default btn-sm" data-animation="am-fade-and-slide-top" ng-click="show()">'+
+                 '<span ng-if="loading" class="text-center" style="margin-right: 6px;">'+
+                 '<img src="/static/images/loading.gif" style="height: 12px;"/></span>'+
+                 '<i class="icon icon-flash"></i>Find Lion Match</button>';
           default:
-            return '<p><a class="btn btn-lg btn-default btn-block btn-minwidth-180" data-animation="am-fade-and-slide-top" ng-click="show()"><i class="icon icon-flash"></i> Request CV</a></p>';
+            return '<p><a class="btn btn-lg btn-default btn-block btn-minwidth-180" data-animation="am-fade-and-slide-top" ng-click="show()">'+
+                   '<span ng-if="loading" class="text-center" style="margin-right: 6px;">'+
+                   '<img src="/static/images/loading.gif"/></span>'+
+                   '<i class="icon icon-flash"></i>Find Lion Match</a></p>';
       }
     },
     scope: {
       useTemplateUrl: '@',
       useCtrl: '@',
       formSize: '@',
-      //imagesetId: '=',
       imageset: '=',
       cvRequestSuccess:'&',
       debug: '=',
@@ -48,6 +53,7 @@ angular.module('linc.cvrequest.directive', [])
         scope.modalIsOpen = true;
         var modalScope = scope.$new();
         modalScope.debug = scope.debug;
+        scope.loading = true;
         var modalInstance = $uibModal.open({
           animation: true,
           backdrop  : 'static',
@@ -57,27 +63,25 @@ angular.module('linc.cvrequest.directive', [])
           scope: modalScope,
           windowClass: 'large-Modal',
           resolve: {
-            // imagesetId: function () {
-            //   return scope.imagesetId;
-            // },
             imageset: function () {
               return scope.imageset;
             },
             lions: ['LincServices', function(LincServices) {
               return LincServices.Lions();
             }],
-            lion_filters: ['LincDataFactory', function(LincDataFactory) {
-              return LincDataFactory.get_lions_cvreq_filters();
+            cvrequests_options: ['LincDataFactory', function(LincDataFactory) {
+              return LincDataFactory.get_cvrequests();
             }]
           }
         });
         modalInstance.result.then(function (cvrequest) {
           scope.modalIsOpen = false;
-          //scope.cvRequestSuccess({imageset_Id: scope.imagesetId, request_Obj: cvrequest});
           scope.cvRequestSuccess({imageset_Id: scope.imageset.id, request_Obj: cvrequest});
+          scope.loading = false;
           console.log('Modal ok ' + cvrequest);
         }, function () {
           scope.modalIsOpen = false;
+          scope.loading = false;
           console.log('Modal dismissed at: ' + new Date());
         });
       };

@@ -27,9 +27,15 @@ angular.module('linc.cvresults.directive', [])
     template: function(element, attrs) {
       switch (attrs.type) { //view selection. Put type='new' or type='search'
         case 'search':
-          return '<button class="btn btn-primary btn-sm" data-animation="am-fade-and-slide-top" ng-click="show()"><i class="icon icon-flash"></i>CV Results</button>';
+          return '<button class="btn btn-primary btn-sm" data-animation="am-fade-and-slide-top" ng-click="show()">'+
+                 '<span ng-if="loading" class="text-center" style="margin-right: 6px;">'+
+                 '<img src="/static/images/loading.gif" style="height: 12px;"/></span>'+
+                 '<i class="icon icon-flash"></i>CV Results</button>';
         default:
-          return '<p><a class="btn btn-lg btn-default btn-block btn-minwidth-180" data-animation="am-fade-and-slide-top" ng-click="show()"><i class="icon icon-flash"></i> VIEW CV RESULTS</a></p>';
+          return '<p><a class="btn btn-lg btn-default btn-block btn-minwidth-180" data-animation="am-fade-and-slide-top" ng-click="show()">'+
+                 '<span ng-if="loading" class="text-center" style="margin-right: 6px;">'+
+                 '<img src="/static/images/loading.gif"/></span>'+
+                 '<i class="icon icon-flash"></i> VIEW CV RESULTS</a></p>';
       }
     },
     scope: {
@@ -52,6 +58,7 @@ angular.module('linc.cvresults.directive', [])
         modalScope.debug = scope.debug;
         modalScope.ResultsErased = false;
         modalScope.Associated_Data = null;
+        scope.loading = true;
         var modalInstance = $uibModal.open({
           animation: true,
           backdrop  : 'static',
@@ -71,7 +78,7 @@ angular.module('linc.cvresults.directive', [])
               return scope.cvresultsId;
             },
             data_cvresults: ['LincServices', function(LincServices) {
-              return LincServices.getCVResults(scope.cvresultsId);
+              return LincServices.GetCVResults(scope.cvresultsId);
             }]
           }
         });
@@ -103,9 +110,11 @@ angular.module('linc.cvresults.directive', [])
           if(modalScope.Associated_Data != null)
             scope.imagesetUpdated({'data': modalScope.Associated_Data, 'imagesetId': scope.imageset.id});
           console.log('Modal ok');
+          scope.loading = false;
         }, function () {
           modalScope.cancel_Poller();
           scope.modalIsOpen = false;
+          scope.loading = false;
           console.log('Modal dismissed at: ' + new Date());
         });
       };

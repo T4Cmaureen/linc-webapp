@@ -214,15 +214,11 @@ angular.module('linc.admin.organizations.controller', [])
   $scope.Delete_Organization = function() {
     $scope.DialogDelete('Organizations')
     .then(function (result) {
-      var organizations_id = _.pluck(_.map($scope.Selecteds, function (organization){
-        return {'id': organization.id};
-      }), 'id');
+      var organizations_id = _.map($scope.Selecteds, 'id');
 
       $scope.LincApiServices.Organizations({'method': 'delete', 'organizations_id': organizations_id}).then(function(response){
         if(response.error.length>0){
-          var data = _.pluck(_.map(response.error, function (organization){
-            return {'id': organization.id};
-          }), 'id');
+          var data = _.map(response.error, 'id');
           var msg = (data.length>1) ? 'Unable to delete organizations ' + data : 'Unable to delete organization ' + data;
           $scope.Notification.error({
             title: "Delete", 

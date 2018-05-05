@@ -23,6 +23,7 @@ angular.module('linc.metadata.directive', [])
 .directive('metadata', ['$uibModal', function($uibModal) {
   return {
     transclude: true,
+    replace: true,
     restrict: 'EA',
     template: function(element, attrs) {
       switch (attrs.type) { //view selection. Put type='edit' or type=''
@@ -39,7 +40,6 @@ angular.module('linc.metadata.directive', [])
       }
     },
     scope: {
-      //gotoImagesetAction: '&',
       cancelAction: '&',
       useTemplateUrl: '@',
       useCtrl: '@',
@@ -63,6 +63,7 @@ angular.module('linc.metadata.directive', [])
           backdrop  : 'static',
           templateUrl: scope.useTemplateUrl,
           controller:  scope.useCtrl,
+          controllerAs: 'vm',
           size: scope.formSize,
           scope: modalScope,
           resolve: {
@@ -78,7 +79,6 @@ angular.module('linc.metadata.directive', [])
                   deferred.reject(response);
               });
               return deferred.promise;
-              //return LincServices.Organizations();
             }]
           }
         });
@@ -110,6 +110,7 @@ angular.module('linc.metadata.directive', [])
           backdrop  : 'static',
           templateUrl: scope.useTemplateUrl,
           controller:  scope.useCtrl,
+          controllerAs: 'vm',
           size: scope.formSize,
           scope: modalScope,
           resolve: {
@@ -125,7 +126,6 @@ angular.module('linc.metadata.directive', [])
                   deferred.reject(response);
               });
               return deferred.promise;
-              //return LincServices.Organizations();
             }]
           }
         });

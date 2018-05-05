@@ -1,47 +1,49 @@
 <div class="aside" tabindex="-1" role="dialog">
-  <!-- LINC is an open source shared database and facial recognition
-  system that allows for collaboration in wildlife monitoring.
-  Copyright (C) 2016  Wildlifeguardians
+<!-- LINC is an open source shared database and facial recognition
+system that allows for collaboration in wildlife monitoring.
+Copyright (C) 2016  Wildlifeguardians
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU Affero General Public License as
-  published by the Free Software Foundation, either version 3 of the
-  License, or (at your option) any later version.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU Affero General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
 
-  You should have received a copy of the GNU Affero General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-  For more information or to contact visit linclion.org or email tech@linclion.org -->
-  
-<div class="aside-dialog font-homenaje-1-2">
-  <div class="aside-content">
-    <div class="aside-header" ng-show="title">
-      <button type="button" class="close" ng-click="$hide()">&times;</button>
-      <h4 class="aside-title" ng-bind-html="title"></h4>
-    </div>
-    <div class="aside-body" ng-show="content">
-      <p>Logged in as <strong>{{!user.name}}</strong> of <strong>{{!user.organization}}</strong></p>
-      <ul class="nav nav-stacked" ng-show="user.logged" >
-        <li role="presentation" class="active"><a ui-sref="conservationists" ng-click="$hide()">Directory of conservationists</a></li>
-        <li role="separator" class="divider"><hr></li>
-        <li role="presentation">
-          <metadata use-ctrl="MetadataCtrl" use-template-url="metadata.html" form-size="lg" type="side_lion" goto-imageset-action="goto_lion(Id); $hide()" cancel_action="$hide()" options-set="options.lions" debug="debug" modal-is-open="is_modal_open"></metadata>
-        </li>
-        <li role="presentation"><a ui-sref="searchlion" ng-click="$hide()">Search Lion</a></li>
-        <li role="presentation">
-          <metadata use-ctrl="MetadataCtrl" use-template-url="metadata.html" form-size="lg" type="side_image_set"  goto-imageset-action="goto_imageset(Id); $hide()" cancel-action="$hide()" options-set="options.imageset" debug="debug" modal-is-open="is_modal_open"></metadata>
-        </li>
-        <li role="presentation"><a ui-sref="searchimageset" ng-click="$hide()">Search Image Sets</a></li>
-        <li role="separator" class="divider"><hr></li>
-        <li role="presentation" ng-show="user.admin"><a ui-sref="admin" ng-click="$hide()">Administration</a></li>
-        <li role="presentation"><a ng-click="changePWD($hide)">Change Password</a></li>
-        <li role="presentation"><a ng-click="logout($hide)">Logout</a></li>
-      </ul>
+For more information or to contact visit linclion.org or email tech@linclion.org -->
+  <div class="aside-dialog font-homenaje-1-2">
+    <div class="aside-content">
+      <div class="aside-header" ng-show="title">
+        <button type="button" class="close" ng-click="$hide()">&times;</button>
+        <h4 class="aside-title" ng-bind-html="title"></h4>
+      </div>
+      <div class="aside-body" ng-show="content">
+        <p>Logged in as <strong>{{!user.name}}</strong> of <strong>{{!user.organization}}</strong></p>
+        <ul class="nav nav-stacked" ng-show="user.logged" >
+          <li role="presentation" class="active"><a ui-sref="conservationists" ng-click="$hide()">Directory of conservationists</a></li>
+          <li role="separator" class="divider"><hr></li>
+          <li role="presentation">
+            <metadata use-ctrl="MetadataCtrl" use-template-url="metadata.html" form-size="lg" type="side_lion" goto-imageset-action="goto_lion(Id); $hide()" cancel_action="$hide()" options-set="options.lions" debug="debug" modal-is-open="is_modal_open"></metadata>
+          </li>
+          <li role="presentation"><a ui-sref="viewliondatabase" ng-click="$hide()">View Lion Database</a></li>
+          <li role="presentation">
+            <metadata use-ctrl="MetadataCtrl" use-template-url="metadata.html" form-size="lg" type="side_image_set"  goto-imageset-action="goto_imageset(Id); $hide()" cancel-action="$hide()" options-set="options.imageset" debug="debug" modal-is-open="is_modal_open"></metadata>
+          </li>
+          <li role="presentation"><a ui-sref="viewimagesets" ng-click="$hide()">View Image Sets</a></li>
+          <li role="separator" class="divider"><hr></li>
+          <li role="presentation" ng-show="user.admin"><a ui-sref="admin" ng-click="$hide()">Administration</a></li>
+          <li role="presentation"><a ng-click="user_manual()">User Manual</a></li>
+          
+          <li role="presentation"><a ng-click="changePWD($hide)">Change Password</a></li>
+          <li role="presentation"><a ng-click="logout($hide)">Logout</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

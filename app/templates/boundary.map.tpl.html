@@ -1,0 +1,117 @@
+<!-- LINC is an open source shared database and facial recognition
+system that allows for collaboration in wildlife monitoring.
+Copyright (C) 2016  Wildlifeguardians
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+For more information or to contact visit linclion.org or email tech@linclion.org -->
+<script type="text/ng-template" id="polygon.name.tpl.html">
+	<form name="form" ng-submit="Submit(name)" class="font-homenaje-1-1">
+		<div class="modal-header" ng-show="title">
+			<button type="button" class="close" ng-click="cancel()">&times;</button>
+			<h1 class="modal-title forgot-title" ng-bind-html="title"></h1>
+		</div>
+		<div class="modal-body">
+			<div class="wrapper">
+				<div class="form-group">
+					<input class="form-control" type="text" name="name" ng-model="name" required
+					oninvalid="this.setCustomValidity('Please enter a label')" 
+            		oninput="setCustomValidity('')">
+				</div>
+			</div>
+			<div class="form-actions pull-right-btn-16">
+				<button type="submit" class="btn btn-primary">Set</button>			
+			</div>
+		</div>
+	</form>
+</script>
+
+
+<div name="Map" class="map boundary-map" ng-keyup="KeyEvent($event)">
+	<div class="modal-header" ng-show="title">
+		<button type="button" class="close" ng-click="Cancel()">&times;</button>
+		<h4 class="modal-title" ng-bind-html="title"></h4>
+	</div>
+	<div class="modal-body">
+		<div class="row">
+			<div class="col-sm-3">
+				<label class="label-boundary">Search Areas:</label>
+				<!-- <div class="wrapper well" ng-show="GeoBounds.length">
+					<div ng-repeat="boundary in GeoBounds">
+						<label>
+							<input type="checkbox" 
+								ng-model="boundary.selected" ng-checked="boundary.selected" 
+								ng-change="SelectBoundary(boundary)">
+							{{! boundary.label.text}}
+						</label>
+					</div>
+				</div>
+				<div class="form-group user-actions text-center">
+					<button ng-disabled="!boundary.modified" class="btn btn-raised btn-default btn-update" ng-click="Submit()">
+						Update Boundarys
+					</button>
+				</div> -->
+				<div class="wrapper well" ng-show="GeoBounds.length">
+					
+						<div class="checkbox" ng-repeat="boundary in GeoBounds">
+							<label class="checkbox-inline">
+								<input type="checkbox" class="form-input" 
+								ng-model="boundary.selected" ng-checked="boundary.selected" 
+								ng-change="SelectBoundary(boundary)">
+								<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+									{{! boundary.label.text}}
+							</label>
+						</div>
+					
+					<div class="form-group user-actions">
+						<button ng-disabled="!boundary.modified" class="btn btn-raised btn-default btn-update" ng-click="Submit()">
+							Update Boundarys
+						</button>
+					</div>
+				</div>
+				<div class="form-group">
+					Total Filtered: {{!filtered_markers.length}}
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th class="text-center">Id</th>
+								<th class="text-center">Photo</th>
+								<th class="text-center">Name</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="link" ng-repeat="marker in filtered_markers = ( markers | geographical2: GeoBounds ) track by $index">
+								<td class="text-center">{{!marker.entitie.id}}</td>
+								<td class="text-center">
+									<img ng-src="{{!marker.entitie.thumbnail}}" width="30" height="30">
+								</td>
+								<td class="text-center">{{!marker.entitie.name}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="col-sm-9 line-right">
+				<map id="boundary" disable-default-u-i={{!options.disableDefaultUI}}
+					disable-double-click-zoom={{!options.disableDoubleClickZoom}}
+					draggable={{!options.draggable}}
+					handle-esc="cancel_edit()"
+					scale-control="true"
+					map-type-control-options="{style: 'HORIZONTAL_BAR', position: 'BOTTOM_CENTER'}">
+				</map>
+			</div>
+		</div>
+		<div id="popup_content"></div>
+	</div>
+</div>

@@ -20,29 +20,43 @@
 
 angular.module('linc.compare.images.controller', [])
 
-.controller('CompareImagesCtrl', ['$scope', '$filter', 'LincServices', 'imageset_gallery', 'lion_gallery',
-	function ($scope, $filter, LincServices, imageset_gallery, lion_gallery, imageTypes_filter) {
+.controller('CompareImagesCtrl', ['$scope', '$filter', 'LincServices', 'cvresults_data', 'imageset_gallery', 'lion_gallery',
+	function ($scope, $filter, LincServices, cvresults_data, imageset_gallery, lion_gallery) {
 
 	$scope.dataLoading = false;
 
+	$scope.title = cvresults_data.title;
+	$scope.reverse = cvresults_data.reverse;
+	$scope.predicate = cvresults_data.predicate;
+	$scope.imageset = cvresults_data.imageset;
+	$scope.lion = cvresults_data.lion;
+	$scope.cvresults = cvresults_data.cvresults;
+	$scope.CVResultsTitle = $scope.cvresults.length + ' matches'
+
+	$scope.$parent.show_navbar = false;
+
 	// Image Set Types Filter
-	$scope.ImageSetTypes = [ 
-		{type: 'cv', name: 'CV Image', checked: true}, 
-		{type:'full-body', name:'Full Body', checked: true}, 
-		{type:'whisker', name:'Whisker', checked: true}, 
-		{type:'main-id',name:'Main Id', checked: true}, 
-		{type:'marking',name:'Marking', checked: true}
+	$scope.ImageSetTags = [ 
+		{checked: true, type: 'cv', label: 'CV Image'},
+		{checked: true, type: 'full-body', label: 'Full Body'}, 
+		{checked: true, type: 'main-id', label: 'Main Id'}, 
+		{checked: true, type: 'marking', label: 'Marking'},
+		{checked: true, type: 'whisker', label: 'Whisker (No use in Algorithm)'},
+		{checked: true, type: 'whisker-left', label: 'Whisker Left'},
+		{checked: true, type: 'whisker-right', label: 'Whisker Right'}
 	];
 	// Collapse Image Set Filter Panel
 	$scope.isImageSetCollapsed = true;
 
 	// Lion Primary Image Set Types Filter
-	$scope.LionTypes = [
-		{type: 'cv', name: 'CV Image', checked: true},
-		{type:'full-body', name:'Full Body', checked: true}, 
-		{type:'whisker', name:'Whisker', checked: true},
-		{type:'main-id',name:'Main Id', checked: true}, 
-		{type:'marking',name:'Marking', checked: true}
+	$scope.LionTags = [
+		{checked: true, type: 'cv', label: 'CV Image'},
+		{checked: true, type: 'full-body', label: 'Full Body'}, 
+		{checked: true, type: 'main-id', label: 'Main Id'}, 
+		{checked: true, type: 'marking', label: 'Marking'},
+		{checked: true, type: 'whisker', label: 'Whisker (No use in Algorithm)'},
+		{checked: true, type: 'whisker-left', label: 'Whisker Left'},
+		{checked: true, type: 'whisker-right', label: 'Whisker Right'}
 	];
 	// Collapse Image Set Filter Panel
 	$scope.isLionCollapsed = true; 
@@ -50,27 +64,29 @@ angular.module('linc.compare.images.controller', [])
 	// Carousel Options
 	$scope.carousel = { interval: 500000, noWrapSlides: false, no_transition : false};
 	// ImageSet
-	$scope.carouselImg={ showslide: true, gallery:[], active: 0, Page: 1, Begin: 0, Count: 4 };
+	$scope.carouselImg={ showslide: true, gallery:[], name: 'imageset', active: 0, Page: 1, Begin: 0, Count: 4 };
 	// Lion
-	$scope.carouselLion={ showslide: true, gallery: [], active: 0, Page: 1, Begin: 0, Count: 4 };
+	$scope.carouselLion={ showslide: true, gallery: [], name: 'lion', active: 0, Page: 1, Begin: 0, Count: 4 };
 	// ImageSet Gallery
 	var setGallery = function (gallery){
-		var photos = []
-		_.forEach(gallery.images, function(photo, index){
-			photo.index = index;
-			var name = 'Name: ' + photo.filename;
-			var date = photo.img_date_stamp ? 'date stamp: '+ 
-				photo.img_date_stamp.toLocaleString() : 'updated at: ' + 
-				photo.img_updated_at.toLocaleString();
-			var texto = name + '<br> ' + date + '<br> type: ' + photo.type;
+		var photos = _.map(gallery.images, function(photo, index) {
+			var elem = {};
+			elem['name'] = 'Name: ' + photo.filename;
+			var date = photo.date_stamp ? ('date stamp: '+ photo.date_stamp.toLocaleString()) : 
+				(photo.created_at ? 'created at: ' + photo.created_at.toLocaleString() : ('updated at: ' + photo.updated_at.toLocaleString()));
+			var texto = name + '<br> ' + date + '<br> tags: ' + photo.tags.join();
 			if(photo.joined)
 				texto += '<br> joined from:&nbsp;' + photo.joined_from;
 			photo.tooltip = {title: texto, checked: true};
-			photos.push(photo);
+			elem['index'] = index;
+			return _.extend({}, photo, elem);
 		});
 		return photos;
-	}
+	};
+
 	$scope.carouselImg.gallery = setGallery(imageset_gallery);
+
+	console.log($scope.carouselImg.gallery);
 	// Lions
 	$scope.carouselLion.gallery = setGallery(lion_gallery);
 	// Previous Page Click
@@ -151,12 +167,16 @@ angular.module('linc.compare.images.controller', [])
 	SetCarousel($scope.carouselImg);
 	SetCarousel($scope.carouselLion);
 
-	// Filter Carousel Thumbnails by Selected Types
-	$scope.Change_Types = function ($set, types){
+	// // Filter Carousel Thumbnails by Selected Types
+	$scope.Change_Tags = function ($set, tags){
 		SetCarousel($set);
-		$set.filtered = $filter('imageTypes_filter')($set.gallery, types);
+		$set.filtered = $filter('TagsFilter')($set.gallery, tags);
 		ChangePage($set);
 		$set.paginated = $filter('limitTo')($set.filtered, $set.Count, $set.Begin);
+		if ($set.name == 'imageset')
+			$scope.ImagesetTitle = "Image Set "+ $scope.imageset.id + " - Gallery ( " + $set.filtered.length + " Images )"; 
+		else
+			$scope.TitleLion = "CV Result (Image Set: "+ $scope.lion.primary_image_set_i + ") - Gallery ( " + $set.filtered.length + " Images )"; 
 	}
 
 	$scope.resizeChange = function(h,w){
@@ -247,10 +267,10 @@ angular.module('linc.compare.images.controller', [])
 		$scope.carouselCV.active = photo.index;
 		$scope.dataLoading = true;
 		$scope.carouselLion.showslide=false;
-		LincServices.getImageGallery(photo.primary_image_set_id).then(function(response){
+		LincServices.GetImageGallery(photo.primary_image_set_id).then(function(response){
 			lion_gallery = angular.copy(response);
 			$scope.carouselLion.gallery = setGallery(lion_gallery);
-			$scope.carouselLion.filtered = $filter('imageTypes_filter')($scope.carouselLion.gallery, $scope.LionTypes);
+			$scope.carouselLion.filtered = $filter('TagsFilter')($scope.carouselLion.gallery, $scope.LionTags);
 			$scope.carouselLion.Page = 1;
 			$scope.carouselLion.active = 0;
 
@@ -262,6 +282,7 @@ angular.module('linc.compare.images.controller', [])
 			$scope.dataLoading = false;
 		});
 	}
-
+	$scope.ImagesetTitle = "Image Set "+ $scope.imageset.id + " - Gallery ( " + $scope.carouselImg.gallery.length + " Images )"; 
+	$scope.TitleLion = "CV Result (Image Set: "+ $scope.lion.primary_image_set_id + ") - Gallery ( " + $scope.carouselLion.gallery.length + " Images )"; 
 }]);
 

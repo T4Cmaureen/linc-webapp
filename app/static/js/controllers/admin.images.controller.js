@@ -96,7 +96,7 @@ angular.module('linc.admin.images.controller', [])
     modalScope.imagesets = angular.copy($scope.$parent.imagesets);
     modalScope.image = {
       'url': '', 
-      'image_type': 'cv', 
+      'image_tags': ['cv'], 
       'image_set_id': '',
       'is_public': true, 
       'selected': true
@@ -120,7 +120,7 @@ angular.module('linc.admin.images.controller', [])
         modalScope.dataSending = true;
         var data = { 
           'url': modalScope.image.url,
-          'image_type': modalScope.image.image_type,
+          'image_tags': modalScope.image.image_tags,
           'image_set_id': modalScope.image.image_set_id,
           'is_public': modalScope.image.is_public
         };
@@ -187,12 +187,38 @@ angular.module('linc.admin.images.controller', [])
         $scope.Image_Mode = '';
         modalScope.dataSending = false;
       });
-      
+
+      modalScope.OnSelect = function($item, Tags, ListOfTags) {
+        UpdateTags(Tags, ListOfTags);
+        Tags.sort(StrCompare);
+      };
+
+      modalScope.OnRemove = function($item, Tags, ListOfTags) {
+        UpdateTags(Tags, ListOfTags);
+        Tags.sort(StrCompare);
+      };
+
+      function StrCompare(a, b) {
+        if (a.id < b.id) return -1;
+        if (a.id > b.id) return 1;
+        return 0;
+      };
+
+      var UpdateTags = function (Tags, ListOfTags){
+        var disabled_tag = _.difference(['whisker', 'whisker-left','whisker-right'],
+          _.intersection(Tags, ['whisker', 'whisker-left','whisker-right']));
+        if (disabled_tag.length == 3)
+          disabled_tag = [];
+        _.forEach(ListOfTags, function(tag){
+            tag.disabled = _.includes(disabled_tag, tag.value);
+        });
+      };
+
       modalScope.submit = function(valid){
         if(valid){
           var data = { 
             'url': modalScope.image.url,
-            'image_type': modalScope.image.image_type,
+            'image_tags': modalScope.image.image_tags,
             'image_set_id': modalScope.image.image_set_id,
             'is_public': modalScope.image.is_public
           };
@@ -233,15 +259,11 @@ angular.module('linc.admin.images.controller', [])
   $scope.Delete_Image = function() {
     $scope.DialogDelete('Images')
     .then(function (result) {
-      var images_id = _.pluck(_.map($scope.Selecteds, function (image){
-        return {'id': image.id};
-      }), 'id');
+      var images_id = _.map($scope.Selecteds, 'id');
 
       $scope.LincApiServices.Images({'method': 'delete', 'images_id': images_id}).then(function(response){
         if(response.error.length>0){
-          var data = _.pluck(_.map(response.error, function (image){
-            return {'id': image.id};
-          }), 'id');
+          var data = _.map(response.error, 'id');
           var msg = (data.length>1) ? 'Unable to delete images ' + data : 'Unable to delete image ' + data;
           $scope.Notification.error({
             title: "Delete", 
@@ -297,10 +319,15 @@ angular.module('linc.admin.images.controller', [])
     }
   }
 
-  $scope.TypesLabel = [ {'type': 'cv', 'label': 'CV Image'},{'type': 'full-body', 'label': 'Full Body'},
-                        {'type': 'whisker', 'label': 'Whisker'},{'type': 'main-id', 'label': 'Main Id'},
-                        {'type': 'marking', 'label': 'Marking'}];
-
+   $scope.ListOfTags = [
+      { disabled: false, id: 0, value: "cv", label: "CV Image" },
+      { disabled: false, id: 1, value: "main-id", label: "Main Id" },
+      { disabled: false, id: 3, value: "whisker-left", label: "Whisker Left" },
+      { disabled: false, id: 4, value: "whisker-right", label: "Whisker Right" },
+      { disabled: false, id: 2, value: "marking", label: "Marking" },
+      { disabled: false, id: 7, value: "whisker", label: "Whisker (No use in Algorithm)" },
+      { disabled: false, id: 6, value: "full-body", label: "Full Body" }
+  ];
 
   // Order by
   $scope.reverse = $scope.settings.images.reverse;

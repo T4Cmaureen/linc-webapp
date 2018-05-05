@@ -22,12 +22,13 @@
 
 from handlers.base import VersionHandler
 from handlers.auth import LogoutHandler, LoginHandler, CheckAuthHandler, ResetPassword, ChangePassword, RequestAccessEmailHandler
-from handlers.main import MainHandler, LoginMainHandler, HomeHandler, SideMenuHandler
-from handlers.main import LionMainHandler, SearchLionHandler, ImageSetMainHandler, SearchImageSetHandler
+from handlers.main import MainHandler, LoginMainHandler, HomeHandler, SideMenuHandler, RelativesTplHandler, CarouselGalleryHandler
+from handlers.main import LionMainHandler, ViewLionDatabaseHandler, ImageSetMainHandler, ViewImageSetsHandler, BoundaryMapHandler
 from handlers.main import ConservationistsHandler, ImageGalleryHandler, LocationHistoryHandler, CompareImagesHandler
 from handlers.main import EditMetadataHandler, CVResultsMainHandler, CVRequestMainHandler, UploadImagesHandler, VerifyImageSetHandler
 from handlers.main import PageAdminHandler, PageAdminUsersHandler, PageAdminOrganizationsHandler, PageAdminLionsHandler
 from handlers.main import PageAdminImageSetsHandler, PageAdminImagesHandler, PageAdminCVRequestsHandler, PageAdminCVResultsHandler
+from handlers.main import RequestAccessHandler, MetadataBatchHandler, LocationOnMapHandler, DeleteBatchHandler
 from handlers.api import LionsListHandler, ImagesListHandler, ImageSetsListHandler, OrganizationsListHandler
 from handlers.api import ImagesUploadHandler, ImagesHandler, LionsHandler, ImageSetsHandler
 from handlers.api import OrganizationsHandler, CVResultsHandler, CVRequestHandler, UsersHandler, RelativesHandler
@@ -51,18 +52,25 @@ url_patterns = [
     (r"/home.html", HomeHandler),
     (r"/sidemenu.html", SideMenuHandler),
     (r"/lion.html", LionMainHandler),
-    (r"/searchlion.html", SearchLionHandler),
+    (r"/view.lion.database.html", ViewLionDatabaseHandler),
     (r"/imageset.html", ImageSetMainHandler),
-    (r"/searchimageset.html", SearchImageSetHandler),
+    (r"/view.imagesets.html", ViewImageSetsHandler),
     (r"/conservationists.html", ConservationistsHandler),
-    (r"/imagegallery.html", ImageGalleryHandler),
-    (r"/locationhistory.html", LocationHistoryHandler),
+    (r"/image.gallery.html", ImageGalleryHandler),
+    (r"/location.history.html", LocationHistoryHandler),
     (r"/metadata.html", EditMetadataHandler),
     (r"/cvresults.html", CVResultsMainHandler),
     (r"/cvrequest.html", CVRequestMainHandler),
     (r"/uploadimages.html", UploadImagesHandler),
     (r"/verify_imageset.tpl.html", VerifyImageSetHandler),
-    (r"/compare.images.tpl.html", CompareImagesHandler),
+    (r"/compare.images.html", CompareImagesHandler),
+    (r"/boundary.map.tpl.html", BoundaryMapHandler),
+    (r"/relatives.tpl.html", RelativesTplHandler),
+    (r"/request.access.tpl.html", RequestAccessHandler),
+    (r"/metadata.batch.html", MetadataBatchHandler),
+    (r"/delete.batch.tpl.html", DeleteBatchHandler),
+    (r"/location.on.map.html", LocationOnMapHandler),
+    (r"/carousel.gallery.tpl.html", CarouselGalleryHandler),
     # Handlers for API comunication
     (r"/imagesets/list", ImageSetsListHandler),
     (r"/imagesets/(\w+)/(cvrequest)$", ImageSetsListHandler),

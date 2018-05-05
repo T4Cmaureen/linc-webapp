@@ -1,0 +1,103 @@
+<div name="Map" class="map location-on-map" ng-keyup="KeyEvent($event)">
+	<form name="vm.form">
+		<div class="modal-header" ng-show="title">
+			<button type="button" class="close" ng-click="Cancel()">&times;</button>
+			<h4 class="modal-title" ng-bind-html="title"></h4>
+		</div>
+		<div class="modal-body" ng-show="location">
+			<div class="row location-painel">
+				<div class="col-sm-3 div-location">
+					<div class="form-group latitude" ng-class="{'has-error': vm.form.latitude.$dirty && (vm.form.latitude.$error.pattern || vm.form.latitude.$error.limlatlng)}">
+						<label class="meta_label" for="latitude">Latitude: {{!vm.form.latitude.$error.limlatlng}}</label>
+						<input data-lpignore="true" class="form-control meta_input" type="text" 
+							pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-required="true"
+							ng-model="location.latitude" name="latitude" limlatlng="90"
+							ng-model-options='{ debounce: 300 }' ng-change="UpdatePosition()"
+							oninvalid="this.setCustomValidity('Please enter a valid latitude number')" 
+							oninput="setCustomValidity('')" placeholder="Latitude">
+						<span class="icon icon-cross" ng-click="submitted=false;" ng-show="vm.form.latitude.$error.limlatlng && submitted"></span>
+						<div class="error-messages" ng-messages="vm.form.latitude.$error" ng-if="submitted">
+							<div ng-message="limlatlng">
+								<div class="row">
+									<div class="col-sm-2">
+										<i class="icon icon-error icon-notification"></i>
+									</div>
+									<div class="col-sm-10 error-msg-col">
+										choose a latitude value between -90 and 90.
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group longitude" ng-class="{'has-error': vm.form.longitude.$dirty && (vm.form.longitude.$error.pattern || vm.form.longitude.$error.limlatlng)}">
+						<label class="meta_label" for="longitude">Longitude: {{!vm.form.longitude.$error.limlatlng}}</label>
+						<input data-lpignore="true" class="form-control meta_input" type="text" 
+							pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-required="true"
+							ng-model="location.longitude" name="longitude" limlatlng="180"
+							ng-model-options='{ debounce: 300 }' ng-change="UpdatePosition()"
+							oninvalid="this.setCustomValidity('Please enter a valid longitude number')" 
+							oninput="setCustomValidity('')" placeholder="Longitude">
+						<span class="icon icon-cross" ng-click="submitted=false;" ng-show="!vm.form.latitude.$error.limlatlng && vm.form.longitude.$error.limlatlng && submitted"></span>
+						<div class="error-messages" ng-messages="form.longitude.$error" ng-if="!vm.form.latitude.$error.limlatlng && submitted">
+							<div ng-message="limlatlng">
+								<div class="row">
+									<div class="col-sm-2">
+										<i class="icon icon-error icon-notification"></i>
+									</div>
+									<div class="col-sm-10 error-msg-col">
+										choose a longitude value between -180 and 180.
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 form-group div-tag-location">
+					<label for="tag_location_status">
+						<input type="checkbox" name="tag_location_status" ng-model="location.tag_location.status"
+							class="batch-checkbox" ng-click="ToggleTagLocation()">Tag location:
+					</label>
+					<div class="tag-inputs">
+						<input data-lpignore="true" class="form-control meta_input" type="text" 
+							ng-model="location.tag_location.title" name="tag_location_title"
+							ng-required="location.tag_location.status"
+							ng-disabled="!location.tag_location.status"
+							ng-model-options='{ debounce: 300 }' ng-change="UpdateTagLabel(location.tag_location.title)"
+							placeholder="label"
+							oninvalid="this.setCustomValidity('Please enter a valid label to tag location')"
+							oninput="setCustomValidity('')">
+						<input data-lpignore="true" class="pull-right form-control meta_input" type="text" 
+							ng-model="location.tag_location.value" name="tag_location_value"
+							ng-required="location.tag_location.status"
+							ng-disabled="!location.tag_location.status"
+							placeholder="distance (m)"
+							oninvalid="this.setCustomValidity('Please enter a valid radius distance to tag location')"
+							oninput="setCustomValidity('')">
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<rzslider ng-show="location.tag_location.status" 
+						class="custom-slider"
+						rz-slider-model="location.tag_location.value"
+						rz-slider-options="slider.options"
+					></rzslider>
+				</div>
+				<div class="form-group user-actions text-right col-sm-2">
+					<button class="btn btn-default" type="button" ng-disabled="!vm.form.modified" 
+						ng-click="Reset(vm.form)">Reset</button>
+					<button class="btn btn-raised btn-default" type="submit" ng-disabled="!vm.form.modified"
+						ng-click="Submit(vm.form)">Update</button>
+				</div>
+			</div>
+			<map id="location-on-map"
+				disable-default-u-i={{!options.disableDefaultUI}}
+				disable-double-click-zoom={{!options.disableDoubleClickZoom}}
+				draggable={{!options.draggable}}
+				handle-esc="cancel_edit()"
+				scale-control="true"
+				map-type-control-options="{style: 'HORIZONTAL_BAR', position: 'BOTTOM_CENTER'}">
+			</map>
+		</div>
+		<div id="popup_content"></div>
+	</form>
+</div>

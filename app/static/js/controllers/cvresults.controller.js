@@ -18,7 +18,7 @@
 // For more information or to contact visit linclion.org or email tech@linclion.org
 'use strict';
 
-angular.module('linc.cvresults.controller', ['linc.cvresults.directive', 'linc.compare.images.controller'])
+angular.module('linc.cvresults.controller', [])
 
 .controller('CVResultsCtrl', ['$scope', '$state', '$timeout', '$interval', '$uibModalInstance', '$uibModal', '$filter', 'LincServices', 'NotificationFactory', 'imageset', 'cvrequestId', 'cvresultsId', 'data_cvresults', 
   function ($scope, $state, $timeout, $interval, $uibModalInstance, $uibModal, $filter, LincServices, NotificationFactory, imageset, cvrequestId, cvresultsId, data_cvresults) {
@@ -27,6 +27,7 @@ angular.module('linc.cvresults.controller', ['linc.cvresults.directive', 'linc.c
   $scope.content = 'Form';
   $scope.imageset = imageset;
   $scope.cvresults = data_cvresults.cvresults;
+  $scope.processing = false;
   $scope.cvresults = _.map(data_cvresults.cvresults, function(element, index) {
     var style = {'background-color': 'green'};
     var elem = {};
@@ -46,6 +47,7 @@ angular.module('linc.cvresults.controller', ['linc.cvresults.directive', 'linc.c
       
       var conf = {'number': element.cn, 'style': style};
       elem['confidence'] = conf;
+      elem['dataloading'] = false;
     }
     return _.extend({}, element, elem);
   });
@@ -55,44 +57,24 @@ angular.module('linc.cvresults.controller', ['linc.cvresults.directive', 'linc.c
   $scope.show_photo = function(image){
     var win = window.open(image, "_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=100, left=100, width=600, height=600");
     win.focus();
-  }
+  };
 
   $scope.CompareImages = function (lion){
-    var modalScope = $scope.$new();
-    modalScope.title = 'Compare Images';
-
-    modalScope.imageset = imageset;
-    modalScope.lion = lion;
-    modalScope.cvresults = $filter('orderBy')($scope.cvresults,$scope.predicate,$scope.reverse);
-    modalScope.reverse = $scope.reverse;
-    modalScope.predicate = $scope.predicate;
-
-    var modalInstance = $uibModal.open({
-        animation: true,
-        backdrop  : 'static',
-        templateUrl: 'compare.images.tpl.html',
-        controller:  'CompareImagesCtrl',
-        scope: modalScope,
-        size: 'lg',
-        windowClass: 'large-modal',
-        resolve: {
-          imageset_gallery: ['LincServices', function(LincServices) {
-            return LincServices.getImageGallery(modalScope.imageset.id);
-          }],
-          lion_gallery: ['LincServices', function(LincServices) {
-            return LincServices.getImageGallery(modalScope.lion.primary_image_set_id);
-          }]
-        }
-    });
-    modalInstance.result.then(function (result) {
-    }, function (){ });
-    modalScope.close = function (){
-      modalInstance.close();
-    }
+    var data = {
+      title: 'Compare Images',
+      imageset: imageset,
+      lion: lion,
+      cvresults: $filter('orderBy')($scope.cvresults,$scope.predicate,$scope.reverse),
+      reverse: $scope.reverse,
+      predicate: $scope.predicate
+    };
+    // $state.go("comparecvresults", {data: data});
+    var url = $state.href("comparecvresults", {data: data})
+    window.open(url,"_blank", "location=0, scrollbars=yes, resizable=yes, top=100, left=100, width=800");
   };
 
   var Poller = function () {
-    LincServices.getCVResults(cvresultsId).then(function(response){
+    LincServices.GetCVResults(cvresultsId).then(function(response){
       $scope.cvresults = response.cvresults;
       if(response.status == 'finished' || response.status == 'error'){
         console.log('Res Canceled - Status: ' + response.status);
@@ -119,7 +101,7 @@ angular.module('linc.cvresults.controller', ['linc.cvresults.directive', 'linc.c
         console.log("Result CV Req Poller started");
       });
     }, 0);
-  }
+  };
 
   if(data_cvresults.status != 'finished' && data_cvresults.status != 'error'){
     start_Poller();
@@ -128,8 +110,9 @@ angular.module('linc.cvresults.controller', ['linc.cvresults.directive', 'linc.c
   $scope.Close = function () {
     $uibModalInstance.close();
   };
+
   $scope.ClearResults= function () {
-    LincServices.deleteCVRequest(cvrequestId, function(){
+    LincServices.DeleteCVRequest(cvrequestId, function(){
       var data = {'lion_id': null, 'is_verified': false};
       LincServices.Associate(imageset.id, data, function(result){
         $scope.Updated({'lion_id': null, 'name': '-', 'lions_org_id': ''});
@@ -138,64 +121,75 @@ angular.module('linc.cvresults.controller', ['linc.cvresults.directive', 'linc.c
       });
     });
   };
-  $scope.Associate = function (id){
-    _.forEach($scope.cvresults, function(lion) {
-      lion.associated = false;
+
+  $scope.Associate = function (lion){
+    lion.dataloading = true;
+    $scope.processing = true;
+    _.forEach($scope.cvresults, function(cvresult) {
+      cvresult.associated = false;
     });
-    var index = _.indexOf($scope.cvresults, _.find($scope.cvresults, {id: id}));
-    var data = {'lion_id': id};
-    if(imageset.organization_id === $scope.cvresults[index].organization_id){
+    var data = {'lion_id': lion.id};
+    if(imageset.organization_id === lion.organization_id){
       data['is_verified'] = true;
     }
     LincServices.Associate(imageset.id, data, function(result){
-      $scope.cvresults[index].associated = true;
-      $scope.Updated({'lion_id': id, 'name' : $scope.cvresults[index].name,
+      lion.associated = true;
+      $scope.Updated({'lion_id': lion.id, 'name' : lion.name,
         'is_verified': result.data.data.is_verified,
-        'lions_org_id': $scope.cvresults[index].organization_id, 'organization' : $scope.cvresults[index].organization});
+        'lions_org_id': lion.organization_id, 'organization' : lion.organization});
       NotificationFactory.success({
-        title: "Associate", message:'Lion (id: ' + id + ') was associated',
+        title: "Associate", message:'Lion (id: ' + lion.id + ') was associated',
         position: "right", // right, left, center
         duration: 2000     // milisecond
       });
+      lion.dataloading = false;
+      $scope.processing = false;
     },
     function(error){
       if($scope.debug || (error.status != 401 && error.status != 403)){
         NotificationFactory.error({
-          title: "Error", message: 'Unable to Associate the Lion (id: ' + id + ') ',
+          title: "Error", message: 'Unable to Associate the Lion (id: ' + lion.id + ') ',
           position: 'right', // right, left, center
           duration: 5000   // milisecond
         });
       }
+      lion.dataloading = false;
+      $scope.processing = false;
       console.log(error);
     });
   };
 
-  $scope.Disassociate = function (id){
-    var index = _.indexOf($scope.cvresults, _.find($scope.cvresults, {id: id}));
+  $scope.Disassociate = function (lion){
+    lion.dataloading = true;
+    $scope.processing = true;
     var data = {'lion_id': null, 'is_verified': false};
     LincServices.Associate(imageset.id, data, function(result){
-      $scope.cvresults[index].associated = false;
+      lion.associated = false;
       $scope.Updated({'lion_id': null, 'name': '-', 'is_verified': false, 'lions_org_id': ''});
       NotificationFactory.success({
-        title: "Disassociate", message:'Lion (id: ' + id + ') was disassociated',
+        title: "Disassociate", message:'Lion (id: ' + lion.id + ') was disassociated',
         position: "right", // right, left, center
         duration: 2000     // milisecond
       });
+      lion.dataloading = false;
+      $scope.processing = false;
     },
     function(error){
       if($scope.debug || (error.status != 401 && error.status != 403)){
         NotificationFactory.error({
-          title: "Error", message: 'Unable to Disassociate the Lion (id: ' + id + ')',
+          title: "Error", message: 'Unable to Disassociate the Lion (id: ' + lion.id + ')',
           position: 'right', // right, left, center
           duration: 5000   // milisecond
         });
       }
       console.log(error);
+      lion.dataloading = false;
+      $scope.processing = false;
     });
   };
 
-  $scope.reverse = true;//lion_filters.reverse;
-  $scope.predicate = 'cv';//lion_filters.predicate;
+  $scope.reverse = true;
+  $scope.predicate = 'cv';
 
   $scope.order = function(predicate) {
     $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;

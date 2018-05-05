@@ -31,8 +31,10 @@ angular.module('linc.login.controller', [])
     $scope.checkLogged = function(){
       AuthService.login_chech_auth().then(function(resp){
         $state.go("home");
+      }, function(error){
+        console.log('unauthenticated')
       });
-    }
+    };
 
     $scope.login = function() {
       if (!user || !user.logged){
@@ -71,6 +73,7 @@ angular.module('linc.login.controller', [])
         }
       }
     };
+
     $scope.forgotPwd = function(){
       var modalScope = $scope.$new();
       modalScope.dataSending = false;
@@ -93,11 +96,6 @@ angular.module('linc.login.controller', [])
           AuthService.resetPassword({'email': modalScope.forgot.username})
           .then(function(response){
             $scope.loginData.username = modalScope.forgot.username;
-            // NotificationFactory.success({
-            //   title: 'Change Password', message: 'Password of '+ modalScope.forgot.username +' successfully updated',
-            //   position: "right", 
-            //   duration: 2000 
-            // });
             modalInstance.close(modalScope.forgot);
           },
           function(error){
@@ -120,7 +118,8 @@ angular.module('linc.login.controller', [])
       modalScope.cancel = function(){
         modalInstance.dismiss();
       }
-    }
+    };
+
     var ShowInfo = function (data){
       var modalScope = $scope.$new();
       modalScope.title = 'New Password';
@@ -131,11 +130,14 @@ angular.module('linc.login.controller', [])
           scope: modalScope,
           size: '350px'
       });
+      modalInstance.result.then(function (result) {
+      }, function(error){
+      });
       modalScope.close = function (){
         modalInstance.close();
       }
-    }
-    $scope.checkLogged();
+    };
 
+    $scope.checkLogged();
   }
-])
+]);

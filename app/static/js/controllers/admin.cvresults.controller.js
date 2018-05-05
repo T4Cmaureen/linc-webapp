@@ -214,15 +214,11 @@ angular.module('linc.admin.cvresults.controller', [])
   $scope.Delete_CVResult = function() {
     $scope.DialogDelete('CV Results')
     .then(function (result) {
-      var cvresults_id = _.pluck(_.map($scope.Selecteds, function (cvresult){
-        return {'id': cvresult.id};
-      }), 'id');
+      var cvresults_id = _.map($scope.Selecteds, 'id');
 
       $scope.LincApiServices.CVResults({'method': 'delete', 'cvresults_id': cvresults_id}).then(function(response){
         if(response.error.length>0){
-          var data = _.pluck(_.map(response.error, function (cvresult){
-            return {'id': cvresult.id};
-          }), 'id');
+          var data = _.map(response.error, 'id');
           var msg = (data.length>1) ? 'Unable to delete cv results ' + data : 'Unable to delete cv result ' + data;
           $scope.Notification.error({
             title: "Delete", message: msg,

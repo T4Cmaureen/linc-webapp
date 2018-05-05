@@ -55,7 +55,7 @@ angular.module('linc.image.gallery.directive', [])
               return scope.optionsSet;
             },
             gallery: ['LincServices', function(LincServices) {
-              return LincServices.getImageGallery(scope.optionsSet.id);
+              return LincServices.GetImageGallery(scope.optionsSet.id);
             }]
           }
         });

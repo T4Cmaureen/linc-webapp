@@ -1,0 +1,73 @@
+<!-- LINC is an open source shared database and facial recognition
+system that allows for collaboration in wildlife monitoring.
+Copyright (C) 2016  Wildlifeguardians
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+For more information or to contact visit linclion.org or email tech@linclion.org -->
+<!-- Tooltip Info Date & Name -->
+
+<div name="CarouselGallery" class="carousel-gallery font-homenaje">
+	<!-- LightBox -->
+	<div id="view-carousel" ng-show="carousel.view" class="view-carousel">
+		<div class="view-carousel-close">
+			<button type="button" class="close pull-right" ng-click="CloseCarousel()">&times;</button>
+		</div>
+		<div uib-carousel active="carousel.active" no-transition="carousel.no_transition" interval="carousel.interval" no-wrap="carousel.noWrapSlides">
+			<div uib-slide ng-repeat="(index, photo) in carousel.gallery track by photo.index" index="photo.index" class="carousel-pagination">
+				<div class="div-image">
+					<img ng-src="{{!photo.medium || '//:0' }}" class="carousel-img img-responsive center-block">
+				</div>
+				<div class="carousel-caption">
+					<div class="photo-caption">
+						<i class="icon icon-star pull-left" ng-if="photo.cover"
+							uib-tooltip="Is Cover" tooltip-placement="auto top">&nbsp;
+						</i>
+						<div class="div-tag">
+						<i class="icon icon-{{!tag}} pull-left" uib-tooltip="{{!dynamicTooltip[tag]}}" 
+							ng-repeat="tag in photo.tags"></i>
+						</div>
+						<i class="icon icon-binoculars pull-right" ng-if="photo.joined && IsPrimary"
+							uib-tooltip="{{!photo.tooltip.joined.from}}" tooltip-placement="auto top">	
+						</i>
+						<i class="icon icon-eye-plus pull-right" ng-if="photo.joined && !IsPrimary"
+							uib-tooltip="{{!photo.tooltip.joined.to}}" tooltip-placement="auto top"></i>
+						<i class="icon icon-globe pull-right" ng-if="photo.is_public"
+							uib-tooltip="Is public" tooltip-placement="auto top">&nbsp;
+						</i>
+					</div>
+					<div class="photo-controller">
+						{{!photo.name}} {{!photo.date | date:'yyyy/MM/dd @ hh:mm'}}
+					</div>
+					<div class="photo-zoom-icon" data-animation="am-flip-x" data-html="true"
+							 placement="auto" bs-tooltip="zoomtooltip">
+						<i class="icon icon-zoom-in" ng-click="show_zoom(photo.medium);">&nbsp;</i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Zoom Panel -->
+	<div id="zoom_view" ng-show="panzoom.view" class="zoom-view">
+		<panzoomwidget panzoom-id="PanZoom" class="panzoom-control"></panzoomwidget>
+		<div class="zoom-close">
+			<button type="button" class="close pull-right" ng-click="hide_zoom()">&times;</button>
+		</div>
+		<panzoom id="PanZoom" config="panzoom.Config" model="panzoom.Model">
+			<img ng-src="{{!panzoom.Model.photo || '//:0' }}" class="position-absolute"/>
+		</panzoom>
+	</div> 
+
+</div>

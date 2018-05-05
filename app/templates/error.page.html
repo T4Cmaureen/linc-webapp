@@ -59,15 +59,16 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     <nav ng-if="show_navbar" class="navbar navbar-default navbar-fixed-top" role="navigation" bs-navbar>
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" ng-click="goto_home()">
+          <a class="navbar-brand" href="{{goto_url}}" >
             <img src="static/logo.png" alt="logo" >
           </a>
         </div>
       </div>
     </nav>
     <div id="content" class="container">
-      {{status_code}}
-      <h1>404 – Page not found</h1>
+      <!-- <h1>404 – Page not found</h1> -->
+      <h1>ERROR:</h1>
+      <h2>{{http_error}}</h2>
     </div>
     <footer>
     </footer>
