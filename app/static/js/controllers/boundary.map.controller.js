@@ -48,16 +48,16 @@ angular.module('linc.boundary.map.controller',[])
 		position: google.maps.ControlPosition.RIGHT_BOTTOM
 	};
 	// DRAWNING CONTROLS
-	var drawingControlOptions = { 
+	var drawingControlOptions = {
 		position: google.maps.ControlPosition.TOP_CENTER,
-		drawingModes: [google.maps.drawing.OverlayType.POLYGON, 
+		drawingModes: [google.maps.drawing.OverlayType.POLYGON,
 				google.maps.drawing.OverlayType.CIRCLE, google.maps.drawing.OverlayType.RECTANGLE]
 	};
 	// DRAWING OPTIONS
 	var drawingOptions = {
 		drawingMode: null, drawingControl: true,
 		drawingControlOptions: drawingControlOptions,
-		markerOptions: {icon: '/static/icons/location.png'},
+		markerOptions: {draggable: true, icon: '/static/icons/location.png'},
 		circleOptions: {fillColor: '#ffffff', fillOpacity: 0.3, strokeColor: '#5e9ae1',
 			strokeWeight: 1, clickable: true, editable: false, zIndex: 1, draggable: false},
 		rectangleOptions: {fillColor: '#ffffff', fillOpacity: 0.3, strokeColor: '#5e9ae1',
@@ -75,7 +75,7 @@ angular.module('linc.boundary.map.controller',[])
 	$scope.Intersections = [];
 	$scope.GeoBounds = [];
 	$scope.listeners = [];
-	$scope.markers = {};
+	$scope.markers = [];
 	var mspider;
 	var spiderConfig = { keepSpiderfied: true, event: 'mouseover' };
 	// NG-MAP OPTIONS
@@ -166,7 +166,7 @@ angular.module('linc.boundary.map.controller',[])
 		var label = data.label;
 		var title = label.text;
 		var modalScope = $scope.$new();
-		modalScope.title = 'Update the ' + type + ' label';
+		modalScope.title = 'Update the Search Area label';
 		modalScope.name = label.text;
 		var modalInstance = $uibModal.open({
 			templateUrl: 'polygon.name.tpl.html',
@@ -535,6 +535,32 @@ angular.module('linc.boundary.map.controller',[])
 		// 	});
 		// });
 	});
+	var dlb_promise = null;
+	var animated = undefined;
+	$scope.animated = null;
+	$scope.AnimateMarker = function(marker){
+		if(dlb_promise) return;
+		dlb_promise = $timeout(function() {
+			$timeout.cancel(dlb_promise);
+			dlb_promise = null;
+			if(animated != undefined && $scope.animated){
+				$timeout.cancel(animated);
+				$scope.animated.setAnimation(null);
+			}
+			$scope.animated = marker;
+			$scope.animated.setAnimation(google.maps.Animation.BOUNCE);
+			animated = $timeout(function() {
+				$scope.animated.setAnimation(null);
+			}, 1000);
+		}, 250);
+	};
+
+	$scope.CenterMarker = function(marker){
+		$timeout.cancel(dlb_promise);
+		dlb_promise = null;
+		$scope.map.setCenter(marker.getPosition());
+	};
+
 	$scope.SelectBoundary = function(boundary){
 		ShowBoundarys(boundary)
 		Update_Intersections();
@@ -573,8 +599,8 @@ angular.module('linc.boundary.map.controller',[])
 				marker['marker'].setMap(null);
 			if(_.has(marker,'tag_circle') && marker['tag_circle']){
 				var tag_circle = marker['tag_circle'];
-				tag_circle['circle'] .setMap(null);
-				tag_circle['label'] .setMap(null);
+				tag_circle['circle'].setMap(null);
+				tag_circle['label'].setMap(null);
 			}
 		});
 		if(mspider){
@@ -701,10 +727,10 @@ angular.module('linc.boundary.map.controller',[])
 	};
 	// Set Lion/Imageset Marker on Map
 	var SetLocationOnMap = function (entities) {
-		$scope.markers = _.map(entities, function(entitie, i){
-			var position = new google.maps.LatLng(entitie.latitude, entitie.longitude);
+		$scope.markers = _.map(entities, function(entity, i){
+			var position = new google.maps.LatLng(entity.latitude, entity.longitude);
 			$scope.bounds.extend(position);
-			var name = entitie.name;
+			var name = entity.name;
 			var marker = new MarkerLabel({
 				position: position, 
 				map: $scope.map,
@@ -727,19 +753,33 @@ angular.module('linc.boundary.map.controller',[])
 
 			// Create a TagCircle
 			var tag_circle = null;
-			if (entitie.tag_location && entitie.tag_location.value){
+			var title = 'lat: ' + entity.latitude + ' lng: ' + entity.longitude; 
+			if (entity.tag_location && entity.tag_location.value){
 				// Create a TagCircle
 				tag_circle = TagCircle({
 					center: position,
-					radius: entitie.tag_location.value,
-					title: entitie.tag_location.title,
+					radius: entity.tag_location.value,
+					title: entity.tag_location.title,
 					draggable: false,
 					zIndex: 10,
 				});
 				tag_circle.circle.bindTo('center', marker, 'position');
+				title = entity.tag_location.title + ' : ' + entity.tag_location.value +' km <br>'+ title;
 			}
 			mspider.addMarker(marker);
-			return ({'marker': marker, 'tag_circle': tag_circle, 'entitie': entitie});
+
+			var data_marker = {
+				marker: marker, 
+				tag_circle: tag_circle,
+				location: entity.location,
+				tag_location: entity.tag_location,
+				circle: entity.circle,
+				name: entity.name,
+				id: entity.id,
+				thumbnail: entity.thumbnail,
+				tooltip: { title: title, enabled: true }
+			};
+			return (data_marker);
 		});
 		var center = $scope.bounds.getCenter();
 		$scope.map.setCenter(center);
@@ -766,7 +806,7 @@ angular.module('linc.boundary.map.controller',[])
 	$scope.DialogPolygonName = function (name, type){
 		var deferred = $q.defer();
 		var modalScope = $scope.$new();
-		modalScope.title = 'Enter a label for the ' + type;
+		modalScope.title = 'Enter a label for the Search Area';
 		modalScope.name = name;
 		var modalInstance = $uibModal.open({
 			templateUrl: 'polygon.name.tpl.html',
@@ -791,8 +831,8 @@ angular.module('linc.boundary.map.controller',[])
 	$scope.DialogDelete = function (title){
 		var deferred = $q.defer();
 		var modalScope = $scope.$new();
-		modalScope.title = 'Delete "' + title + '"';
-		modalScope.message = 'Are you sure you want to delete the "' + title + '" ?';
+		modalScope.title = 'Delete Search Area "' + title + '"';
+		modalScope.message = 'Are you sure you want to delete the search area labeled "' + title + '" ?';
 		var modalInstance = $uibModal.open({
 			templateUrl: 'Dialog.Delete.tpl.html',
 			scope: modalScope,
@@ -898,24 +938,23 @@ angular.module('linc.boundary.map.controller',[])
 
 	var Contain = function(marker, GeoBounds){
 		var contain = false;
-		var input = marker.entitie;
-		if(!input.tag_location){// Is Exact Location
+		if(!marker.tag_location){// Is Exact Location
 			_.forEach(GeoBounds, function(databound){
 				if (databound.selected){
 					if (databound.type == 'circle'){
-						contain = databound.overlay.Contains(input.location);
+						contain = databound.overlay.Contains(marker.location);
 						if(contain)
 							return false;
 					}
 					if (databound.type == 'rectangle'){
 						var bounds = databound.overlay.getBounds();
-						contain = bounds.contains(input.location);
+						contain = bounds.contains(marker.location);
 						if(contain)
 							return false;
 					}
 					if (databound.type == 'polygon'){ 
 						var polygon = databound.overlay;
-						contain = Poly.containsLocation(input.location, polygon);
+						contain = Poly.containsLocation(marker.location, polygon);
 						if(contain)
 							return false;
 					}
@@ -926,7 +965,7 @@ angular.module('linc.boundary.map.controller',[])
 		else{ // Is Approximated Location
 			_.forEach(GeoBounds, function(databound){
 				if (databound.selected){
-					contain = databound.jsts_pol.intersects(input.circle)
+					contain = databound.jsts_pol.intersects(marker.circle)
 					if(contain)
 					return false;
 				}
