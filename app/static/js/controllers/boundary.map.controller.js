@@ -410,6 +410,11 @@ angular.module('linc.boundary.map.controller',[])
 					$scope.UpdateStatus(true);
 				});
 				$scope.listeners.push(center_changed);
+				var radius_changed = google.maps.event.addListener(overlay, 'radius_changed', function (e) {
+					$scope.moved = true;
+					$scope.UpdateStatus(true);
+				});
+				$scope.listeners.push(radius_changed);
 			}
 			else{
 				menu_label = 'Rectangle';
@@ -464,6 +469,11 @@ angular.module('linc.boundary.map.controller',[])
 						$scope.UpdateStatus(true);
 					});
 					$scope.listeners.push(center_changed);
+					var radius_changed = google.maps.event.addListener(event.overlay, 'radius_changed', function (e) {
+						$scope.moved = true;
+						$scope.UpdateStatus(true);
+					});
+					$scope.listeners.push(radius_changed);
 				}
 				else{ // EVENT TO MODE RECTANGLE
 					center = event.overlay.getBounds().getCenter();
