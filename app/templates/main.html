@@ -42,8 +42,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           <div class="modal-body" ng-bind-html="message">
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" ng-click="ok()">OK</button>
-            <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+            <button type="button" class="btn btn-primary" ng-click="ok()">{{! data_ok ? data_ok : 'Yes'}}</button>
+            <button type="button" class="btn btn-default" ng-click="cancel()">{{! data_cancel ? data_cancel : 'No'}}</button>
           </div>
         </div>
       </script>

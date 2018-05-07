@@ -37,6 +37,19 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 	</form>
 </script>
 
+<script type="text/ng-template" id="dlg.confirm.tpl.html">
+	<div name="Warning" class="font-homenaje-1-1">
+		<div class="modal-header" ng-show="data.title">
+			<h4 class="modal-title" ng-bind-html="data.title"></h4>
+		</div>
+		<div class="modal-body" ng-bind-html="data.text">
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" ng-click="cancel()">{{!data.cancel}}</button>
+			<button type="button" class="btn btn-primary" ng-click="ok()">{{!data.ok}}</button>
+		</div>
+	</div>
+</script>
 
 <div name="Map" class="map boundary-map" ng-keyup="KeyEvent($event)">
 	<div class="modal-header" ng-show="title">
@@ -47,8 +60,9 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 		<div class="row">
 			<div class="col-sm-3">
 				<label class="label-boundary">Search Areas:</label>
-				<div class="wrapper well" ng-show="GeoBounds.length">
+				<div class="wrapper well">
 					
+					<div class="form-group" ng-show="GeoBounds.length">
 						<div class="checkbox" ng-repeat="boundary in GeoBounds">
 							<label class="checkbox-inline">
 								<input type="checkbox" class="form-input" 
@@ -58,11 +72,32 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 									{{! boundary.label.text}}
 							</label>
 						</div>
+					</div>
 					
 					<div class="form-group user-actions">
-						<button ng-disabled="!boundary.modified" class="btn btn-raised btn-default btn-update" ng-click="Submit()">
-							Update Boundarys
+						<div class="file-upload">
+							<div class="form-group is-empty is-fileinput">
+								<label for="loadboundary" class="btn btn-default btn-raised"
+									uib-tooltip="Load Search Areas Filters from File" tooltip-placement="top-left">
+									<i class="fa fa-file" aria-hidden="true"></i>
+								</label>
+								<input type="file" id="loadboundary" accept="application/json,text/*,.dat" 
+									load-boundarys-on-change="LoadBoundarys" ng-model="fileupload.name">
+							</div>
+						</div>
+					
+						<button type="btn" class="btn btn-default btn-raised save-in-file" 
+							ng-click="SaveBoundarys()" ng-disabled="!GeoBounds.length"
+							uib-tooltip="Save Search Areas Filters to File" tooltip-placement="top-left">
+							<strong class="sr-only">Save</strong>
+							<i class="fa fa-floppy-o" aria-hidden="true"></i>
 						</button>
+
+						<button class="btn btn-raised btn-default btn-update pull-right"
+							ng-disabled="!boundary.modified" ng-click="Submit()" tooltip-placement="top-left">
+							Save Search Areas
+						</button>
+
 					</div>
 				</div>
 				<div class="form-group">

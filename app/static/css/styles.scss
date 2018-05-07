@@ -2219,6 +2219,35 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 }
 
 .boundary-map{
+	.label-boundary{ font-weight: 400;}
+	div.wrapper.well{
+		padding: 6px 3px 3px 6px; background-color: unset;
+		.user-actions{
+			margin-bottom: 6px;
+			.file-upload{
+				display: inline;
+				.is-fileinput{
+					display: inline;
+					position: relative;
+					label{
+						width: 38px;
+						height: 30px;
+					}
+					input[type='file'] {
+						display: none;
+					}
+					button{
+						height: 30px;
+					}
+				}
+			}
+			.save-in-file{
+				height: 30px;
+			}
+			.btn-update{ height: 30px; margin-right: 12px;}
+		}
+	}
+
 	table { width: 100%; }
 	thead, tbody, tr, td, th { display: block; }
 	tr:after { content: ' '; display: block; visibility: hidden; clear: both; }
@@ -2238,11 +2267,6 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 		background-color: rgba(245, 195, 171, 0.25);
 	}
 	tf { padding: 3px;}
-	.label-boundary{ font-weight: 400;}
-	div.wrapper.well{
-		padding: 6px 3px 3px 6px; background-color: unset;
-	}
-	.btn-update{ height: 30px; }
 }
 .pull-right-btn-16{
 	margin-bottom: 16px;

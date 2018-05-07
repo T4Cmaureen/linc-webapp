@@ -289,9 +289,9 @@ angular.module('linc.view.lion.database.controller', [])
 		_.forEach(collections, function(lion) {
 			lion.selected = val;
 			if(lion.selected){
-        		if(!_.some($scope.Selecteds, lion))
-          			$scope.Selecteds.push(lion);
-      		}
+				if(!_.some($scope.Selecteds, lion))
+					$scope.Selecteds.push(lion);
+			}
 		});
 		if(!val)
 			$scope.Selecteds = [];
