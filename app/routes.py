@@ -28,7 +28,7 @@ from handlers.main import ConservationistsHandler, ImageGalleryHandler, Location
 from handlers.main import EditMetadataHandler, CVResultsMainHandler, CVRequestMainHandler, UploadImagesHandler, VerifyImageSetHandler
 from handlers.main import PageAdminHandler, PageAdminUsersHandler, PageAdminOrganizationsHandler, PageAdminLionsHandler
 from handlers.main import PageAdminImageSetsHandler, PageAdminImagesHandler, PageAdminCVRequestsHandler, PageAdminCVResultsHandler
-from handlers.main import RequestAccessHandler, MetadataBatchHandler, LocationOnMapHandler, DeleteBatchHandler
+from handlers.main import RequestAccessHandler, MetadataBatchHandler, LocationOnMapHandler, DeleteBatchHandler, SelectBoundarysHandler
 from handlers.api import LionsListHandler, ImagesListHandler, ImageSetsListHandler, OrganizationsListHandler
 from handlers.api import ImagesUploadHandler, ImagesHandler, LionsHandler, ImageSetsHandler
 from handlers.api import OrganizationsHandler, CVResultsHandler, CVRequestHandler, UsersHandler, RelativesHandler
@@ -71,6 +71,7 @@ url_patterns = [
     (r"/delete.batch.tpl.html", DeleteBatchHandler),
     (r"/location.on.map.html", LocationOnMapHandler),
     (r"/carousel.gallery.tpl.html", CarouselGalleryHandler),
+    (r"/select.boundarys.tpl.html", SelectBoundarysHandler),
     # Handlers for API comunication
     (r"/imagesets/list", ImageSetsListHandler),
     (r"/imagesets/(\w+)/(cvrequest)$", ImageSetsListHandler),

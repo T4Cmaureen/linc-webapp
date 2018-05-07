@@ -22,9 +22,9 @@
 angular.module('linc.boundary.map.controller',[])
 
 .controller('BoundaryMapCtrl', ['$scope', '$compile', '$q', '$timeout', '$transitions', '$uibModalInstance', 
-	'NgMap', 'inputdata', 'AuthService', '$uibModal', 'NotificationFactory',
-	function ($scope, $compile, $q, $timeout, $transitions, $uibModalInstance, NgMap, inputdata, AuthService,
-	$uibModal, NotificationFactory){
+	'NgMap', 'FileSaver', 'inputdata', 'AuthService', '$uibModal', '$ModalPage', 'NotificationFactory',
+	function ($scope, $compile, $q, $timeout, $transitions, $uibModalInstance, NgMap, FileSaver, inputdata,
+	AuthService, $uibModal, $ModalPage, NotificationFactory){
 
 	// Global
 	$scope.boundary = {modified: false};
@@ -384,59 +384,107 @@ angular.module('linc.boundary.map.controller',[])
 		});
 		Create_Intesections();
 	};
-	// Create a Boundarys
+
+	// Create 1 Boundary
+	var Create_Boundary = function(data, index, map){
+		var center;
+		var overlay = null;
+		var menu_label = 'Rectangle';
+		if (data.type == 'polygon'){
+			menu_label = 'Polygon';
+			overlay = CreatePolygon({'path': data.path, 'map': map});
+			center = overlay.Centroid();
+			overlay.enableCoordinatesChangedEvent();
+			var changeHandler = google.maps.event.addListener(overlay, 'coordinates_changed', function () {
+				$scope.moved = true;
+				$scope.UpdateStatus(true);
+			});
+			$scope.listeners.push(changeHandler);
+
+			var dragstartHandler =  google.maps.event.addListener(overlay,  'dragstart', function(e){
+				$scope.polygonDragStart(overlay);
+			});
+			$scope.listeners.push(dragstartHandler);
+
+			var dragendHandler =  google.maps.event.addListener(overlay, 'dragend', function(e){
+				$scope.polygonDragEnd(overlay);
+			});
+			$scope.listeners.push(dragendHandler);
+		}
+		else if (data.type == 'circle'){ // EVENT TO MODE CIRCLE
+			menu_label = 'Circle';
+			overlay = CreateCircle({'center': data.center, 'radius': data.radius, 'map': map});
+			center = overlay.getCenter();
+			var center_changed = google.maps.event.addListener(overlay, 'center_changed', function (e) {
+				$scope.moved = true;
+				$scope.UpdateStatus(true);
+			});
+			$scope.listeners.push(center_changed);
+
+			var radius_changed = google.maps.event.addListener(overlay, 'radius_changed', function (e) {
+				$scope.moved = true;
+				$scope.UpdateStatus(true);
+			});
+			$scope.listeners.push(radius_changed);
+		}
+		else{
+			menu_label = 'Rectangle';
+			overlay = CreateRectangle({'bounds': data.bounds, 'map': map})
+			center = overlay.getBounds().getCenter();
+			var bounds_changed = google.maps.event.addListener(overlay, 'bounds_changed', function (e) {
+				$scope.moved = true;
+				$scope.UpdateStatus(true);
+			});
+			$scope.listeners.push(bounds_changed); 
+		}
+		var label = PolygonLabel({'center': center, 'map': map, 'title' : data.title });
+		var jsts_pol = CreateJstsPol(overlay, data.type);
+		var databound = {
+			'type': data.type , 'overlay': overlay, 'jsts_pol': jsts_pol, 'index': index, 
+			'label': label, 'menu_label': menu_label, 'map': map, 'selected': data['selected']
+		};
+		return databound;
+	};
+
+	// Create Boundarys
 	var Create_Boundarys = function(boundarys, map){
 		_.forEach(boundarys, function(data, index) {
-			var center;
-			var overlay = null;
-			var menu_label = 'Rectangle';
-			if (data.type == 'polygon'){
-				menu_label = 'Polygon';
-				overlay = CreatePolygon({'path': data.path, 'map': map});
-				center = overlay.Centroid();
-				overlay.enableCoordinatesChangedEvent();
-				var dragendHandler = google.maps.event.addListener(overlay, 'coordinates_changed', function () {
-					$scope.moved = true;
-					$scope.UpdateStatus(true);
-				});
-				$scope.listeners.push(dragendHandler);
-			}
-			else if (data.type == 'circle'){ // EVENT TO MODE CIRCLE
-				menu_label = 'Circle';
-				overlay = CreateCircle({'center': data.center, 'radius': data.radius, 'map': map});
-				center = overlay.getCenter();
-				var center_changed = google.maps.event.addListener(overlay, 'center_changed', function (e) {
-					$scope.moved = true;
-					$scope.UpdateStatus(true);
-				});
-				$scope.listeners.push(center_changed);
-				var radius_changed = google.maps.event.addListener(overlay, 'radius_changed', function (e) {
-					$scope.moved = true;
-					$scope.UpdateStatus(true);
-				});
-				$scope.listeners.push(radius_changed);
-			}
-			else{
-				menu_label = 'Rectangle';
-				overlay = CreateRectangle({'bounds': data.bounds, 'map': map})
-				center = overlay.getBounds().getCenter();
-				var bounds_changed = google.maps.event.addListener(overlay, 'bounds_changed', function (e) {
-					$scope.moved = true;
-					$scope.UpdateStatus(true);
-				});
-				$scope.listeners.push(bounds_changed); 
-			}
-			var label = PolygonLabel({'center': center, 'map': map, 'title' : data.title });
-			var jsts_pol = CreateJstsPol(overlay, data.type);
-			var databound = {
-				'type': data.type , 'overlay': overlay, 'jsts_pol': jsts_pol, 'index': index, 
-				'label': label, 'menu_label': menu_label, 'map': map, 'selected': data['selected']
-			};
-
+			var databound = Create_Boundary(data, index, map);
 			$scope.GeoBounds.push(databound);
 			Create_ContextMenu(databound);
 			ShowBoundarys(databound);
 		});
+	};
+
+	$scope.polygon_path = null;
+	$scope.polygonDragStart = function(polygon){
+		$scope.polygon_path = angular.copy(polygon.getPath());
+		console.log('start: ');
+		$scope.polygon_path.forEach(function(path){
+			console.log('['+path.lat()+' , '+path.lng()+']')
+		});
+	};
+
+	$scope.polygonDragEnd = function(polygon){
+		var path = [];
+		$scope.polygon_path.forEach(function(point){
+			path.push(point);			
+		});
+		if($scope.polygon_path && path.length>0){
+			var data = {
+				title: 'Move the Search Area',
+				message: 'Are you sure you want to move the search area?'
+			};
+		
+			$scope.DialogUpdate(data).then(function (result) {
+				$scope.polygon_path = null;
+			}, function () {
+				polygon.setMap(null);
+				polygon.setPaths(path);
+				polygon.setMap($scope.map);
+				$scope.polygon_path = null;
+			});
+		}
 	};
 
 	$scope.moved = false;
@@ -456,9 +504,19 @@ angular.module('linc.boundary.map.controller',[])
 				if (event.type == 'polygon'){
 					center = event.overlay.Centroid();
 					event.overlay.enableCoordinatesChangedEvent();
-					var dragendHandler = google.maps.event.addListener(event.overlay, 'coordinates_changed', function () {
+					var changeHandler = google.maps.event.addListener(event.overlay, 'coordinates_changed', function () {
 						$scope.moved = true;
 						$scope.UpdateStatus(true);
+					});
+					$scope.listeners.push(changeHandler);
+
+					var dragstartHandler =  google.maps.event.addListener(event.overlay,  'dragstart', function(e){
+						$scope.polygonDragStart(event.overlay);
+					});
+					$scope.listeners.push(dragstartHandler);
+
+					var dragendHandler =  google.maps.event.addListener(event.overlay, 'dragend', function(e){
+						$scope.polygonDragEnd(event.overlay);
 					});
 					$scope.listeners.push(dragendHandler);
 				}
@@ -469,6 +527,7 @@ angular.module('linc.boundary.map.controller',[])
 						$scope.UpdateStatus(true);
 					});
 					$scope.listeners.push(center_changed);
+
 					var radius_changed = google.maps.event.addListener(event.overlay, 'radius_changed', function (e) {
 						$scope.moved = true;
 						$scope.UpdateStatus(true);
@@ -793,7 +852,38 @@ angular.module('linc.boundary.map.controller',[])
 		});
 		var center = $scope.bounds.getCenter();
 		$scope.map.setCenter(center);
-		$scope.map.fitBounds($scope.bounds);
+		console.log($scope.map.getZoom());
+		if($scope.markers.length >1){
+			var ne = $scope.bounds.getNorthEast();
+			var sw = $scope.bounds.getSouthWest();
+			if(!ne.equals(sw)){
+				var radius = Calc_Max_Radius(center, $scope.markers);
+				$scope.bounds = CircleBounds(center, radius);
+				$scope.map.fitBounds($scope.bounds);
+			}
+			console.log($scope.map.getZoom());
+		}
+	};
+
+	// Calc Radius distance 
+	var Calc_Max_Radius = function (center, markers){
+		var dist = 0;
+		_.forEach(markers, function(data_marker){
+			var marker = data_marker.marker;
+			var position = marker.getPosition()
+			dist = Math.max(dist, Spherical.computeDistanceBetween(position, center));
+		});
+		return (dist);
+	};
+	// Bounds of Circle
+	var CircleBounds = function (center, radius) {
+		var north = Spherical.computeOffset(center, radius, 0);
+		var east = Spherical.computeOffset(center, radius, 45);
+		var sout  = Spherical.computeOffset(center, radius, 180);
+		var west = Spherical.computeOffset(center, radius, 225);
+		var northeast = new google.maps.LatLng(north.lat(), east.lng());
+		var southwest = new google.maps.LatLng(sout.lat(), west.lng());
+		return (new google.maps.LatLngBounds(southwest, northeast));
 	};
 
 	$scope.guid = function(){
@@ -813,65 +903,157 @@ angular.module('linc.boundary.map.controller',[])
 		});
 	};
 
+	// Save Boundarys in File
+	$scope.SaveBoundarys = function(){
+		var date = new Date;
+		var outputs = BoundsToJson();
+		var json_data = {
+			version : "1.0",
+			date: date.toISOString(),
+			boundarys: outputs
+		};
+
+		var jsonfile = JSON.stringify(json_data);
+		var data = new Blob([jsonfile], {type: 'application/json;charset=utf-8'});
+		var name = "Geographical-Filters-" + date.toISOString().slice(0,16).replace(/T/g,"h");
+		FileSaver.saveAs(data, name);
+	};
+
+	// Import Boundarys from File
+	$scope.fileupload = {"name": ''};
+	$scope.LoadBoundarys = function(file){
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			try {
+				var data = JSON.parse(reader.result);
+				$timeout(function() {
+					$scope.$apply(function () {
+						if(data.hasOwnProperty('boundarys') && data.boundarys.length>0){
+							var scopeLoad = $scope.$new();
+							scopeLoad.boundarys = angular.copy(data.boundarys);
+							scopeLoad.show_keep = !_.isEmpty($scope.GeoBounds);
+							var modalLoad = $uibModal.open({
+								templateUrl: 'select.boundarys.tpl.html',
+								controller: 'SelectBoundarysCtrl',
+								scope: scopeLoad, backdrop: 'static', keyboard: false,
+								animation: true, transclude: true, replace: true
+							});
+							modalLoad.result.then(function (response) {
+								LoadBoundarys({boundarys: data.boundarys, keep: response.keep, selecteds: response.selecteds});
+							}, function (error){
+							});
+						}
+					});
+				},100);
+			} catch (error) {
+				alert("File Type Not supported!");
+			}
+		};
+		reader.readAsText(file);
+	};
+	var LoadBoundarys = function(input_data){
+		if(!input_data.keep){
+			_.forEach($scope.GeoBounds, function(bound) {
+				if(bound){
+					bound.label.setMap(null);
+					bound.overlay.setMap(null);
+				}
+			});
+			$scope.GeoBounds = [];
+			_.forEach($scope.Intersections, function(bound){
+				if(bound)
+					bound.setMap(null);
+			});
+			$scope.Intersections = [];
+		}
+		_.forEach(input_data.boundarys, function(data, index) {
+			if( _.includes(input_data.selecteds, index)){
+				data.selected = true;
+				var databound = Create_Boundary(data, index, $scope.map);
+				$scope.GeoBounds.push(databound);
+				Create_ContextMenu(databound);
+				ShowBoundarys(databound);
+			}
+		});
+		Create_Intesections();
+		$scope.boundary.modified = true;
+	};
+
 	$scope.DialogPolygonName = function (name, type){
 		var deferred = $q.defer();
-		var modalScope = $scope.$new();
-		modalScope.title = 'Enter a label for the Search Area';
-		modalScope.name = name;
-		var modalInstance = $uibModal.open({
+		var scopeName = $scope.$new();
+		scopeName.title = 'Enter a label for the Search Area';
+		scopeName.name = name;
+		var modalName = $uibModal.open({
 			templateUrl: 'polygon.name.tpl.html',
-			scope: modalScope,
+			scope: scopeName,
 			size: 'sm',
 			keyboard  : false
 		});
-		modalInstance.result.then(function (name) {
+		modalName.result.then(function (name) {
 			deferred.resolve(name);
 		}, function(result){
 			deferred.reject();
 		});
-		modalScope.Submit = function (name){
-			modalInstance.close(name);
+		scopeName.Submit = function (name){
+			modalName.close(name);
 		}
-		modalScope.cancel = function(){
-			modalInstance.dismiss();
+		scopeName.cancel = function(){
+			modalName.dismiss();
 		}
 		return deferred.promise;
 	};
 
 	$scope.DialogDelete = function (title){
 		var deferred = $q.defer();
-		var modalScope = $scope.$new();
-		modalScope.title = 'Delete Search Area "' + title + '"';
-		modalScope.message = 'Are you sure you want to delete the search area labeled "' + title + '" ?';
-		var modalInstance = $uibModal.open({
+		var scopeDel = $scope.$new();
+		scopeDel.title = 'Delete Search Area "' + title + '"';
+		scopeDel.message = 'Are you sure you want to delete the search area labeled "' + title + '" ?';
+		var modalDel = $uibModal.open({
 			templateUrl: 'Dialog.Delete.tpl.html',
-			scope: modalScope,
+			scope: scopeDel,
 			backdrop: 'static',
 			keyboard  : false
 		});
-		modalInstance.result.then(function (result) {
+		modalDel.result.then(function (result) {
 			deferred.resolve();
 		}, function(result){
 			deferred.reject();
 		});
 
-		modalScope.ok = function (){
-			modalInstance.close();
+		scopeDel.ok = function (){
+			modalDel.close();
 		}
-		modalScope.cancel = function(){
-			modalInstance.dismiss();
+		scopeDel.cancel = function(){
+			modalDel.dismiss();
 		}
 		return deferred.promise;
 	};
-	// Bounds of Circle
-	var CircleBounds = function (center, radius) {
-		var north = Spherical.computeOffset(center, radius, 0);
-		var east = Spherical.computeOffset(center, radius, 45);
-		var sout  = Spherical.computeOffset(center, radius, 180);
-		var west = Spherical.computeOffset(center, radius, 225);
-		var northeast = new google.maps.LatLng(north.lat(), east.lng());
-		var southwest = new google.maps.LatLng(sout.lat(), west.lng());
-		return (new google.maps.LatLngBounds(southwest, northeast));
+
+	$scope.DialogUpdate = function (data){
+		var deferred = $q.defer();
+		var scopeUpdate = $scope.$new();
+		scopeUpdate.title = data.title;
+		scopeUpdate.message = data.message;
+		var modalUpdate = $uibModal.open({
+			templateUrl: 'Dialog.Delete.tpl.html',
+			scope: scopeUpdate,
+			backdrop: 'static',
+			keyboard  : false
+		});
+		modalUpdate.result.then(function (result) {
+			deferred.resolve();
+		}, function(result){
+			deferred.reject();
+		});
+
+		scopeUpdate.ok = function (){
+			modalUpdate.close();
+		}
+		scopeUpdate.cancel = function(){
+			modalUpdate.dismiss();
+		}
+		return deferred.promise;
 	};
 	//==============================================
 	// MENU DELETE VERTEX
@@ -942,6 +1124,36 @@ angular.module('linc.boundary.map.controller',[])
 	};
 }])
 
+// Select Boundarys from File
+.controller('SelectBoundarysCtrl', ['$scope', '$sce', '$uibModalInstance', function($scope, $sce, $uibModalInstance) {
+								
+	$scope.title = 'Inport Search Areas';
+	$scope.keep = {old: true};
+
+	$scope.Selecteds = [];
+	_.forEach($scope.boundarys, function(boundary) { _.set(boundary, 'selected', false); });
+
+	$scope.Select = function (boundary){
+		if(boundary.selected){
+			if(!_.some($scope.Selecteds, boundary))
+				$scope.Selecteds.push(boundary);
+		}
+		else
+			$scope.Selecteds = _.without($scope.Selecteds, boundary);
+	};
+	$scope.Cancel = function(){
+		$uibModalInstance.dismiss('cancel');
+	};
+
+	$scope.Import = function(){
+		var results = {
+			selecteds: _.map(_.filter($scope.boundarys,'selected'),'index'),
+			keep: $scope.keep.old
+		};
+		$uibModalInstance.close(results);
+	};
+}])
+
 // Geographical
 .filter('geographical2', function(){
 	var Poly = google.maps.geometry.poly;
@@ -993,6 +1205,23 @@ angular.module('linc.boundary.map.controller',[])
 			return Contain(input, GeoBounds);
 		});
 		return filtered;
+	};
+})
+
+.directive('loadBoundarysOnChange', function() {
+	return {
+		restrict: 'A',
+		scope: {
+				 method:'&loadBoundarysOnChange'
+		 },
+		link: function (scope, element, attrs) {
+			var onChangeFunc = scope.method();
+			element.bind('change', function(event){
+				var file = event.target.files[0];
+				onChangeFunc(file);
+				element.val(null);
+			});
+		}
 	};
 });
 
