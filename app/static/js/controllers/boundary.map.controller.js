@@ -28,7 +28,6 @@ angular.module('linc.boundary.map.controller',[])
 
 	// Global
 	$scope.boundary = {modified: false};
-	console.log('modified: ' + $scope.boundary.modified);
 	$scope.title = "Geographical Filter";
 	var user = AuthService.user;
 	$scope.Notification = NotificationFactory;
@@ -373,8 +372,6 @@ angular.module('linc.boundary.map.controller',[])
 		_.forEach($scope.Intersections, function(bound){
 			if(bound)
 				bound.setMap(null);
-			else
-				console.log('bound not found');
 		});
 		$scope.Intersections = [];
 		$scope.GeoBounds = _.map($scope.GeoBounds, function(geobound){
@@ -459,10 +456,6 @@ angular.module('linc.boundary.map.controller',[])
 	$scope.polygon_path = null;
 	$scope.polygonDragStart = function(polygon){
 		$scope.polygon_path = angular.copy(polygon.getPath());
-		console.log('start: ');
-		$scope.polygon_path.forEach(function(path){
-			console.log('['+path.lat()+' , '+path.lng()+']')
-		});
 	};
 
 	$scope.polygonDragEnd = function(polygon){
@@ -708,7 +701,6 @@ angular.module('linc.boundary.map.controller',[])
 	};
 	// Submit the Update
 	$scope.Submit = function(){
-		console.log('modified: ' + $scope.boundary.modified);
 		if($scope.boundary.modified){
 			cleanAll();
 			var output = BoundsToJson();
@@ -717,7 +709,6 @@ angular.module('linc.boundary.map.controller',[])
 	};
 	// CLOSE MODAL ON ESCAPE KEY
 	$scope.KeyEvent = function($event){
-		console.log($event);
 		if($event.key == "Escape")
 			$scope.Cancel();
 	};
@@ -760,7 +751,6 @@ angular.module('linc.boundary.map.controller',[])
 			tag_label.set('position',option.position);
 			tag_label.set('fontColor',option.fontColor);
 			tag_label.set('strokeColor',option.strokeColor);
-			console.log(zoom);
 		});
 		$scope.listeners.push(hmap);
 		return tag_label;
@@ -850,9 +840,10 @@ angular.module('linc.boundary.map.controller',[])
 			};
 			return (data_marker);
 		});
-		var center = $scope.bounds.getCenter();
-		$scope.map.setCenter(center);
-		console.log($scope.map.getZoom());
+		if(!$scope.markers.length){
+			var center = $scope.bounds.getCenter();
+			$scope.map.setCenter(center);
+		}
 		if($scope.markers.length >1){
 			var ne = $scope.bounds.getNorthEast();
 			var sw = $scope.bounds.getSouthWest();
@@ -861,7 +852,6 @@ angular.module('linc.boundary.map.controller',[])
 				$scope.bounds = CircleBounds(center, radius);
 				$scope.map.fitBounds($scope.bounds);
 			}
-			console.log($scope.map.getZoom());
 		}
 	};
 
@@ -898,7 +888,6 @@ angular.module('linc.boundary.map.controller',[])
 		$scope.timeout=$timeout(function() {
 			$scope.$apply(function () {
 				$scope.boundary.modified = val;
-				console.log('boundary modified: ' + $scope.boundary.modified);
 			});
 		});
 	};
