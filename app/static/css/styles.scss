@@ -2232,6 +2232,7 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 					label{
 						width: 38px;
 						height: 30px;
+						margin-bottom: 3px;
 					}
 					input[type='file'] {
 						display: none;
@@ -2243,8 +2244,9 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 			}
 			.save-in-file{
 				height: 30px;
+				margin-bottom: 3px;
 			}
-			.btn-update{ height: 30px;}
+			.btn-update{ height: 30px; margin-bottom: 3px;}
 		}
 	}
 
