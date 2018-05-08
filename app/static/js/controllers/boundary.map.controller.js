@@ -383,13 +383,13 @@ angular.module('linc.boundary.map.controller',[])
 	};
 
 	// Create 1 Boundary
-	var Create_Boundary = function(data, index, map){
+	var Create_Boundary = function(data, map){
 		var center;
 		var overlay = null;
 		var menu_label = 'Rectangle';
 		if (data.type == 'polygon'){
 			menu_label = 'Polygon';
-			overlay = CreatePolygon({'path': data.path, 'map': map});
+			overlay = CreatePolygon({ path: data.path, map: map });
 			center = overlay.Centroid();
 			overlay.enableCoordinatesChangedEvent();
 			var changeHandler = google.maps.event.addListener(overlay, 'coordinates_changed', function () {
@@ -410,7 +410,7 @@ angular.module('linc.boundary.map.controller',[])
 		}
 		else if (data.type == 'circle'){ // EVENT TO MODE CIRCLE
 			menu_label = 'Circle';
-			overlay = CreateCircle({'center': data.center, 'radius': data.radius, 'map': map});
+			overlay = CreateCircle({ center: data.center, radius: data.radius, map: map });
 			center = overlay.getCenter();
 			var center_changed = google.maps.event.addListener(overlay, 'center_changed', function (e) {
 				$scope.moved = true;
@@ -426,7 +426,7 @@ angular.module('linc.boundary.map.controller',[])
 		}
 		else{
 			menu_label = 'Rectangle';
-			overlay = CreateRectangle({'bounds': data.bounds, 'map': map})
+			overlay = CreateRectangle({ bounds: data.bounds, map: map })
 			center = overlay.getBounds().getCenter();
 			var bounds_changed = google.maps.event.addListener(overlay, 'bounds_changed', function (e) {
 				$scope.moved = true;
@@ -434,19 +434,17 @@ angular.module('linc.boundary.map.controller',[])
 			});
 			$scope.listeners.push(bounds_changed); 
 		}
-		var label = PolygonLabel({'center': center, 'map': map, 'title' : data.title });
+		var label = PolygonLabel({ center: center, map: map, title: data.title });
 		var jsts_pol = CreateJstsPol(overlay, data.type);
-		var databound = {
-			'type': data.type , 'overlay': overlay, 'jsts_pol': jsts_pol, 'index': index, 
-			'label': label, 'menu_label': menu_label, 'map': map, 'selected': data['selected']
-		};
+		var databound = { type: data.type , overlay: overlay, jsts_pol: jsts_pol, index: data.index, 
+			label: label, menu_label: menu_label, map: map, selected: data.selected };
 		return databound;
 	};
 
 	// Create Boundarys
 	var Create_Boundarys = function(boundarys, map){
-		_.forEach(boundarys, function(data, index) {
-			var databound = Create_Boundary(data, index, map);
+		_.forEach(boundarys, function(data) {
+			var databound = Create_Boundary(data, map);
 			$scope.GeoBounds.push(databound);
 			Create_ContextMenu(databound);
 			ShowBoundarys(databound);
@@ -535,12 +533,10 @@ angular.module('linc.boundary.map.controller',[])
 					});
 					$scope.listeners.push(bounds_changed);
 				}
-				var label = PolygonLabel({'center': center, 'map': $scope.map, 'title' : title });
+				var label = PolygonLabel({ center: center, map: $scope.map, title: title });
 				var jsts_pol = CreateJstsPol(event.overlay, event.type);
-				var databound = {
-					'type': event.type , 'overlay': event.overlay, 'jsts_pol': jsts_pol, 'index': $scope.guid(), 
-					'label': label, 'menu_label': menu_label, 'map': map, 'selected': true
-				};
+				var databound = { type: event.type , overlay: event.overlay, jsts_pol: jsts_pol, index: $scope.guid(), 
+					label: label, menu_label: menu_label, map: map, selected: true };
 				$scope.GeoBounds.push(databound);
 				Create_Intesection(databound);
 				Create_ContextMenu(databound);
@@ -634,12 +630,12 @@ angular.module('linc.boundary.map.controller',[])
 	};
 	// REMOVE BOUNDARY
 	var RemoveBoundary = function(index){
-		var bound = _.find($scope.GeoBounds,{'index': index});
+		var bound = _.find($scope.GeoBounds,{ index: index });
 		if (bound){
 			bound.label.setMap(null);
 			bound.overlay.setMap(null);
 		}
-		_.remove($scope.GeoBounds,{'index': index});
+		_.remove($scope.GeoBounds,{ index: index });
 	};
 	// CLEAN ALL
 	var cleanAll = function(){
@@ -657,7 +653,7 @@ angular.module('linc.boundary.map.controller',[])
 			menu.setMap(null);
 		});
 		_.forEach($scope.markers,function(marker){
-			if(_.has(marker,'marker') && marker['marker'])
+			if(_.has(marker, 'marker') && marker['marker'])
 				marker['marker'].setMap(null);
 			if(_.has(marker,'tag_circle') && marker['tag_circle']){
 				var tag_circle = marker['tag_circle'];
@@ -768,9 +764,9 @@ angular.module('linc.boundary.map.controller',[])
 			center: data.center, 
 			radius: data.radius
 		});
-		var tag_label = TagLabels({'center': data.center, 'radius': data.radius, 'title': data.title});
+		var tag_label = TagLabels({ center: data.center, radius: data.radius, title: data.title });
 		var jsts_pol = CreateJstsPol(tag_circle, 'circle');
-		return ({'circle': tag_circle, 'label': tag_label, 'jsts_pol': jsts_pol});;
+		return ({ circle: tag_circle, label: tag_label, jsts_pol: jsts_pol });;
 	};
 	// Show / Hide Marker Label
 	$scope.show_label = function(marker, status){
@@ -909,7 +905,7 @@ angular.module('linc.boundary.map.controller',[])
 	};
 
 	// Import Boundarys from File
-	$scope.fileupload = {"name": ''};
+	$scope.fileupload = { name: '' };
 	$scope.LoadBoundarys = function(file){
 		var reader = new FileReader();
 		reader.onload = function(e) {
@@ -958,7 +954,8 @@ angular.module('linc.boundary.map.controller',[])
 		_.forEach(input_data.boundarys, function(data, index) {
 			if( _.includes(input_data.selecteds, index)){
 				data.selected = true;
-				var databound = Create_Boundary(data, index, $scope.map);
+				data.index = $scope.guid();
+				var databound = Create_Boundary(data, $scope.map);
 				$scope.GeoBounds.push(databound);
 				Create_ContextMenu(databound);
 				ShowBoundarys(databound);
@@ -1136,7 +1133,7 @@ angular.module('linc.boundary.map.controller',[])
 
 	$scope.Import = function(){
 		var results = {
-			selecteds: _.map(_.filter($scope.boundarys,'selected'),'index'),
+			selecteds: _.map(_.filter($scope.boundarys, 'selected'), 'index'),
 			keep: $scope.keep.old
 		};
 		$uibModalInstance.close(results);
