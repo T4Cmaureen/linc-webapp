@@ -794,7 +794,10 @@ class ImagesUploadHandler(BaseHandler, ProcessMixin):
             if fileencoded:
                 remove(dirfs + '/' + fname)
                 image_type = self.get_argument("image_type", "cv")
-                image_tags = self.get_argument("image_tags", "[]")
+                tagsl = self.get_argument("image_tags", [])
+                if ',' in tagsl and not isinstance(tagsl, list):
+                    tagsl = [x for x in tagsl.split(',') if x.strip() != '']
+                image_tags = tagsl
                 is_public = self.get_argument("is_public", '')
                 is_public = (is_public.lower() == 'true')
                 image_set_id = self.get_argument("image_set_id")
