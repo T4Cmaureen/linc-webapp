@@ -37,6 +37,19 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 	</form>
 </script>
 
+<script type="text/ng-template" id="dlg.confirm.tpl.html">
+	<div name="Warning" class="font-homenaje-1-1">
+		<div class="modal-header" ng-show="data.title">
+			<h4 class="modal-title" ng-bind-html="data.title"></h4>
+		</div>
+		<div class="modal-body" ng-bind-html="data.text">
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" ng-click="cancel()">{{!data.cancel}}</button>
+			<button type="button" class="btn btn-primary" ng-click="ok()">{{!data.ok}}</button>
+		</div>
+	</div>
+</script>
 
 <div name="Map" class="map boundary-map" ng-keyup="KeyEvent($event)">
 	<div class="modal-header" ng-show="title">
@@ -47,23 +60,9 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 		<div class="row">
 			<div class="col-sm-3">
 				<label class="label-boundary">Search Areas:</label>
-				<!-- <div class="wrapper well" ng-show="GeoBounds.length">
-					<div ng-repeat="boundary in GeoBounds">
-						<label>
-							<input type="checkbox" 
-								ng-model="boundary.selected" ng-checked="boundary.selected" 
-								ng-change="SelectBoundary(boundary)">
-							{{! boundary.label.text}}
-						</label>
-					</div>
-				</div>
-				<div class="form-group user-actions text-center">
-					<button ng-disabled="!boundary.modified" class="btn btn-raised btn-default btn-update" ng-click="Submit()">
-						Update Boundarys
-					</button>
-				</div> -->
-				<div class="wrapper well" ng-show="GeoBounds.length">
+				<div class="wrapper well">
 					
+					<div class="form-group" ng-show="GeoBounds.length">
 						<div class="checkbox" ng-repeat="boundary in GeoBounds">
 							<label class="checkbox-inline">
 								<input type="checkbox" class="form-input" 
@@ -73,33 +72,69 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 									{{! boundary.label.text}}
 							</label>
 						</div>
+					</div>
 					
 					<div class="form-group user-actions">
-						<button ng-disabled="!boundary.modified" class="btn btn-raised btn-default btn-update" ng-click="Submit()">
-							Update Boundarys
+						<div class="file-upload">
+							<div class="form-group is-empty is-fileinput">
+								<label for="loadboundary" class="btn btn-default btn-raised"
+									uib-tooltip="Load Search Areas Filters from File" tooltip-placement="top-left">
+									<i class="fa fa-file" aria-hidden="true"></i>
+								</label>
+								<input type="file" id="loadboundary" accept="application/json,text/*,.dat" 
+									load-boundarys-on-change="LoadBoundarys" ng-model="fileupload.name">
+							</div>
+						</div>
+					
+						<button type="btn" class="btn btn-default btn-raised save-in-file" 
+							ng-click="SaveBoundarys()" ng-disabled="!GeoBounds.length"
+							uib-tooltip="Save Search Areas Filters to File" tooltip-placement="top-left">
+							<strong class="sr-only">Save</strong>
+							<i class="fa fa-floppy-o" aria-hidden="true"></i>
 						</button>
+
+						<button class="btn btn-raised btn-default btn-update"
+							ng-disabled="!boundary.modified" ng-click="Submit()" tooltip-placement="top-left">
+							Save Search Areas
+						</button>
+
 					</div>
 				</div>
 				<div class="form-group">
-					Total Filtered: {{!filtered_markers.length}}
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th class="text-center">Id</th>
-								<th class="text-center">Photo</th>
-								<th class="text-center">Name</th>
+								<th class="text-center p15"><a ng-click="order('id')" ng-class="{'order_class': orderby.predicate === 'id'}">Id</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'id'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+								<th class="text-center p20">Photo</th>
+								<th class="text-center p30">
+									<a href="" ng-click="order('name')" ng-class="{'order_class': orderby.predicate === 'name'}">Name</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'name'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+								<th class="text-center p35">Tag Location</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr class="link" ng-repeat="marker in filtered_markers = ( markers | geographical2: GeoBounds ) track by $index">
-								<td class="text-center">{{!marker.entitie.id}}</td>
-								<td class="text-center">
-									<img ng-src="{{!marker.entitie.thumbnail}}" width="30" height="30">
+							<tr ng-class="{'tag-location': marker.tag_location}" class="link" ng-click="AnimateMarker(marker.marker);"
+								ng-dblclick="CenterMarker(marker.marker);"
+								ng-repeat="marker in filtered_markers = ( markers | geographical2: GeoBounds | orderBy : orderby.predicate : orderby.reverse)">
+								<td class="text-center p15">{{!marker.id}}</td>
+								<td class="text-center p20">
+									<img ng-src="{{!marker.thumbnail}}" width="30" height="30">
 								</td>
-								<td class="text-center">{{!marker.entitie.name}}</td>
+								<td class="text-center p50">{{!marker.name}}</td>
+								<td class="text-center p15"
+									uib-tooltip-html="marker.tooltip.title | unsafe" tooltip-placement="auto left"
+                  					tooltip-trigger="'mouseenter'" tooltip-enable="marker.tooltip.enabled"
+								>
+									<i ng-if="marker.tag_location" class="icon icon-check"></i>
+									<i ng-if="!marker.tag_location" class="icon icon-cross"></i>
+								</td>
 							</tr>
 						</tbody>
 					</table>
+					Total Filtered: {{!filtered_markers.length}}
 				</div>
 			</div>
 			<div class="col-sm-9 line-right">

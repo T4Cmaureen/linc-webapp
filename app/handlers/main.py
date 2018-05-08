@@ -224,3 +224,8 @@ class CarouselGalleryHandler(BaseHandler):
     @web_authenticated
     def get(self):
         self.render('carousel.gallery.tpl.html')
+
+class SelectBoundarysHandler(BaseHandler):
+    @web_authenticated
+    def get(self):
+        self.render('select.boundarys.tpl.html')

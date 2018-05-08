@@ -1,0 +1,62 @@
+<!-- LINC is an open source shared database and facial recognition
+system that allows for collaboration in wildlife monitoring.
+Copyright (C) 2016  Wildlifeguardians
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+For more information or to contact visit linclion.org or email tech@linclion.org -->
+<div name="Map" class="select-boundarys" ng-keyup="KeyEvent($event)">
+	<div class="modal-header" ng-show="title">
+		<button type="button" class="close" ng-click="Cancel()">&times;</button>
+		<h4 class="modal-title" ng-bind-html="title"></h4>
+	</div>
+	<div class="modal-body">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th class="text-center">Select</th>
+					<th class="text-center">index</th>
+					<th class="text-center">type</th>
+					<th class="text-center">title</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="link" ng-repeat="boundary in boundarys">
+					<td class="text-center">
+						<div class="checkbox">
+							<label class="checkbox-inline">
+								<input type="checkbox" class="form-input" ng-checked="boundary.selected" 
+								ng-model="boundary.selected" ng-click="Select(boundary)">
+								<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+							</label>
+						</div>
+					</td>
+					<td class="text-center">{{!boundary.index}}</td>
+					<td class="text-center">{{!boundary.type}}</td>
+					<td class="text-center">{{!boundary.title}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="modal-footer">
+		<div class="checkbox pull-left" ng-if="show_keep">
+			<label class="checkbox-inline">
+				<input type="checkbox" class="form-input" ng-checked="keep.old" ng-model="keep.old">
+				<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+				Keep Current Search Areas {{!keep.old}}
+			</label>
+		</div>
+		<button ng-disabled="!Selecteds.length" type="button" class="btn btn-primary btn-min-120" ng-click="Import()">Apply</button>
+	</div>
+</div>
