@@ -20,9 +20,8 @@
 
 angular.module('linc.image.gallery.controller', [])
 
-.controller('ImageGalleryCtrl', ['$scope', '$state', '$timeout', '$sce', '$q', '$window', '$uibModal', 
-  '$ModalPage', '$uibModalInstance', 'LincServices', 'NotificationFactory', 'optionsSet', 'gallery',
-  function($scope, $state, $timeout, $sce, $q, $window, $uibModal, $ModalPage, $uibModalInstance, 
+.controller('ImageGalleryCtrl', ['$scope', '$state', '$timeout', '$sce', '$q', '$window', '$uibModal', '$uibModalInstance', 'LincServices', 'NotificationFactory', 'optionsSet', 'gallery',
+  function($scope, $state, $timeout, $sce, $q, $window, $uibModal, $uibModalInstance, 
   LincServices, NotificationFactory, optionsSet, gallery) {
 
 	// Title

@@ -289,9 +289,9 @@ angular.module('linc.view.lion.database.controller', [])
 		_.forEach(collections, function(lion) {
 			lion.selected = val;
 			if(lion.selected){
-        		if(!_.some($scope.Selecteds, lion))
-          			$scope.Selecteds.push(lion);
-      		}
+				if(!_.some($scope.Selecteds, lion))
+					$scope.Selecteds.push(lion);
+			}
 		});
 		if(!val)
 			$scope.Selecteds = [];
@@ -448,7 +448,7 @@ angular.module('linc.view.lion.database.controller', [])
 		{
 			templateUrl: 'boundary.map.tpl.html',
 			controller: 'BoundaryMapCtrl',
-			controllerAs: 'vm',
+			controllerAs: 'vm', windowClass: 'Boundary-Modal',
 			size: 'lg', backdrop  : 'static', keyboard: false,
 			animation: true, transclude: true, replace: true
 		})

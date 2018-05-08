@@ -119,11 +119,19 @@ textarea{font-family: 'Homenaje', sans-serif;}
 		width: 760px;
 		margin: 30px auto;
 	}
+	.Boundary-Modal>.modal-lg {
+		width: 760px;
+		// margin: 30px auto;
+	}
 }
 
 @media (min-width: 900px){
 	.large-modal>.modal-lg {
 		width: 860px;
+	}
+	.Boundary-Modal>.modal-lg {
+		width: 900px;
+		// margin: 30px auto;
 	}
 }
 
@@ -131,12 +139,20 @@ textarea{font-family: 'Homenaje', sans-serif;}
 	.large-modal>.modal-lg {
 		width: 980px;
 	}
+	.Boundary-Modal>.modal-lg {
+		width: 1000px;
+		// margin: 30px auto;
+	}
 }
 
 @media(min-width: 1200px){
-		.large-modal > .modal-lg {
-				width: 1100px;
-		}
+	.large-modal > .modal-lg {
+			width: 1100px;
+	}
+	.Boundary-Modal>.modal-lg {
+		width: 1200px;
+		// margin: 30px auto;
+	}
 }
 
 .aside{
@@ -2203,18 +2219,56 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 }
 
 .boundary-map{
+	.label-boundary{ font-weight: 400;}
+	div.wrapper.well{
+		padding: 6px 3px 3px 6px; background-color: unset;
+		.user-actions{
+			margin-bottom: 6px;
+			.file-upload{
+				display: inline;
+				.is-fileinput{
+					display: inline;
+					position: relative;
+					label{
+						width: 38px;
+						height: 30px;
+						margin-bottom: 3px;
+					}
+					input[type='file'] {
+						display: none;
+					}
+					button{
+						height: 30px;
+					}
+				}
+			}
+			.save-in-file{
+				height: 30px;
+				margin-bottom: 3px;
+			}
+			.btn-update{ height: 30px; margin-bottom: 3px;}
+		}
+	}
+
 	table { width: 100%; }
 	thead, tbody, tr, td, th { display: block; }
 	tr:after { content: ' '; display: block; visibility: hidden; clear: both; }
 	thead th { height: 30px; }
 	tbody { height: 450px; overflow-y: auto; }
-	tbody td, thead th { width: 33.3%; float: left; }
-	tf { padding: 3px;}
-	.label-boundary{ font-weight: 400;}
-	div.wrapper.well{
-		padding: 6px 3px 3px 6px; background-color: unset;
+	tbody td.p10, thead th.p10 { width: 10%; float: left; }
+	tbody td.p15, thead th.p15 { width: 15%; float: left; }
+	tbody td.p20, thead th.p20 { width: 20%; float: left; }
+	tbody td.p25, thead th.p25 { width: 25%; float: left; }
+	tbody td.p30, thead th.p30 { width: 30%; float: left; }
+	tbody td.p35, thead th.p35 { width: 35%; float: left; }
+	tbody td.p40, thead th.p40 { width: 40%; float: left; }
+	tbody td.p50, thead th.p50 { width: 50%; float: left; }
+	tbody td.p55, thead th.p55 { width: 55%; float: left; }
+	tbody td.p60, thead th.p60 { width: 60%; float: left; }
+	tbody tr.tag-location{
+		background-color: rgba(245, 195, 171, 0.25);
 	}
-	.btn-update{ height: 30px; }
+	tf { padding: 3px;}
 }
 .pull-right-btn-16{
 	margin-bottom: 16px;
