@@ -836,7 +836,7 @@ angular.module('linc.boundary.map.controller',[])
 			};
 			return (data_marker);
 		});
-		if(!$scope.markers.length){
+		if($scope.markers.length != 0){
 			var center = $scope.bounds.getCenter();
 			$scope.map.setCenter(center);
 		}
