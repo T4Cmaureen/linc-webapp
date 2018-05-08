@@ -951,8 +951,8 @@ angular.module('linc.boundary.map.controller',[])
 			});
 			$scope.Intersections = [];
 		}
-		_.forEach(input_data.boundarys, function(data, index) {
-			if( _.includes(input_data.selecteds, index)){
+		_.forEach(input_data.boundarys, function(data) {
+			if( _.includes(input_data.selecteds, data.index)){
 				data.selected = true;
 				data.index = $scope.guid();
 				var databound = Create_Boundary(data, $scope.map);
