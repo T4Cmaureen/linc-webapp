@@ -26,7 +26,7 @@ angular.module('linc.relatives.directive', [])
     replace: true,
     restrict: 'EA',
     template:  '<p><a class="btn btn-lg btn-default btn-block btn-minwidth-180" ng-click="show()">'+
-               '<span ng-if="loading" class="text-center" style="margin-right: 20px;">'+
+               '<span ng-if="loading" class="text-center">'+
                '<img src="/static/images/loading.gif"/></span>'+
                '<i class="fa fa-paw"></i>'+
                ' RELATIVES '+

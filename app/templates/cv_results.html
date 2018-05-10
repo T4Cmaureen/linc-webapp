@@ -16,104 +16,122 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 For more information or to contact visit linclion.org or email tech@linclion.org -->
-<div name="CVResults" class="font-homenaje-1-1">
+<div name="CVResults" class="cv-results font-homenaje">
   <div class="modal-header" ng-show="title">
     <button type="button" class="close" ng-click="!processing && Close()">&times;</button>
     <div class="modal-header-image" ng-right-click="show_photo(imageset.image)">
-      <a ui-sref="imageset({id: imageset.id})" target="_blank">
+      <a ng-click="GoTo({type: 'imageset', 'params': {id: imageset.id}})">
         <img ng-src="{{!imageset.thumbnail}}" width="40" height="40">
       </a>
     </div>
     <h3 class="modal-title modal-title-image" ng-bind-html="title"></h3>
   </div>
   <div class="modal-body" ng-show="content">
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': predicate === 'id'}">Id</a>
-            <span class="sortorder" ng-show="predicate === 'id'" ng-class="{reverse:reverse}"></span>
-          </th>
-          <th class="text-center">Photo</th>
-          <th class="text-center">
-            <a href="" ng-click="order('name')" ng-class="{'order_class': predicate === 'name'}">Name</a>
-            <span class="sortorder" ng-show="predicate === 'name'" ng-class="{reverse:reverse}"></span>
-          </th>
-          <th class="text-center">
-            <a href="" ng-click="order('age')" ng-class="{'order_class': predicate === 'age'}">Age</a>
-            <span class="sortorder" ng-show="predicate === 'age'" ng-class="{reverse:reverse}"></span>
-          </th>
-          <th class="text-center">
-            <a href="" ng-click="order('organization')" ng-class="{'order_class': predicate === 'organization'}">Organization</a>
-            <span class="sortorder" ng-show="predicate === 'organization'" ng-class="{reverse:reverse}"></span>
-          </th>
-          <th class="text-center">
-            <a href="" ng-click="order('gender')" ng-class="{'order_class': predicate === 'gender'}">Gender</a>
-            <span class="sortorder" ng-show="predicate === 'gender'" ng-class="{reverse:reverse}"></span>
-          </th>
-          <th class="text-center">
-            <a href="" ng-click="order('is_verified')" ng-class="{'order_class': predicate === 'is_verified'}">Verified</a>
-            <span class="sortorder" ng-show="predicate === 'is_verified'" ng-class="{reverse:reverse}"></span>
-          </th>
-          <th class="text-center">
-            <a href="" ng-click="order('cv')" ng-class="{'order_class': predicate === 'cv'}">CV</a>
-            <span class="sortorder" ng-show="predicate === 'cv'" ng-class="{reverse:reverse}"></span>
-          </th>
-          <th class="text-center">
-            <a href="" ng-click="order('confNum')" class="break-line" ng-class="{'order_class': predicate === 'confNum'}">Confidence <br> number</a>
-            <span class="sortorder" ng-show="predicate === 'confNum'" ng-class="{reverse:reverse}"></span>
-          </th>
-          <th class="text-center">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="link" ng-right-click="!processing && CompareImages(lion)" ng-repeat="lion in cvresults | orderBy:predicate:reverse" ng-class="{active:lion.associated}">
-          <td class="text-center">
-            <a ui-sref="lion({id: lion.id})" target="_blank">{{!lion.id}}</a>
-          </td>
-          <td class="text-center">
-            <a ui-sref="lion({id: lion.id})" target="_blank">
-              <img ng-src="{{!lion.thumbnail}}" width="40" height="40">
-            </a>
-          </td>
-          <td class="text-center">
-            <a ui-sref="lion({id: lion.id})" target="_blank">{{!lion.name}}</a>
-          </td>
-          <td class="text-center">
-            <a ui-sref="lion({id: lion.id})" target="_blank">{{!lion.age}} years old</a>
-          </td>
-          <td class="text-center"><a ui-sref="lion({id: lion.id})" target="_blank">{{!lion.organization}}</a>
-          </td>
-          <td class="text-center"><a ui-sref="lion({id: lion.id})" target="_blank">{{!lion.gender}}</a>
-          </td>
-          <td class="text-center">
-            <a ui-sref="lion({id: lion.id})" target="_blank">
+    <div class="div-table">
+      <table class="table table-cv-results">
+        <thead>
+          <tr>
+            <th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': predicate === 'id'}">Id</a>
+              <span class="sortorder" ng-show="predicate === 'id'" ng-class="{reverse:reverse}"></span>
+            </th>
+            <th class="text-center" ng-hide="show_lion_image">Photo</th>
+
+            <th class="text-center lion-image" ng-show="show_lion_image">Photo</th>
+
+            <th class="text-center name">
+              <a href="" ng-click="order('name')" ng-class="{'order_class': predicate === 'name'}">Name</a>
+              <span class="sortorder" ng-show="predicate === 'name'" ng-class="{reverse:reverse}"></span>
+            </th>
+            <th class="text-center age" ng-hide="show_lion_image">
+              <a href="" ng-click="order('age')" ng-class="{'order_class': predicate === 'age'}">Age</a>
+              <span class="sortorder" ng-show="predicate === 'age'" ng-class="{reverse:reverse}"></span>
+            </th>
+            <th class="text-center">
+              <a href="" ng-click="order('organization')" ng-class="{'order_class': predicate === 'organization'}">Organization</a>
+              <span class="sortorder" ng-show="predicate === 'organization'" ng-class="{reverse:reverse}"></span>
+            </th>
+            <th class="text-center" ng-hide="show_lion_image">
+              <a href="" ng-click="order('gender')" ng-class="{'order_class': predicate === 'gender'}">Gender</a>
+              <span class="sortorder" ng-show="predicate === 'gender'" ng-class="{reverse:reverse}"></span>
+            </th>
+            <th class="text-center" ng-hide="show_lion_image">
+              <a href="" ng-click="order('tag_features')" ng-class="{'order_class': predicate === 'tag_features'}">Tag Features</a>
+              <span class="sortorder" ng-show="predicate === 'tag_features'" ng-class="{reverse: reverse}"></span>
+            </th>
+            <th class="text-center" ng-hide="show_lion_image">
+              <a href="" ng-click="order('is_verified')" ng-class="{'order_class': predicate === 'is_verified'}">Verified</a>
+              <span class="sortorder" ng-show="predicate === 'is_verified'" ng-class="{reverse:reverse}"></span>
+            </th>
+            <th class="text-center">
+              <a href="" ng-click="order('cv')" ng-class="{'order_class': predicate === 'cv'}">CV</a>
+              <span class="sortorder" ng-show="predicate === 'cv'" ng-class="{reverse:reverse}"></span>
+            </th>
+            <th class="text-center">
+              <a href="" ng-click="order('confNum')" class="break-line" ng-class="{'order_class': predicate === 'confNum'}">Confidence <br> number</a>
+              <span class="sortorder" ng-show="predicate === 'confNum'" ng-class="{reverse:reverse}"></span>
+            </th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="link" ng-class="{active:lion.associated}" ng-right-click="!processing && CompareImages(lion)"
+            ng-repeat="lion in orderd_lions = cvresults | orderBy:predicate:reverse" repeat-done="ResizeTable()">
+
+            <td class="text-center">
+              <a target="_blank">{{!lion.id}}</a>
+            </td>
+
+            <td class="text-center" ng-hide="show_lion_image && lion.show_image" ng-click="SwitchImage(lion, true)">
+                <img ng-src="{{!lion.thumbnail}}" width="40" height="40">
+            </td>
+
+            <td class="text-center lion-image" ng-show="show_lion_image && lion.show_image" ng-click="SwitchImage(lion, false)">
+                <img ng-src="{{!lion.image}}">
+            </td>
+
+            <td class="text-center">
+              <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.name}}</a>
+            </td>
+            <td class="text-center" ng-hide="show_lion_image">
+              <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.age}} years old</a>
+            </td>
+            <td class="text-center">
+              <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.organization}}</a>
+            </td>
+            <td class="text-center" ng-hide="show_lion_image">
+              <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.gender}}</a>
+            </td>
+            <td class="text-center" ng-hide="show_lion_image">
+              <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.tag_features}}</a>
+            </td>
+
+            <td class="text-center" ng-hide="show_lion_image" ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">
               <i ng-if="lion.is_verified" class="icon icon-check"></i>
               <i ng-if="!lion.is_verified" class="icon icon-cross"></i>
-            </a>
-          </td>
-          <td class="text-center">
-            <a ui-sref="lion({id: lion.id})" target="_blank">
+            </td>
+
+            <td class="text-center" ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">
               <span class="badge">{{!lion.cv | percentage:2}}</span>
-            </a>
-          </td>
-          <td class="text-center" ng-if="lion.confidence.number!=undefined">
-            <a ui-sref="lion({id: lion.id})" target="_blank">
+            </td>
+
+            <td class="text-center" ng-if="lion.confidence.number!=undefined"
+              ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">
               <span class="badge" ng-style="lion.confidence.style">
                 {{!lion.confidence.number | percentage:2}}</td>
               </span>
-            </a>
-          <td class="text-center" ng-if="lion.confidence.number==undefined"></td>
+            <td class="text-center" ng-if="lion.confidence.number==undefined"></td>
 
-          <td class="text-center">
-            <button ng-if="!lion.associated" ng-disabled="processing" class="btn btn-default" ng-click="Associate(lion)"> Associate </button>
-            <button ng-if="lion.associated" ng-disabled="processing" class="btn btn-warning" ng-click="Disassociate(lion)"> Disassociate </button>
-            <span ng-if="lion.dataloading" class="text-right text-danger span-preloader">
-              <img src="/static/images/loading.gif" class="preloader" />wait {{!lion.associated ? 'disassociating' : 'associating'}}&hellip;
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            <td class="text-center">
+              <button ng-if="!lion.associated" ng-disabled="processing" class="btn btn-default" ng-click="Associate(lion)"> Associate </button>
+              <button ng-if="lion.associated" ng-disabled="processing" class="btn btn-warning" ng-click="Disassociate(lion)"> Disassociate </button>
+              <span ng-if="lion.dataloading" class="text-right text-danger span-preloader">
+                <img src="/static/images/loading.gif" class="preloader" />wait {{!lion.associated ? 'disassociating' : 'associating'}}&hellip;
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" ng-click="ClearResults()">Clear Results</button>

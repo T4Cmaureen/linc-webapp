@@ -66,7 +66,7 @@ angular.module('linc.directives', ['linc.cvrequest.directive', 'linc.cvresults.d
 	};
 })
 
-.directive('ngRightClick', function($parse) {
+.directive('ngRightClick', ['$parse', function($parse) {
 		return function(scope, element, attrs) {
 				var fn = $parse(attrs.ngRightClick);
 				element.bind('contextmenu', function(event) {
@@ -76,7 +76,7 @@ angular.module('linc.directives', ['linc.cvrequest.directive', 'linc.cvresults.d
 						});
 				});
 		};
-})
+}])
 
 .directive('scaleImage', function () {
 	return {
@@ -139,13 +139,15 @@ angular.module('linc.directives', ['linc.cvrequest.directive', 'linc.cvresults.d
 	};
 })
 
-.directive('repeatDone', function() {
+.directive('repeatDone', ['$timeout', function($timeout) {
 	return function(scope, element, attrs) {
 		if (scope.$last) { // all are rendered
-			scope.$eval(attrs.repeatDone);
+			$timeout(function(){
+				scope.$eval(attrs.repeatDone);
+			}, 0);
 		}
 	}
-})
+}])
 
 //Provides with pagination with infinite scroll to handle large list of choices. 
 //An upfront large list of choices makes the control unstable and unresponsive.

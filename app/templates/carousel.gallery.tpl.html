@@ -48,7 +48,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 						</i>
 					</div>
 					<div class="photo-controller">
-						{{!photo.name}} {{!photo.date | date:'yyyy/MM/dd @ hh:mm'}}
+						{{!photo.name}} - {{! photo.date | date:'mediumDate'}} {{! photo.date | date:'shortTime'}}
 					</div>
 					<div class="photo-zoom-icon" data-animation="am-flip-x" data-html="true"
 							 placement="auto" bs-tooltip="zoomtooltip">

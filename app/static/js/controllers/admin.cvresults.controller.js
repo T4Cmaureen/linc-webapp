@@ -50,7 +50,7 @@ angular.module('linc.admin.cvresults.controller', [])
       var index1 = _.findIndex($scope.ordered_cvresults, {'id': cvresult.id});
       var first = Math.min(index0, index1);
       var second = Math.max(index0, index1);
-      for(var i = first; i < second; i++){
+      for(var i = first; i <= second; i++){
         var cvres = $scope.ordered_cvresults[i];
         cvres.selected = cvresult.selected;
         if(cvresult.selected){

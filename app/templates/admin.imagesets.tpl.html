@@ -127,11 +127,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           </div>
           <div class="form-group" ng-class="{'has-error': datepickerForm.date.$invalid}">
             <label for="date_stamp" class="control-label"><i class="fa fa-calendar"></i>Date Stamp: </label>
-            <input type="text" class="form-control" ng-model="imageset.date_stamp" data-date-format="yyyy-MM-dd" data-date-type="string" data-min-date="02/10/86" data-max-date="today" data-autoclose="1" name="date_stamp" bs-datepicker placement="top-right">
+            <input type="text" class="form-control" ng-model="imageset.date_stamp" data-date-format="mediumDate" data-date-type="string" data-min-date="02/10/86" data-max-date="today" data-autoclose="1" name="date_stamp" bs-datepicker placement="top-right">
           </div>
           <div for="date_of_birth" class="form-group" ng-class="{'has-error': datepickerForm.date1.$invalid}">
             <label class="control-label"><i class="fa fa-calendar"></i>Date of Birth: </label>
-            <input type="text" class="form-control" ng-model="imageset.date_of_birth"  data-date-format="yyyy-MM-dd" data-date-type="string" data-max-date="today" data-autoclose="1" name="date_of_birth" bs-datepicker placement="top-right">
+            <input type="text" class="form-control" ng-model="imageset.date_of_birth"  data-date-format="mediumDate" data-date-type="string" data-max-date="today" data-autoclose="1" name="date_of_birth" bs-datepicker placement="top-right">
           </div>
           <br>
           <div class="form-group checkbox adm-checkbox">
@@ -381,8 +381,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         <td class="text-center">{{!imageset.latitude}}</td>
         <td class="text-center">{{!imageset.longitude}}</td>
         <td class="text-center">{{!imageset.geopos_private}}</td>
-        <td class="text-center">{{!imageset.date_stamp}}</td>
-        <td class="text-center">{{!imageset.date_of_birth}}</td>
+        <td class="text-center">{{!imageset.date_stamp | date:'mediumDate'}}</td>
+        <td class="text-center">{{!imageset.date_of_birth | date:'mediumDate'}}</td>
         <td class="text-center">{{!imageset.gender}}</td>
         <td class="text-center">{{!imageset.notes}}</td>
         <td class="text-center">
@@ -392,8 +392,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           <i ng-if="imageset.is_verified" class="icon icon-check"></i>
           <i ng-if="!imageset.is_verified" class="icon icon-cross"></i>
         </td>
-        <td class="text-center">{{!imageset.created_at}}</td>
-        <td class="text-center">{{!imageset.updated_at}}</td>
+        <td class="text-center">{{!imageset.created_at | date:'short'}}</td>
+        <td class="text-center">{{!imageset.updated_at | date:'short'}}</td>
       </tr>
     </tbody>
   </table>

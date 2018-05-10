@@ -24,16 +24,17 @@ angular.module('linc.cvresults.directive', [])
   return {
     transclude: true,
     restrict: 'EA',
+    replace: true,
     template: function(element, attrs) {
       switch (attrs.type) { //view selection. Put type='new' or type='search'
         case 'search':
           return '<button class="btn btn-primary btn-sm" data-animation="am-fade-and-slide-top" ng-click="show()">'+
-                 '<span ng-if="loading" class="text-center" style="margin-right: 6px;">'+
-                 '<img src="/static/images/loading.gif" style="height: 12px;"/></span>'+
+                 '<span ng-if="loading" class="text-center">'+
+                 '<img src="/static/images/loading.gif"/></span>'+
                  '<i class="icon icon-flash"></i>CV Results</button>';
         default:
           return '<p><a class="btn btn-lg btn-default btn-block btn-minwidth-180" data-animation="am-fade-and-slide-top" ng-click="show()">'+
-                 '<span ng-if="loading" class="text-center" style="margin-right: 6px;">'+
+                 '<span ng-if="loading" class="text-center">'+
                  '<img src="/static/images/loading.gif"/></span>'+
                  '<i class="icon icon-flash"></i> VIEW CV RESULTS</a></p>';
       }

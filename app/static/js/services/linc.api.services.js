@@ -66,8 +66,8 @@ angular.module('linc.api.services', [])
       function (results){
         var data = results.data.data;
         var organizations = _.map(data, function(org) {
-          org.created_at = (org.created_at || "").substring(0,19);
-          org.updated_at = (org.updated_at || "").substring(0,19);
+          org.created_at = org.created_at ? new Date(org.created_at) : null;
+          org.updated_at = org.updated_at ? new Date(org.created_at) : null;
           return _.extend({}, org, {'selected': false});
         });
         deferred.resolve(organizations);
@@ -155,12 +155,11 @@ angular.module('linc.api.services', [])
         var data = results.data.data;
         var organizations = data_in.organizations;
         var users =  _.map(data, function(user) {
+          user.created_at = user.created_at ? new Date(user.created_at) : null;
+          user.updated_at = user.updated_at ? new Date(user.created_at) : null;
 
-          user.created_at = (user.created_at || "").substring(0,19);
-          user.updated_at = (user.updated_at || "").substring(0,19);
-
-          user.current_sign_in_at = (user.current_sign_in_at || "").substring(0,19);
-          user.last_sign_in_at = (user.last_sign_in_at || "").substring(0,19);
+          user.current_sign_in_at ? new Date(user.current_sign_in_at) : null;
+          user.last_sign_in_at ? new Date(user.last_sign_in_at) : null;
 
           var text =
           'Current Sign In At: ' + user.current_sign_in_at + ';<br>' +
@@ -264,8 +263,8 @@ angular.module('linc.api.services', [])
         var data = results.data.data;
         var organizations = data_in.organizations;
         var lions = _.map(data, function(lion) {
-          lion.created_at = (lion.created_at || "").substring(0,19);
-          lion.updated_at = (lion.updated_at || "").substring(0,19);
+          lion.created_at = lion.created_at ? new Date(lion.created_at) : null;
+          lion.updated_at = lion.updated_at ? new Date(lion.created_at) : null;
 
           var id = lion.organization_id;
           var organization = _.find(organizations, {'id': id});
@@ -364,10 +363,12 @@ angular.module('linc.api.services', [])
         var users = data_in.users;
         var images = data_in.images;
         var imagesets = _.map(data, function(imageset) {
-          imageset.created_at = (imageset.created_at || "").substring(0,19);
-          imageset.updated_at = (imageset.updated_at || "").substring(0,19);
-          if(imageset.date_of_birth)
-            imageset.date_of_birth = (imageset.date_of_birth || "").substring(0,10);
+          imageset.created_at = imageset.created_at ? new Date(imageset.created_at) : null;
+          imageset.updated_at = imageset.updated_at ? new Date(imageset.created_at) : null;
+
+          imageset.date_of_birth = imageset.date_of_birth ? new Date(imageset.date_of_birth) : null;
+          imageset.date_stamp = imageset.date_stamp ? new Date(imageset.date_stamp) : null;
+
           var id = imageset.lion_id;
           var lion = _.find(lions, {'id': id});
           if(lion == undefined) lion = {'name': '-'};
@@ -470,8 +471,8 @@ angular.module('linc.api.services', [])
       function (results){
         var data = results.data.data;
         var images = _.map(data, function(image) {
-          image.created_at = (image.created_at || "").substring(0,19);
-          image.updated_at = (image.updated_at || "").substring(0,19);
+          image.created_at = image.created_at ? new Date(image.created_at) : null;
+          image.updated_at = image.updated_at ? new Date(image.created_at) : null;
 
           return _.extend({}, image, {'selected': false});
         });
@@ -560,8 +561,8 @@ angular.module('linc.api.services', [])
         var data = results.data.data;
         var organizations = data_in.organizations;
         var cvrequests = _.map(data, function(cvrequest) {
-          cvrequest.created_at = (cvrequest.created_at || "").substring(0,19);
-          cvrequest.updated_at = (cvrequest.updated_at || "").substring(0,19);
+          cvrequest.created_at = cvrequest.created_at ? new Date(cvrequest.created_at) : null;
+          cvrequest.updated_at = cvrequest.updated_at ? new Date(cvrequest.updated_at) : null;
           var id = cvrequest.requesting_organization_id;
           var organization = _.find(organizations, {'id': id});
           return _.extend({}, cvrequest, {'requesting_organization': organization['name'], 'selected': false});
@@ -650,8 +651,8 @@ angular.module('linc.api.services', [])
       function (results){
         var data = results.data.data;
         var cvresults = _.map(data, function(cvresult) {
-          cvresult.created_at = (cvresult.created_at || "").substring(0,19);
-          cvresult.updated_at = (cvresult.updated_at || "").substring(0,19);
+          cvresult.created_at = cvresult.created_at ? new Date(cvresult.created_at) : null;
+          cvresult.updated_at = cvresult.updated_at ? new Date(cvresult.created_at) : null;
           return _.extend({}, cvresult, {'selected': false});
         });
         deferred.resolve(cvresults);

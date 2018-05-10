@@ -54,7 +54,7 @@ angular.module('linc.admin.images.controller', [])
       var index1 = _.findIndex($scope.paginated_images, {'id': image.id});
       var first = Math.min(index0, index1);
       var second = Math.max(index0, index1);
-      for(var i = first; i < second; i++){
+      for(var i = first; i <= second; i++){
         var img = $scope.paginated_images[i];
         img.selected = image.selected;
         if(image.selected){

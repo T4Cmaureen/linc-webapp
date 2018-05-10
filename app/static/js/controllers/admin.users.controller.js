@@ -50,7 +50,7 @@ angular.module('linc.admin.users.controller', [])
       var index1 = _.findIndex($scope.ordered_users, {'id': user.id});
       var first = Math.min(index1, index0);
       var second = Math.max(index1, index0);
-      for(var i = first; i < second; i++){
+      for(var i = first; i <= second; i++){
         var person = $scope.ordered_users[i];
         person.selected = user.selected;
         if(user.selected){

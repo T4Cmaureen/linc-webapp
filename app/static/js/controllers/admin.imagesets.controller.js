@@ -63,7 +63,7 @@ angular.module('linc.admin.imagesets.controller', [])
       var index1 = _.findIndex($scope.ordered_imagesets, {'id': imageset.id});
       var first = Math.min(index0, index1);
       var second = Math.max(index0, index1);
-      for(var i = first; i < second; i++){
+      for(var i = first; i <= second; i++){
         var imgset = $scope.ordered_imagesets[i];
         imgset.selected = imageset.selected;
         if(imageset.selected){
@@ -111,8 +111,8 @@ angular.module('linc.admin.imagesets.controller', [])
       'uploading_organization_id': undefined, 
       'uploading_user_id': undefined, 
       'latitude' : '', 'longitude' : '',
-      'date_stamp': new Date().toJSON().slice(0,10), 
-      'date_of_birth': new Date().toJSON().slice(0,10),
+      'date_stamp': new Date(),
+      'date_of_birth': new Date(),
       'gender': '', 
       'tags': [], 
       'notes': '', 
@@ -193,11 +193,6 @@ angular.module('linc.admin.imagesets.controller', [])
             duration: 2000
           });
           var imageset = response.data;
-          imageset.created_at = (imageset.created_at || "").substring(0,19);
-          imageset.updated_at = (imageset.updated_at || "").substring(0,19);
-
-          if(imageset.date_of_birth)
-            imageset.date_of_birth = (imageset.date_of_birth || "").substring(0,10);
           var id = imageset.lion_id;
           var lion = _.find($scope.$parent.lions, {'id': id});
           imageset.lion_name = (lion == undefined)? '-' : lion.name;
@@ -350,11 +345,6 @@ angular.module('linc.admin.imagesets.controller', [])
 
             var imageset = $scope.Selecteds[0];
             _.merge(imageset, imageset, response.data);
-            imageset.created_at = (imageset.created_at || "").substring(0,19);
-            imageset.updated_at = (imageset.updated_at || "").substring(0,19);
-
-            if(imageset.date_of_birth)
-              imageset.date_of_birth = (imageset.date_of_birth || "").substring(0,10);
             var id = imageset.lion_id;
             var lion = _.find($scope.$parent.lions, {'id': id});
             imageset.lion_name = (lion == undefined)? '-' : lion.name;
@@ -491,8 +481,4 @@ angular.module('linc.admin.imagesets.controller', [])
 
   $scope.multipleDemo = {};
   $scope.multipleDemo.singleSelectedPerson = $scope.all.items[500];
-
-
-}])
-
-;
+}]);

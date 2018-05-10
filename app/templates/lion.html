@@ -45,7 +45,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       <div class="meta-info">
         <h4 class="h4inline">Primary Image Set ID:</h4>
         <h4 class="h4data">
-          <a ui-sref="imageset({id: lion.primary_image_set_id})">{{!lion.primary_image_set_id}}</a>
+          <a ng-click="GoTo({type: 'imageset', 'params': {id: lion.primary_image_set_id}})">{{!lion.primary_image_set_id}}</a>
         </h4>
       </div>
       <div class="meta-info">
@@ -59,11 +59,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       </div>
       <div class="meta-info">
         <h4 class="h4inline">Date Stamp:</h4>
-        <h4 class="h4data">{{!lion.date_stamp}}</h4>
+        <h4 class="h4data">{{!lion.date_stamp | date:'mediumDate'}}</h4>
       </div>
       <div class="meta-info">
         <h4 class="h4inline">Date of Birth:</h4>
-        <h4 class="h4data">{{!lion.date_of_birth}}</h4>
+        <h4 class="h4data">{{!lion.date_of_birth | date:'mediumDate'}}</h4>
       </div>
       <div class="meta-info">
         <h4 class="h4inline">Age:</h4>
@@ -162,11 +162,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         modal-is-open="is_modal_open">
       </metadata>
       
-      <relatives use-ctrl="RelativesCtrl" use-template-url="relatives.tpl.html" form-size="lg" 
+      <relatives class="relatives" use-ctrl="RelativesCtrl" use-template-url="relatives.tpl.html" form-size="lg"
         lion="lion" lions-relatives="relatives" debug="debug" modal-is-open="is_modal_open"
         update-action="update_relatives(data)">
       </relatives>
-      
+
 
       <p ng-click="goto_view_imagesets()"><a class="btn btn-lg btn-default btn-block btn-minwidth-180">
         <i class="icon icon-images"></i> LION IMAGE SETS</a>

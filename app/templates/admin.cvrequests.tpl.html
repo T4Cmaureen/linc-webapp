@@ -155,8 +155,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         <td class="text-center">
           <div class="div-width-fixed-400">{{!cvrequest.request_body}}</div>
         </td>
-        <td class="text-center">{{!cvrequest.created_at}}</td>
-        <td class="text-center">{{!cvrequest.updated_at}}</td>
+        <td class="text-center">{{!cvrequest.created_at | date:'short'}}</td>
+        <td class="text-center">{{!cvrequest.updated_at | date:'short'}}</td>
       </tr>
     </tbody>
   </table>

@@ -62,6 +62,31 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 			$state.go("home");
 	};
 
+	$scope.GoTo = function (data){
+		var scopeGo = $scope.$new();
+		scopeGo.title = (data.type == 'lion') ? 'Lion Info' : 'Image Set Info';
+		scopeGo.message = 'Would you like to open the ' + ((data.type == 'lion') ? 'lion' : 'image set') + ' info page?';
+		var modalGoTo = $uibModal.open({
+			templateUrl: 'Dialog.Delete.tpl.html',
+			scope: scopeGo
+		});
+
+		modalGoTo.result.then(function (result) {
+			var params = data.params ? data.params : {};
+			var url = $state.href(data.type, params)
+			var win_params = win_params ? win_params : {name:'', specs:''};
+			window.open(url, win_params.name, win_params.specs);
+	    }, function () {
+
+	    });
+	    scopeGo.ok = function (){
+	      modalGoTo.close();
+	    }
+	    scopeGo.cancel = function(){
+	      modalGoTo.dismiss();
+	    }
+	};
+
 	$scope.changePWD = function(user){
 		var modalScope = $scope.$new();
 		modalScope.dataSending = false;
