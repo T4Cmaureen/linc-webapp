@@ -496,16 +496,21 @@ angular.module('linc.view.imagesets.controller', [])
 	$scope.Selecteds = [];
 	// Select All Imagesets
 	$scope.check_all = function (val){
-		_.forEach($scope.imagesets, function(imageset) {
-			imageset.selected = val;
-			if(imageset.selected){
-				if(!_.some($scope.Selecteds, imageset))
-					$scope.Selecteds.push(imageset);
-			}
-		});
-		if(!val)
+		if(val){
+			_.forEach($scope.filtered_image_sets, function(imageset) {
+				imageset.selected = val;
+				if(imageset.selected){
+					if(!_.some($scope.Selecteds, imageset))
+						$scope.Selecteds.push(imageset);
+				}
+			});
+		}
+		else{
+			_.forEach($scope.imagesets, function(imageset) {
+				imageset.selected = val;
+			});
 			$scope.Selecteds = [];
-
+		}
 		check_selects();
 	};
 
