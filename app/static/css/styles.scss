@@ -2116,12 +2116,13 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 		top: 7px;
 		label{
 			position: absolute;
-			right: 30px;
+			right: 36px;
 			top: 4px;
 		}
 		button.btn-select{
 			height: 26px;
 			color: white;
+			min-width: 160px;
 			&:active, &.active {
 				background: #fff;
 			}
@@ -2225,6 +2226,9 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 		tbody td:last-child, thead th:last-child { border-right: none; }
 		th.tag_features, td.tag_features {
 			min-width: 200px;
+		}
+		th.notes, td.notes{
+			min-width: 300px;
 		}
 		a:focus, a:hover {
 			color: #f9190a;

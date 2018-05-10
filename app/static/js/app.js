@@ -98,6 +98,7 @@ app.constant('TAG_LABELS', {
       {value: 'tag_location', label: 'Tag Location'},
       {value: 'geopos_private', label: 'GPS Points Private'},
       {value: 'tag_features', label: 'Tag Features'},
+      {value: 'notes', label: 'Notes'},
       {value: 'date_stamp', label: 'Time Stamp'},
       {value: 'is_verified', label: 'Verified'}
     ],
@@ -112,6 +113,7 @@ app.constant('TAG_LABELS', {
       {value: 'tag_location', label: 'Tag Location'},
       {value: 'geopos_private', label: 'GPS Points Private'},
       {value: 'tag_features', label: 'Tag Features'},
+      {value: 'notes', label: 'Notes'},
       {value: 'date_stamp', label: 'Time Stamp'},
       {value: 'is_verified', label: 'Verified'},
       {value: 'is_primary', label: 'Primary'}
