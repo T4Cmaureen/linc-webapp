@@ -20,17 +20,38 @@
 
 angular.module('linc.cvresults.controller', [])
 
-.controller('CVResultsCtrl', ['$scope', '$state', '$timeout', '$interval', '$uibModalInstance', '$uibModal', '$filter', 'LincServices', 'NotificationFactory', 'imageset', 'cvrequestId', 'cvresultsId', 'data_cvresults', 
-  function ($scope, $state, $timeout, $interval, $uibModalInstance, $uibModal, $filter, LincServices, NotificationFactory, imageset, cvrequestId, cvresultsId, data_cvresults) {
+.controller('CVResultsCtrl', ['$scope', '$state', '$timeout', '$interval', '$uibModalInstance', '$uibModal',
+  '$filter', 'LincServices', 'NotificationFactory', 'imageset', 'cvrequestId', 'cvresultsId', 'data_cvresults', 'TAG_LABELS',
+  function ($scope, $state, $timeout, $interval, $uibModalInstance, $uibModal, $filter, LincServices,
+  NotificationFactory, imageset, cvrequestId, cvresultsId, data_cvresults, TAG_LABELS) {
 
   $scope.title = 'CV Results (CV Request Id: '+ data_cvresults.req_id + ' - Status: ' + data_cvresults.status + ')';
   $scope.content = 'Form';
   $scope.imageset = imageset;
   $scope.cvresults = data_cvresults.cvresults;
   $scope.processing = false;
+
+  var GET_FEATURES = function (lbs, TAGS){
+    var label = "";
+    TAGS.forEach(function (elem, i){
+      label += lbs[elem];
+      if(i<TAGS.length-1) label += ', ';
+    });
+    return label;
+  };
+
   $scope.cvresults = _.map(data_cvresults.cvresults, function(element, index) {
     var style = {'background-color': 'green'};
     var elem = {};
+
+    var TAGS = [];
+    if(!element.gender) element.gender = 'unknown';
+    if(element['tags']==undefined)element['tags']="[]";
+    try{ TAGS = JSON.parse(element['tags']);
+    }catch(e){ TAGS = element['tags'].split(","); }
+    if(TAGS==null) TAGS = [];
+    elem['tag_features'] = GET_FEATURES(TAG_LABELS, TAGS);
+    elem['show_image'] = false;
 
     if(element.cn == null || element.cn == undefined){
       style = {};
@@ -64,7 +85,7 @@ angular.module('linc.cvresults.controller', [])
       title: 'Compare Images',
       imageset: imageset,
       lion: lion,
-      cvresults: $filter('orderBy')($scope.cvresults,$scope.predicate,$scope.reverse),
+      cvresults: $filter('orderBy')($scope.cvresults, $scope.predicate, $scope.reverse),
       reverse: $scope.reverse,
       predicate: $scope.predicate
     };
@@ -194,6 +215,96 @@ angular.module('linc.cvresults.controller', [])
   $scope.order = function(predicate) {
     $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
     $scope.predicate = predicate;
+    $timeout(function () {
+      $scope.$apply(function () {
+        $scope.ResizeTable();
+      });
+    }, 0);
   };
 
+
+
+  $scope.GoTo = function (data){
+    //ui-sref="lion({id: lion.id})"
+    var scopeGo = $scope.$new();
+    scopeGo.title = (data.type == 'lion') ? 'Lion Info' : 'Image Set Info';
+    scopeGo.message = 'Would you like to open the ' + ((data.type == 'lion') ? 'lion' : 'image set') + ' info page?';
+    var modalGoTo = $uibModal.open({
+        templateUrl: 'Dialog.Delete.tpl.html',
+        scope: scopeGo
+    });
+
+    modalGoTo.result.then(function (result) {
+      var params = data.params ? data.params : {};
+      var url = $state.href(data.type, params)
+      var win_params = win_params ? win_params : { name: "_blank", specs: "location=0, scrollbars=yes, resizable=yes, top=100, left=100, width=800" };
+      window.open(url, win_params.name, win_params.specs);
+    }, function () {
+    });
+    scopeGo.ok = function (){
+      modalGoTo.close();
+    }
+    scopeGo.cancel = function(){
+      modalGoTo.dismiss();
+    }
+  };
+
+  var old_selected_id = null;
+  $scope.show_lion_image = false;
+  $scope.SwitchImage = function(lion, val){
+    if (!val){
+      lion.show_image=false;
+    }
+    else{
+      var show = lion.show_image;
+
+      if (old_selected_id){
+        var old_lion = _.find($scope.orderd_lions, {'id': old_selected_id});
+        if (old_lion)
+          old_lion['show_image'] = false;
+      }
+      lion.show_image = !show;
+      old_selected_id = lion.id;
+    }
+    $scope.show_lion_image = _.some($scope.orderd_lions, { show_image: true });
+  };
+
+  $scope.ResizeTable = function(){
+    var $table = $('table.table-cv-results'),
+    $bodyCells = $table.find('tbody tr:first').children(),
+    $headerCells = $table.find('thead tr:first').children();
+
+    var colWidth = [];
+    $table.find('tbody tr').each(function(j,tr){
+      colWidth = $(tr).find('td').map(function(i, v) {
+        return Math.max(v.offsetWidth, _.isNaN(colWidth[i]) ? 0 : colWidth[i]);
+      }).get();
+    });
+
+    colWidth = $headerCells.map(function(i, v) {
+      return Math.max(v.offsetWidth, colWidth[i]);
+    }).get();
+
+    $headerCells.each(function(i, v) {
+      var min = Math.max(colWidth[i],30);
+      if(min > 200)
+        $(v).css({'width': '200px'});
+      else
+        $(v).css({'min-width': min + 'px'});
+
+    });
+
+    $table.find('tbody tr').each(function(j,tr){
+      $(tr).find('td').each(function(i, v) {
+        var min = Math.max(colWidth[i], 30);
+        if(min > 200)
+          $(v).css({'width': '200px'});
+        else
+          $(v).css({'min-width': min + 'px'});
+      });
+    });
+  };
+  $(window).resize(function() {
+    $scope.ResizeTable();
+  }).resize();
 }]);

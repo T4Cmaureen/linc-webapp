@@ -54,7 +54,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       <div class="meta-info">
         <h4 class="h4inline">Lion Name:</h4>
         <h4 class="h4data">
-          <a ng-click="(imageset.lion_id==null) || goto_lion(imageset.lion_id);">{{!imageset.name || '-'}}</a>
+          <a ng-click="(imageset.lion_id==null) || GoTo({type: 'lion', 'params': {id: imageset.lion_id}});">{{!imageset.name || '-'}}</a>
         </h4>
       </div>
       <div class="meta-info">
@@ -91,11 +91,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       </div>
       <div class="meta-info">
         <h4 class="h4inline">Date Stamp:</h4>
-        <h4 class="h4data">{{!imageset.date_stamp}}</h4>
+        <h4 class="h4data">{{!imageset.date_stamp | date:'mediumDate'}}</h4>
       </div>
       <div class="meta-info">
         <h4 class="h4inline">Date of Birth:</h4>
-        <h4 class="h4data">{{!imageset.date_of_birth}}</h4>
+        <h4 class="h4data">{{!imageset.date_of_birth | date:'mediumDate'}}</h4>
       </div>
       <div class="meta-info">
         <h4 class="h4inline">Age:</h4>
@@ -166,12 +166,12 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         debug="debug" modal-is-open="is_modal_open">
       </metadata>
       <div ng-if="imageset && permissions.canShow">
-        <cvresults use-ctrl="CVResultsCtrl" use-template-url="cvresults.html" form-size="lg" imageset="imageset"
+        <cvresults class="cvresults" use-ctrl="CVResultsCtrl" use-template-url="cvresults.html" form-size="lg" imageset="imageset"
           cvresults-id="imageset.cvresults" cvrequest-id="imageset.cvrequest" ng-if="imageset.action == 'cvresults'"
           cv-result-erased="CVResultsErased(imagesetId)" imageset-updated="UpdateImageset(data, imagesetId)"
           debug="debug" modal-is-open="is_modal_open">
         </cvresults>
-        <cvrequest use-ctrl="CVRequesCtrl" use-template-url="cvrequest.html" form-size="lg" imageset="imageset"
+        <cvrequest class="cvrequest" use-ctrl="CVRequesCtrl" use-template-url="cvrequest.html" form-size="lg" imageset="imageset"
           ng-if="imageset.action == 'cvrequest'" cv-request-success="CVReqSuccess(imageset_Id, request_Obj)" 
           debug="debug" modal-is-open="is_modal_open">
         </cvrequest>

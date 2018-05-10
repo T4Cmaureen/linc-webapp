@@ -28,7 +28,8 @@ angular.module('linc.view.imagesets.controller', [])
   $ModalPage, NgMap, LincDataFactory, TAG_LABELS, TOOL_TITLE) {
 
 	$scope.user = AuthService.user;
-	
+	$scope.$parent.isBatchMode = false;
+
 	$scope.ChangeStatus = $rootScope.ChangeStatus;
 
 	$scope.is_modal_open = false;
@@ -96,25 +97,25 @@ angular.module('linc.view.imagesets.controller', [])
 		return label;
 	}
 
-	var set_all_imagesets = function(sets){
+	var get_permissions = function (user,imageset){
+		var permissions = {};
+		var imageset_ismine  = user.organization_id == imageset.organization_id;
+		var lion_ismy = user.organization_id == imageset.lions_org_id;
+		var lion_exist= imageset.lion_id!=undefined ;
 
-		var get_permissions = function (user,imageset){
-			var permissions = {};
-			var imageset_ismine  = user.organization_id == imageset.organization_id;
-			var lion_ismy = user.organization_id == imageset.lions_org_id;
-			var lion_exist= imageset.lion_id!=undefined ;
+		permissions['canShow'] = (user.admin || imageset_ismine);
+		permissions['canLocate'] = (!imageset.geopos_private || user.admin || imageset_ismine);
+		permissions['ismine'] = (user.admin || imageset_ismine);
 
-			permissions['canShow'] = (user.admin || imageset_ismine);
-			permissions['canLocate'] = (!imageset.geopos_private || user.admin || imageset_ismine);
-			permissions['ismine'] = (user.admin || imageset_ismine);
+		permissions['canDisassociate'] = (!user.admin && (imageset_ismine && !imageset.is_primary && lion_exist && imageset.is_verified));
+		permissions['NeedVerify'] = ((user.admin || (!imageset_ismine && lion_ismy)) && !imageset.is_primary && lion_exist);
 
-			permissions['canDisassociate'] = (!user.admin && (imageset_ismine && !imageset.is_primary && lion_exist && imageset.is_verified));
-			permissions['NeedVerify'] = ((user.admin || (!imageset_ismine && lion_ismy)) && !imageset.is_primary && lion_exist);
+		permissions['CanSetPrimary'] = (!imageset.is_primary && lion_exist && imageset.is_verified) &&
+																	 (user.admin || imageset_ismine && imageset.lions_org_id==user.organization_id);
+		return permissions;
+	}
 
-			permissions['CanSetPrimary'] = (!imageset.is_primary && lion_exist && imageset.is_verified) &&
-																		 (user.admin || imageset_ismine && imageset.lions_org_id==user.organization_id);
-			return permissions;
-		}
+	var set_all_imagesets = function(sets, selected){
 
 		$scope.imagesets = _.map(sets, function(element, index) {
 
@@ -154,7 +155,7 @@ angular.module('linc.view.imagesets.controller', [])
 			elem['tooltip'] = {features: {title: tag_features, checked: true}};
 			elem['features'] = (tag_features.length > 0) ? true : false;
 			elem['tag_features'] = tag_features;
-			elem['selected'] = false;
+			elem['selected'] = (selected && _.has(element, 'selected') ? element['selected'] : false);
 
 			elem['location'] = (!element['latitude'] || !element['longitude']) ? null : new google.maps.LatLng(element['latitude'], element['longitude']);
 			//elem['location'] = new google.maps.LatLng(element['latitude'], element['longitude']);
@@ -190,7 +191,7 @@ angular.module('linc.view.imagesets.controller', [])
 
 	$scope.change = function(type){
 		imagesets_options.filters[type] = $scope.filters[type];
-		$scope.setPage(0);
+		LincDataFactory.set_imagesets(imagesets_options);
 	}
 	// Click collapse
 	$scope.collapse = function(type){
@@ -205,94 +206,13 @@ angular.module('linc.view.imagesets.controller', [])
 		LincDataFactory.set_imagesets(imagesets_options);
 	};
 
-	$scope.PerPages = [
-		{'index': 0, 'label' : '10 Image Sets', 'value': 10, 'disabled': false},
-		{'index': 1, 'label' : '20 Image Sets', 'value': 20, 'disabled': $scope.imagesets.length < 10 ?  true : false},
-		{'index': 2, 'label' : '30 Image Sets', 'value': 30, 'disabled': $scope.imagesets.length < 20 ?  true : false},
-		{'index': 3, 'label' : '60 Image Sets', 'value': 60, 'disabled': $scope.imagesets.length < 30 ?  true : false},
-		{'index': 4, 'label' : '100 Image Sets', 'value' : 100, 'disabled': $scope.imagesets.length < 60 ?  true : false},
-		{'index': 5, 'label' : 'All Image Sets', 'value' : $scope.imagesets.length, 'disabled': false}
-	];
-
-	$scope.pages = imagesets_options.pages;
-	$scope.changeItensPerPage = function(){
-		$scope.setPage(0);
-		var min_val = ($scope.filtered_image_sets==undefined) ? $scope.imagesets.length : $scope.filtered_image_sets.length;
-		switch ($scope.pages.PerPage){
-			case 0:
-				$scope.itemsPerPage = Math.min(10, min_val);
-			 imagesets_options.pages.PerPage = $scope.PerPages[0].index;
-			break;
-			case 1:
-				$scope.itemsPerPage = Math.min(20, min_val);
-			 imagesets_options.pages.PerPage = $scope.PerPages[1].index;
-			break;
-			case 2:
-				$scope.itemsPerPage = Math.min(30, min_val);
-				imagesets_options.pages.PerPage = $scope.PerPages[2].index;
-			break;
-			case 3:
-				$scope.itemsPerPage = Math.min(60, min_val);
-				imagesets_options.pages.PerPage = $scope.PerPages[3].index;
-			break;
-			case 4:
-				$scope.itemsPerPage = Math.min(100, min_val);
-				imagesets_options.pages.PerPage = $scope.PerPages[4].index;
-			default:
-				$scope.itemsPerPage = $scope.PerPages[5].value;
-				imagesets_options.pages.PerPage = $scope.PerPages[5].index;
-		};
-		LincDataFactory.set_imagesets(imagesets_options);
-	};
-
-	$scope.setPage = function(n) {
-		imagesets_options.pages.currentPage = $scope.pages.currentPage = n;
-	};
-	$scope.prevPage = function() {
-		if ($scope.pages.currentPage > 0)
-			$scope.setPage($scope.pages.currentPage - 1);
-	};
-	$scope.nextPage = function() {
-		if ($scope.pages.currentPage < $scope.pageCount()-1)
-			$scope.setPage($scope.pages.currentPage + 1);
-	};
-	$scope.firstPage = function() {
-		$scope.setPage(0)
-	};
-	$scope.lastPage = function() {
-		if ($scope.pages.currentPage < $scope.pageCount()-1)
-			$scope.setPage($scope.pageCount()-1);
-	};
-	$scope.prevPageDisabled = function() {
-		return $scope.pages.currentPage === 0 ? "disabled" : "";
-	};
-	$scope.nextPageDisabled = function() {
-		return ($scope.pages.currentPage === $scope.pageCount()-1 || !$scope.pageCount())? "disabled" : "";
-	};
-	$scope.pageCount = function() {
-		return Math.ceil($scope.filtered_image_sets.length/$scope.itemsPerPage);
-	};
-	$scope.range = function() {
-		var rangeSize = Math.min(5, $scope.pageCount());
-		var ret = [];
-		var start = $scope.pages.currentPage -3;
-		if ( start < 0 ) start = 0;
-		if ( start > $scope.pageCount()-(rangeSize-3) ) {
-			start = $scope.pageCount()-rangeSize+1;
-		}
-		var max = Math.min(start+rangeSize,$scope.pageCount());
-		for (var i=start; i<max; i++) {
-			ret.push(i);
-		}
-		return ret;
-	};
-
-	$scope.viewer_label = function(){
-		var label = "0 image sets found";
-		if($scope.filtered_image_sets != undefined && $scope.filtered_image_sets.length){
-			label = ($scope.filtered_image_sets.length).toString() + " image sets found - " +
-							($scope.pages.currentPage*$scope.itemsPerPage+1).toString() + " to " +
-							(Math.min((($scope.pages.currentPage+1)*$scope.itemsPerPage),$scope.filtered_image_sets.length)).toString();
+	$scope.viewer_selected = function(){
+		var label = "";
+		if($scope.Selecteds.length == $scope.imagesets.length)
+			label = "All " + $scope.Selecteds.length + " lions are selected";
+		else if($scope.Selecteds.length){
+			label = ($scope.Selecteds.length).toString();
+			label += ($scope.Selecteds.length == 1 ) ? ' is selected' : ' are selected';
 		}
 		return label;
 	}
@@ -513,15 +433,8 @@ angular.module('linc.view.imagesets.controller', [])
 		$scope.isCollapsed.Location = $scope.pfilters.hasOwnProperty('Location') ? false : 
 			(($scope.filters.Location.latitude && $scope.filters.Location.longitude && $scope.filters.Location.radius) ? false : true);
 		$scope.isCollapsed.Boundarys = $scope.pfilters.hasOwnProperty('Boundarys') ? false : ($scope.filters.Boundarys.length ? false : true);
-
-		$scope.changeItensPerPage();
 	}
 	else{
-		// Pagination scopes
-		var cur_per_page = imagesets_options.pages.currentPage;
-		$scope.changeItensPerPage();
-		$scope.pages.currentPage = cur_per_page;
-
 		$scope.isCollapsed.NameOrId = $scope.filters.NameOrId ? false : true;
 		$scope.isCollapsed.Organization = _.every($scope.filters.Organizations, {checked: true});
 		$scope.isCollapsed.Age = (($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
@@ -546,34 +459,23 @@ angular.module('linc.view.imagesets.controller', [])
 	// Batch Mode
 	$scope.canNotDelete = false; // Primary Imagesets can only be deleted in the lion's profile
 	$scope.is_modal_open = false;
-	$scope.message_select_all = { show: false, message: {selected: '', select: ''} };
-	$scope.selection = {
-		paginated:{ allSel: false, allUnSel: false },
-		allLions:{ allSel: false, allUnSel: false }
-	};
+	$scope.selection = { allSel: false, allUnSel: false };
 
 	$scope.$on('BatchModeUpdated', function(event, args) {
-		$scope.message_select_all.show = args.isBatchMode;
 		if(!$scope.isBatchMode){
-			$scope.check_all($scope.imagesets, false, 'paginated');
+			$scope.check_all(false);
 		}
+		$timeout(function () {
+			$scope.$apply(function () {
+				$scope.ResizeTable();
+			});
+		}, 0);
 	});
 
 	$scope.Selecteds = [];
 	// Select All Imagesets
-	$scope.check_all = function (collections, val, type){
-		if (type =='all'){
-			$scope.loading = true;
-			$timeout(function () {
-				$scope.$apply(function () {
-					$scope.pages.PerPage = $scope.PerPages.length;
-					$scope.changeItensPerPage();
-					$scope.loading = false;
-					$scope.message_select_all.show = false;
-				});
-			}, 0);
-		}
-		_.forEach(collections, function(imageset) {
+	$scope.check_all = function (val){
+		_.forEach($scope.imagesets, function(imageset) {
 			imageset.selected = val;
 			if(imageset.selected){
 				if(!_.some($scope.Selecteds, imageset))
@@ -583,11 +485,6 @@ angular.module('linc.view.imagesets.controller', [])
 		if(!val)
 			$scope.Selecteds = [];
 
-		if (type == 'paginated' && val && collections.length < $scope.mine_imagesets.length){
-			$scope.message_select_all.message.selected = 'All ' + collections.length.toString() + ' imagesets on this page are selected.'
-			$scope.message_select_all.message.select = 'Select all ' + $scope.mine_imagesets.length.toString()  + ' imagesets from the database.'
-			$scope.message_select_all.show = true;
-		}
 		check_selects();
 	};
 
@@ -595,12 +492,12 @@ angular.module('linc.view.imagesets.controller', [])
 	$scope.Select_Imageset = function ($event, imageset){
 		var shiftKey = $event.shiftKey;
 		if(shiftKey && lastSelId>=0){
-			var index0 = _.findIndex($scope.paginated_image_sets, {'id': lastSelId});
-			var index1 = _.findIndex($scope.paginated_image_sets, {'id': imageset.id});
+			var index0 = _.findIndex($scope.ordered_image_sets, {'id': lastSelId});
+			var index1 = _.findIndex($scope.ordered_image_sets, {'id': imageset.id});
 			var first = Math.min(index0, index1);
 			var second = Math.max(index0, index1);
-			for(var i = first; i < second; i++){
-				var img = $scope.paginated_image_sets[i];
+			for(var i = first; i <= second; i++){
+				var img = $scope.ordered_image_sets[i];
 				img.selected = imageset.selected;
 				if(imageset.selected){
 					if(!_.some($scope.Selecteds, img))
@@ -623,18 +520,16 @@ angular.module('linc.view.imagesets.controller', [])
 	};
 	// Check to Set Checkbox
 	var check_selects = function (){
-		$scope.selection.paginated.allSel = _.every($scope.paginated_image_sets, {selected: true});
-		$scope.selection.paginated.allUnSel = _.every($scope.paginated_image_sets, {selected: false}); 
-		$scope.canNotDelete = (_.filter($scope.paginated_image_sets, {'selected': true, 'is_primary' : true})).length > 0;
+		$scope.selection.allSel = _.every($scope.ordered_image_sets, {selected: true});
+		$scope.selection.allUnSel = _.every($scope.ordered_image_sets, {selected: false});
+		$scope.canNotDelete = (_.filter($scope.ordered_image_sets, {'selected': true, 'is_primary' : true})).length > 0;
 	};
 	// ACTION AFTER BATCH UPDATE
 	$scope.BatchUpdateImageset = function (data){
-		console.log(data);
-		console.log($scope.Selecteds);
 		_.forEach($scope.Selecteds, function(sel){
 			_.merge(sel,data);
 		});
-		set_all_imagesets($scope.imagesets);
+		set_all_imagesets($scope.imagesets, true);
 	}
 	// Batch Delete
 	$scope.BatchDelete = function(type){
@@ -655,16 +550,18 @@ angular.module('linc.view.imagesets.controller', [])
 		}, function (error) {
 		});
 	};
-	// Batch Delete
+	// Batch Export
+	$scope.exporting = false;
 	$scope.BatchExport = function(type){
 		var now = new Date();
 		var date = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
 		var ids = _.map($scope.Selecteds, 'id');
-
+		$scope.exporting = true;
 		LincServices.DataExport({'data': {'imagesets': ids}}).then(function(res_data){
 			var blob = res_data.blob;
 			var fileName = 'Data-Imagesets-'+ date + '-' + (res_data.fileName || "").substring(res_data.fileName.lastIndexOf('/')+1) || 'images.csv';
 			saveAs(blob, fileName);
+			$scope.exporting = false;
 		},function(error){
 			if($scope.debug || (error.status != 401 && error.status != 403)){
 				NotificationFactory.error({
@@ -674,6 +571,7 @@ angular.module('linc.view.imagesets.controller', [])
 					duration: 5000
 				});
 			}
+			$scope.exporting = false;
 		});
 	};
 	// Label to Tag Location
@@ -772,4 +670,30 @@ angular.module('linc.view.imagesets.controller', [])
 			modalInstance.dismiss();
 		}
 	};
+
+	$scope.ResizeTable = function(){
+		var $table = $('table.table-view'),
+		$bodyCells = $table.find('tbody tr:first').children(),
+		$headerCells = $table.find('thead tr:first').children();
+
+		var col0Width = $bodyCells.map(function(i, v) {
+			return v.offsetWidth;
+		}).get();
+		var colWidth = $headerCells.map(function(i, v) {
+			return Math.max(v.offsetWidth, col0Width[i]);
+		}).get();
+
+		var maxcols = $table.find('thead tr').children().length;
+		$bodyCells.each(function(i, v) {
+			var min = Math.max(colWidth[i],30);
+			$(v).css({'min-width': min + 'px'});
+		});
+		$headerCells.each(function(i, v) {
+			var min = Math.max(colWidth[i],30);
+			$(v).css({'min-width': min + 'px'});
+		});
+	};
+	$(window).resize(function() {
+		$scope.ResizeTable();
+	}).resize();
 }]);

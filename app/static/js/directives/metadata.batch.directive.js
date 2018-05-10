@@ -25,8 +25,8 @@ angular.module('linc.metadata.batch.directive', [])
     transclude: true,
     replace: true,
     restrict: 'EA',
-    template: '<button type="button" class="btn btn-primary btn-edit" '+
-            'ng-disabled="disableBtn" ng-click="show()">Edit</button>',
+    template: '<button type="button" class="btn btn-primary btn-edit" ng-disabled="disableBtn" ng-click="show()">Edit'+
+              '<span ng-if="dataloading" class="text-center"><img src="/static/images/loading.gif"/></span></button>',
     scope: {
       useTemplateUrl: '@',
       useCtrl: '@',
@@ -43,6 +43,7 @@ angular.module('linc.metadata.batch.directive', [])
         scope.modalIsOpen = true;
         var modalScope = scope.$new();
         modalScope.debug = scope.debug;
+        scope.dataloading = true;
         var modalInstance = $uibModal.open({
           animation: true,
           backdrop  : 'static',
@@ -68,10 +69,12 @@ angular.module('linc.metadata.batch.directive', [])
         });
         modalInstance.result.then(function (result) {
           scope.modalIsOpen = false;
+          scope.dataloading = false;
           scope.updateAction({data: result.data});
           console.log('Modal ok');
         }, function () {
           scope.modalIsOpen = false;
+          scope.dataloading = false;
           console.log('Modal dismissed at: ' + new Date());
         });
       }

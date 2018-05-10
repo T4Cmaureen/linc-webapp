@@ -25,7 +25,7 @@ angular.module('linc.image.gallery.controller', [])
   LincServices, NotificationFactory, optionsSet, gallery) {
 
 	// Title
-	$scope.title = 'Image Gallery ' + ' <h4 style="display:inline;">(Imageset - ' + optionsSet.id + ')</h4>';
+	$scope.title = 'Image Gallery ' + ' <h4>(Imageset - ' + optionsSet.id + ')</h4>';
 
 	// Order
 	$scope.ListOfOrderBy = [

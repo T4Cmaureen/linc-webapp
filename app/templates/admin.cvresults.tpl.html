@@ -110,8 +110,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         <td class="text-center">
           <div class="div-width-limited">{{!cvresult.match_probability}}</div>
         </td>
-        <td class="text-center">{{!cvresult.created_at}}</td>
-        <td class="text-center">{{!cvresult.updated_at}}</td>
+        <td class="text-center">{{!cvresult.created_at | date:'short'}}</td>
+        <td class="text-center">{{!cvresult.updated_at | date:'short'}}</td>
       </tr>
     </tbody>
   </table>

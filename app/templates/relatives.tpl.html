@@ -68,10 +68,10 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 						<tr class="link" ng-click="SetActiveLion(lion)" ng-repeat="(key, lion) in filtered_lions = 
 							(lions_list | nameid_filter: filters.NameOrId: 'primary_image_set_id' | organization_filter: filters.Organizations | 
 							gender_filter: filters.Genders | age_filter: filters.Ages) | orderBy : orderby.predicate : orderby.reverse">
+							<td class="text-center" ng-show="!lion.show_image">{{!lion.id}}</td>
 							<td class="text-center lion-image" ng-show="lion.show_image" ng-click="SwitchImage(lion, false)">
 								<img ng-src="{{!lion.image}}">
 							</td>
-							<td class="text-center" ng-show="!lion.show_image">{{!lion.id}}</td>
 							<td class="text-center" ng-show="!lion.show_image" ng-click="SwitchImage(lion, true)">
 								<img ng-src="{{!lion.thumbnail}}" width="40" height="40">
 							</td>

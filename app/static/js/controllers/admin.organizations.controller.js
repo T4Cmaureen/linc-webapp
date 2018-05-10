@@ -50,7 +50,7 @@ angular.module('linc.admin.organizations.controller', [])
       var index1 = _.findIndex($scope.ordered_organizations, {'id': organization.id});
       var first = Math.min(index0, index1);
       var second = Math.max(index0, index1);
-      for(var i = first; i < second; i++){
+      for(var i = first; i <= second; i++){
         var org = $scope.ordered_organizations[i];
         org.selected = organization.selected;
         if(organization.selected){

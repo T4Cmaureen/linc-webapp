@@ -25,9 +25,9 @@ angular.module('linc.location.on.map.directive', [])
         transclude: true,
         replace: true,
         restrict: 'EA',
-        template: '<button style="padding: 5px 2px 0px 2px; background-color: #eee; color: #d95210;" class="btn btn-secondary" type="button"'+ 
+        template: '<button class="btn btn-secondary" type="button"'+
                     'uib-tooltip="Select Location on Map" tooltip-is-open="tooltip.open" ng-click="show()">'+
-                      '<i class="icon icon-location-pin" style="font-size: 18px;"></i>'+
+                      '<i class="icon icon-location-pin"></i>'+
                   '</button>',
         scope: {
           useTemplateUrl: '@',

@@ -20,10 +20,11 @@
 
 angular.module('linc.cvrequest.controller', [])
 
-.controller('CVRequesCtrl', ['$scope', '$state', '$timeout', '$bsTooltip', '$uibModalInstance', 'LincServices', 'LincDataFactory',
-  'NotificationFactory', 'imageset', 'lions', 'cvrequests_options', 'AuthService', 'TAG_LABELS', 'TOOL_TITLE', 
-  function ($scope, $state, $timeout, $bsTooltip, $uibModalInstance, LincServices, LincDataFactory, NotificationFactory,
-  imageset, lions, cvrequests_options, AuthService, TAG_LABELS, TOOL_TITLE) {
+.controller('CVRequesCtrl', ['$scope', '$state', '$timeout', '$bsTooltip', '$uibModal', '$uibModalInstance',
+  'LincServices', 'LincDataFactory', 'NotificationFactory', 'imageset', 'lions', 'cvrequests_options',
+  'AuthService', 'TAG_LABELS', 'TOOL_TITLE', function ($scope, $state, $timeout, $bsTooltip, $uibModal,
+  $uibModalInstance, LincServices, LincDataFactory, NotificationFactory, imageset, lions, cvrequests_options,
+  AuthService, TAG_LABELS, TOOL_TITLE) {
 
   $scope.title = 'CV Search';
   $scope.content = 'Search';
@@ -111,6 +112,31 @@ angular.module('linc.cvrequest.controller', [])
     LincDataFactory.set_cvrequests(cvrequests_options);
   };
 
+  $scope.GoTo = function (data){
+    //ui-sref="lion({id: lion.id})"
+    var scopeGo = $scope.$new();
+    scopeGo.title = (data.type == 'lion') ? 'Lion Info' : 'Image Set Info';
+    scopeGo.message = 'Would you like to open the ' + ((data.type == 'lion') ? 'lion' : 'image set') + ' info page?';
+    var modalGoTo = $uibModal.open({
+        templateUrl: 'Dialog.Delete.tpl.html',
+        scope: scopeGo
+    });
+
+    modalGoTo.result.then(function (result) {
+      var params = data.params ? data.params : {};
+      var url = $state.href(data.type, params)
+      var win_params = win_params ? win_params : { name: "_blank", specs: "location=0, scrollbars=yes, resizable=yes, top=100, left=100, width=800" };
+      window.open(url, win_params.name, win_params.specs);
+    }, function () {
+    });
+    scopeGo.ok = function (){
+      modalGoTo.close();
+    }
+    scopeGo.cancel = function(){
+      modalGoTo.dismiss();
+    }
+  };
+
   $scope.isCollapsed.NameOrId = $scope.filters.NameOrId ? false : true;
   $scope.isCollapsed.Organization = _.every($scope.filters.Organizations, {checked: true});
   $scope.isCollapsed.Age = (($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
@@ -119,9 +145,9 @@ angular.module('linc.cvrequest.controller', [])
   $scope.isCollapsed.Location = ($scope.filters.Location.latitude && $scope.filters.Location.longitude && $scope.filters.Location.radius) ? false : true;
   
   $scope.viewer_label = function(){
-    var label = "0 lions found";
+    var label = "0 lion filtered";
     if($scope.filtered_lions != undefined && $scope.filtered_lions.length){
-      label = ($scope.filtered_lions.length).toString() + " lions found";
+      label = ($scope.filtered_lions.length).toString() + " lions filtered";
     }
     return label;
   };
@@ -132,7 +158,7 @@ angular.module('linc.cvrequest.controller', [])
 
   $scope.loading = false;
   $scope.requestCV = function () {
-    var lions_id = _.map($scope.filtered_lions, 'id');
+    var lions_id = _.map($scope.Selecteds, 'id');
     var data = {"lions": lions_id};
     $scope.loading = true;
     LincServices.RequestCV(imageset.id, data, function(result){
@@ -146,5 +172,90 @@ angular.module('linc.cvrequest.controller', [])
       $scope.loading = false;
     });
   };
+
+  $scope.viewer_selected = function(){
+    var label = "";
+    if($scope.Selecteds.length == $scope.lions.length)
+      label = "All " + $scope.Selecteds.length + " lions are selected";
+    else if($scope.Selecteds.length){
+      label = ($scope.Selecteds.length).toString();
+      label += ($scope.Selecteds.length == 1 ) ? ' lion is selected' : ' lions are selected';
+    }
+    return label;
+  };
+  $scope.selection = { allSel: false, allUnSel: false };
+  $scope.Selecteds = [];
+  $scope.check_all = function (val){
+    _.forEach($scope.lions, function(lion) {
+      lion.selected = val;
+      if(lion.selected){
+        if(!_.some($scope.Selecteds, lion))
+          $scope.Selecteds.push(lion);
+      }
+    });
+    if(!val)
+      $scope.Selecteds = [];
+
+    check_selects();
+  };
+  var lastSelId = -1;
+  $scope.Select_Lion = function ($event, lion){
+    var shiftKey = $event.shiftKey;
+    if(shiftKey && lastSelId>=0){
+      var index0 = _.findIndex($scope.filtered_lions, {'id': lastSelId});
+      var index1 = _.findIndex($scope.filtered_lions, {'id': lion.id});
+      var first = Math.min(index0, index1);
+      var second = Math.max(index0, index1);
+      for(var i = first; i <= second; i++){
+        var animal = $scope.filtered_lions[i];
+        animal.selected = lion.selected;
+        if(lion.selected){
+          if(!_.some($scope.Selecteds, animal))
+            $scope.Selecteds.push(animal);
+        }
+        else
+          $scope.Selecteds = _.without($scope.Selecteds, animal);
+      }
+    }
+    else{
+      lastSelId = lion.id;
+      if(lion.selected){
+        if(!_.some($scope.Selecteds, lion))
+          $scope.Selecteds.push(lion);
+      }
+      else
+        $scope.Selecteds = _.without($scope.Selecteds, lion);
+    }
+    check_selects();
+  };
+  // Check to Set Checkbox
+  var check_selects = function (){
+    $scope.selection.allSel = _.every($scope.filtered_lions, { selected: true });
+    $scope.selection.allUnSel = _.every($scope.filtered_lions, { selected: false });
+  };
+  $scope.ResizeTable = function(){
+    var $table = $('table.table-cv-requests'),
+    $bodyCells = $table.find('tbody tr:first').children(),
+    $headerCells = $table.find('thead tr:first').children();
+
+    var col0Width = $bodyCells.map(function(i, v) {
+      return v.offsetWidth;
+    }).get();
+    var colWidth = $headerCells.map(function(i, v) {
+      return Math.max(v.offsetWidth, col0Width[i]);
+    }).get();
+
+    $bodyCells.each(function(i, v) {
+      var min = Math.max(colWidth[i],30);
+      $(v).css({'min-width': min + 'px'});
+    });
+    $headerCells.each(function(i, v) {
+      var min = Math.max(colWidth[i],30);
+      $(v).css({'min-width': min + 'px'});
+    });
+  };
+  $(window).resize(function() {
+    $scope.ResizeTable();
+  }).resize();
   
 }]);
