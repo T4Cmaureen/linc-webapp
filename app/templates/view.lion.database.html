@@ -31,7 +31,19 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       </span>
     </a> View Lion Database
   </h1>
-
+  <div class="columns-to-show pull-right form-group group-select">
+    <label for="column_view">Columns to Show</label>
+    <button type="button" id="column_view" class="btn btn-default btn-sm btn-select" placeholder="Select Columns"
+            ng-model="columns" data-html="1" data-multiple="1" max-length=1
+            all-none-buttons="true" all-Text="All Columns" all-button="true"
+            none-button="false" none-Text="None"
+            unknown-button="false"
+            bs-options="column.value as column.label for column in columns_to_view"
+            bs-on-select="ColumnsSelect"
+            placement="bottom-right" bs-select>
+      Action <span class="caret"></span>
+    </button>
+  </div>
   <div class="row main-row">
     <div class="col-sm-2 line-right">
 
@@ -209,7 +221,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               </div>
             </form>
           </div>
-          
+
         </div>
 
         <div role="tab">
@@ -305,57 +317,62 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 <span class="sortorder" ng-show="orderby.predicate === 'primary_image_set_id'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center" ng-show="ShowColumn('age')">
                 <a href="" ng-click="order('age')" ng-class="{'order_class': orderby.predicate === 'age'}">Age</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'age'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center" ng-show="ShowColumn('date_of_birth')">
                 <a href="" ng-click="order('date_of_birth')" ng-class="{'order_class': predicate === 'date_of_birth'}">Date of Birth</a>
                 <span class="sortorder" ng-show="predicate === 'date_of_birth'" ng-class="{reverse:reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center" ng-show="ShowColumn('dead')">
                 <a href="" ng-click="order('dead')" ng-class="{'order_class': orderby.predicate === 'dead'}">Dead</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'dead'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center" ng-show="ShowColumn('organization')">
                 <a href="" ng-click="order('organization')" ng-class="{'order_class': orderby.predicate === 'organization'}">Organization</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'organization'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center" ng-show="ShowColumn('gender')">
                 <a href="" ng-click="order('gender')" ng-class="{'order_class': orderby.predicate === 'gender'}">Gender</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'gender'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
-              <th class="text-center"><a ng-click="order('latitude')" ng-class="{'order_class': orderby.predicate === 'latitude'}">Latitude</a>
+              <th class="text-center" ng-show="ShowColumn('latitude')">
+                <a ng-click="order('latitude')" ng-class="{'order_class': orderby.predicate === 'latitude'}">Latitude</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'latitude'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
-              <th class="text-center"><a ng-click="order('longitude')" ng-class="{'order_class': orderby.predicate === 'longitude'}">Longitude</a>
+              <th class="text-center" ng-show="ShowColumn('longitude')">
+                <a ng-click="order('longitude')" ng-class="{'order_class': orderby.predicate === 'longitude'}">Longitude</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'longitude'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
-              <th class="text-center"><a ng-click="order('tag_location')" ng-class="{'order_class': orderby.predicate === 'tag_location'}">Tag Location</a>
+              <th class="text-center" ng-show="ShowColumn('tag_location')">
+                <a ng-click="order('tag_location')" ng-class="{'order_class': orderby.predicate === 'tag_location'}">Tag Location</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'tag_location'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
-              <th class="text-center"><a ng-click="order('geopos_private')" ng-class="{'order_class': orderby.predicate === 'geopos_private'}">GPS Points<br>Private</a>
+              <th class="text-center" ng-show="ShowColumn('geopos_private')">
+                <a ng-click="order('geopos_private')" ng-class="{'order_class': orderby.predicate === 'geopos_private'}">GPS Points<br>Private</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'geopos_private'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center tag_features" ng-show="ShowColumn('tag_features')">
                 <a href="" ng-click="order('tag_features')" ng-class="{'order_class': orderby.predicate === 'tag_features'}">Tag Features</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'tag_features'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
-              <th class="text-center"><a ng-click="order('date_stamp')" ng-class="{'order_class': orderby.predicate === 'date_stamp'}">Time Stamp</a>
+              <th class="text-center" ng-show="ShowColumn('date_stamp')">
+                <a ng-click="order('date_stamp')" ng-class="{'order_class': orderby.predicate === 'date_stamp'}">Date Stamp</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'date_stamp'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center" ng-show="ShowColumn('is_verified')">
                 <a href="" ng-click="order('is_verified')" ng-class="{'order_class': orderby.predicate === 'is_verified'}">Verified</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'is_verified'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
@@ -384,42 +401,56 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 
               <td class="text-center"><a>{{!lion.name}}</a></td>
 
-              <td class="text-center"><a>{{!lion.primary_image_set_id}}</a></td>
-
-              <td ng-if="lion.age!=null" class="text-center"><a>{{!lion.age}} y/o</a></td>
-              <td ng-if="lion.age==null" class="text-center"></td>
-
-              <td ng-if="lion.age!=null" class="text-center"><a>{{!lion.date_of_birth | date:'mediumDate'}}</a></td>
-              <td ng-if="lion.age==null" class="text-center"></td>
-
-              <td class="text-center"><i ng-if="lion.dead" class="search-icon-dead"></i></td>
-
-              <td class="text-center"><a>{{!lion.organization}}</a></td>
-
-              <td class="text-center"><a>{{!lion.gender}}</a></td>
-
-              <td ng-if="lion.permissions.canLocate" class="text-center"><a>{{!lion.latitude | number:6}}</a></td>
-              <td ng-if="!lion.permissions.canLocate"></td>
-              <td ng-if="lion.permissions.canLocate" class="text-center"><a>{{!lion.longitude | number:6}}</a></td>
-              <td ng-if="!lion.permissions.canLocate"></td>
-
-              <td ng-if="lion.permissions.canLocate" class="text-center">
-                <a>{{!tag_location_label(lion.tag_location)}}</a>
-              </td>
-              <td ng-if="!lion.permissions.canLocate"></td>
-
               <td class="text-center">
+                <a>{{!lion.primary_image_set_id}}</a>
+              </td>
+
+              <td class="text-center" ng-show="ShowColumn('age')">
+                <a ng-if="lion.age!=null" >{{! lion.age }} y/o</a>
+              </td>
+
+              <td class="text-center" ng-show="ShowColumn('date_of_birth')">
+                <a ng-if="lion.date_of_birth!=null" >{{! lion.date_of_birth | date:'mediumDate' }}</a>
+              </td>
+
+              <td class="text-center" ng-show="ShowColumn('dead')">
+                <i ng-if="lion.dead" class="search-icon-dead"></i>
+              </td>
+
+              <td class="text-center" ng-show="ShowColumn('organization')">
+                <a>{{!lion.organization}}</a>
+              </td>
+
+              <td class="text-center" ng-show="ShowColumn('gender')">
+                <a>{{!lion.gender}}</a>
+              </td>
+
+              <td class="text-center" ng-show="ShowColumn('latitude')">
+                <a ng-if="lion.permissions.canLocate">{{!lion.latitude | number:6}}</a>
+              </td>
+
+              <td class="text-center" ng-show="ShowColumn('longitude')">
+                <a ng-if="lion.permissions.canLocate">{{!lion.longitude | number:6}}</a>
+              </td>
+
+              <td class="text-center" ng-show="ShowColumn('tag_location')">
+                <a ng-if="lion.permissions.canLocate">{{!tag_location_label(lion.tag_location)}}</a>
+              </td>
+
+              <td class="text-center" ng-show="ShowColumn('geopos_private')">
                 <i ng-if="lion.geopos_private" class="icon icon-check"></i>
                 <i ng-if="!lion.geopos_private" class="icon icon-cross"></i>
               </td>
 
-              <td class="text-center"><a>{{!lion.tag_features}}</a></td>
+              <td class="text-center tag_features" ng-show="ShowColumn('tag_features')">
+                <a>{{!lion.tag_features}}</a>
+              </td>
 
-              <td class="text-center">
+              <td class="text-center" ng-show="ShowColumn('date_stamp')">
                 <div class="div-date_stamp"><a>{{!lion.date_stamp | date:'mediumDate'}}</a><a></div>
               </td>
 
-              <td class="text-center">
+              <td class="text-center" ng-show="ShowColumn('is_verified')">
                 <i ng-if="lion.is_verified" class="icon icon-check"></i>
                 <i ng-if="!lion.is_verified" class="icon icon-cross" bs-tooltip="lion.tooltip.need_verify"></i>
               </td>

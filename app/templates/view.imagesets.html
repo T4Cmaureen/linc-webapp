@@ -31,7 +31,19 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       </span>
     </a> View Image Sets
   </h1>
-
+  <div class="columns-to-show pull-right form-group group-select">
+    <label for="column_view">Columns to Show</label>
+    <button type="button" id="column_view" class="btn btn-default btn-sm btn-select" placeholder="Select Columns"
+            ng-model="columns" data-html="1" data-multiple="1" max-length=1
+            all-none-buttons="true" all-Text="All Columns" all-button="true"
+            none-button="false" none-Text="None"
+            unknown-button="false"
+            bs-options="column.value as column.label for column in columns_to_view"
+            bs-on-select="ColumnsSelect"
+            placement="bottom-right" bs-select>
+      Action <span class="caret"></span>
+    </button>
+  </div>
   <div class="row main-row">
     <div class="col-sm-2 line-right">
 
@@ -326,62 +338,67 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 <span class="sortorder" ng-show="predicate === 'lion_id'" ng-class="{reverse:reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center"  ng-show="ShowColumn('age')">
                 <a href="" ng-click="order('age')" ng-class="{'order_class': predicate === 'age'}">Age</a>
                 <span class="sortorder" ng-show="predicate === 'age'" ng-class="{reverse:reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center" ng-show="ShowColumn('date_of_birth')">
                 <a href="" ng-click="order('date_of_birth')" ng-class="{'order_class': predicate === 'date_of_birth'}">Date of Birth</a>
                 <span class="sortorder" ng-show="predicate === 'date_of_birth'" ng-class="{reverse:reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center" ng-show="ShowColumn('dead')">
                 <a href="" ng-click="order('is_dead')" ng-class="{'order_class': predicate === 'is_dead'}">Dead</a>
                 <span class="sortorder" ng-show="predicate === 'is_dead'" ng-class="{reverse:reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center" ng-show="ShowColumn('organization')">
                 <a href="" ng-click="order('organization')" ng-class="{'order_class': predicate === 'organization'}">Organization</a>
                 <span class="sortorder" ng-show="predicate === 'organization'" ng-class="{reverse:reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center" ng-show="ShowColumn('gender')">
                 <a href="" ng-click="order('gender')" ng-class="{'order_class': predicate === 'gender'}">Gender</a>
                 <span class="sortorder" ng-show="predicate === 'gender'" ng-class="{reverse:reverse}"></span>
               </th>
 
-              <th class="text-center"><a ng-click="order('latitude')" ng-class="{'order_class': predicate === 'latitude'}">Latitude</a>
+              <th class="text-center" ng-show="ShowColumn('latitude')">
+                <a ng-click="order('latitude')" ng-class="{'order_class': predicate === 'latitude'}">Latitude</a>
                 <span class="sortorder" ng-show="predicate === 'latitude'" ng-class="{reverse:reverse}"></span>
               </th>
 
-              <th class="text-center"><a ng-click="order('longitude')" ng-class="{'order_class': predicate === 'longitude'}">Longitude</a>
+              <th class="text-center" ng-show="ShowColumn('longitude')">
+                <a ng-click="order('longitude')" ng-class="{'order_class': predicate === 'longitude'}">Longitude</a>
                 <span class="sortorder" ng-show="predicate === 'longitude'" ng-class="{reverse:reverse}"></span>
               </th>
 
-              <th class="text-center"><a ng-click="order('tag_location')" ng-class="{'order_class': orderby.predicate === 'tag_location'}">Tag Location</a>
+              <th class="text-center" ng-show="ShowColumn('tag_location')">
+                <a ng-click="order('tag_location')" ng-class="{'order_class': orderby.predicate === 'tag_location'}">Tag Location</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'tag_location'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
-              <th class="text-center"><a ng-click="order('geopos_private')" ng-class="{'order_class': predicate === 'geopos_private'}">GPS Points<br>Private</a>
+              <th class="text-center" ng-show="ShowColumn('geopos_private')">
+                <a ng-click="order('geopos_private')" ng-class="{'order_class': predicate === 'geopos_private'}">GPS Points<br>Private</a>
                 <span class="sortorder" ng-show="predicate === 'geopos_private'" ng-class="{reverse:reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center tag_features" ng-show="ShowColumn('tag_features')">
                 <a href="" ng-click="order('tag_features')" ng-class="{'order_class': predicate === 'tag_features'}">Tag Features</a>
                 <span class="sortorder" ng-show="predicate === 'tag_features'" ng-class="{reverse:reverse}"></span>
               </th>
 
-              <th class="text-center"><a ng-click="order('date_stamp')" ng-class="{'order_class': predicate === 'date_stamp'}">Time Stamp</a>
+              <th class="text-center" ng-show="ShowColumn('date_stamp')">
+                <a ng-click="order('date_stamp')" ng-class="{'order_class': predicate === 'date_stamp'}">Date Stamp</a>
                 <span class="sortorder" ng-show="predicate === 'date_stamp'" ng-class="{reverse:reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center" ng-show="ShowColumn('is_verified')">
                 <a href="" ng-click="order('is_verified')" ng-class="{'order_class': predicate === 'is_verified'}">Verified</a>
                 <span class="sortorder" ng-show="predicate === 'is_verified'" ng-class="{reverse:reverse}"></span>
               </th>
 
-              <th class="text-center">
+              <th class="text-center"  ng-show="ShowColumn('is_primary')">
                 <a href="" ng-click="order('is_primary')" ng-class="{'order_class': predicate === 'is_primary'}">Primary</a>
                 <span class="sortorder" ng-show="predicate === 'is_primary'" ng-class="{reverse:reverse}"></span>
               </th>
@@ -407,57 +424,73 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 <input type="checkbox" ng-model="imageset.selected" ng-click="Select_Imageset($event, imageset);$event.stopPropagation();">
               </td>
               
-              <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);"><a>{{!imageset.id}}</a></td>
+              <td class="text-center" ng-click="goto_imageset(imageset);">
+                <a>{{!imageset.id}}</a>
+              </td>
 
-              <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);" ng-right-click="!isBatchMode && show_photo(imageset.image)">
+              <td class="text-center" ng-click="goto_imageset(imageset);" ng-right-click="show_photo(imageset.image)">
                 <img ng-src="{{!imageset.thumbnail}}" width="40" height="40">
               </td>
 
-              <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);"><a>{{!imageset.name}}</a></td>
-
-              <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);"><a>{{!imageset.lion_id}}</a></td>
-
-              <td ng-if="imageset.age!=null" class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);"><a>{{!imageset.age}} y/o</a></td>
-              <td ng-if="imageset.age==null" class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);"></td>
-
-              <td ng-if="imageset.age!=null" class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);"><a>{{!imageset.date_of_birth | date:'mediumDate'}}</a></td>
-              <td ng-if="imageset.age==null" class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);"></td>
-
-              <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);"><i ng-if="imageset.dead" class="search-icon-dead"></i></td>
-
-              <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);"><a>{{!imageset.organization}}</a></td>
-
-              <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);"><a>{{!imageset.gender}}</a></td>
-
-              <td ng-if="imageset.permissions.canLocate" class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);"><a>{{!imageset.latitude | number:6}}</a></td>
-              <td ng-if="!imageset.permissions.canLocate" ng-click="!isBatchMode && goto_imageset(imageset);"></td>
-              <td ng-if="imageset.permissions.canLocate" class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);"><a>{{!imageset.longitude | number:6}}</a></td>
-              <td ng-if="!imageset.permissions.canLocate" ng-click="!isBatchMode && goto_imageset(imageset);"></td>
-
-              <td ng-if="imageset.permissions.canLocate" class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">
-                <a>{{!tag_location_label(imageset.tag_location)}}</a>
+              <td class="text-center" ng-click="goto_imageset(imageset);">
+                <a>{{!imageset.name}}</a>
               </td>
-              <td ng-if="!imageset.permissions.canLocate" ng-click="!isBatchMode && goto_imageset(imageset);"></td>
 
-              <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">
+              <td class="text-center" ng-click="goto_imageset(imageset);">
+                <a>{{!imageset.lion_id}}</a>
+              </td>
+
+              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('age')">
+                <a ng-if="imageset.age!=null">{{! imageset.age }} y/o</a>
+              </td>
+
+              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('date_of_birth')">
+                <a ng-if="imageset.age!=null" >{{! imageset.date_of_birth | date:'mediumDate' }}</a>
+              </td>
+
+              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('dead')">
+                <i ng-if="imageset.dead" class="search-icon-dead"></i>
+              </td>
+
+              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('organization')">
+                <a>{{!imageset.organization}}</a>
+              </td>
+
+              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('gender')">
+                <a>{{!imageset.gender}}</a>
+              </td>
+
+              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('latitude')">
+                <a ng-if="imageset.permissions.canLocate">{{!imageset.latitude | number:6}}</a>
+              </td>
+
+              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('longitude')">
+                <a ng-if="imageset.permissions.canLocate">{{!imageset.longitude | number:6}}</a>
+              </td>
+
+              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('tag_location')">
+                <a ng-if="imageset.permissions.canLocate" >{{!tag_location_label(imageset.tag_location)}}</a>
+              </td>
+
+              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('geopos_private')">
                 <i ng-if="imageset.geopos_private" class="icon icon-check"></i>
                 <i ng-if="!imageset.geopos_private" class="icon icon-cross"></i>
               </td>
 
-              <td id="tag_features" class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">
+              <td class="text-center tag_features" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('tag_features')">
                 <a>{{!imageset.tag_features}}</a>
               </td>
 
-              <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">
+              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('date_stamp')">
                 <div class="div-date_stamp"><a>{{!imageset.date_stamp | date:'mediumDate'}}</a></div>
               </td>
 
-              <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">
+              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('is_verified')">
                 <i ng-if="imageset.is_verified" class="icon icon-check"></i>
                 <i ng-if="!imageset.is_verified" class="icon icon-cross"></i>
               </td>
 
-              <td class="text-center" ng-click="!isBatchMode && goto_imageset(imageset);">
+              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('is_primary')">
                 <i ng-if="imageset.is_primary" class="icon icon-check"></i>
                 <i ng-if="!imageset.is_primary" class="icon icon-cross"></i>
               </td>

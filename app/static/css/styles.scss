@@ -36,6 +36,7 @@ body{
 	padding-top: 70px;
 	background: #F9F9F9;
 	color: #333;
+	min-width: 650px;
 }
 
 h1,h2,h3,h4, .btn{
@@ -326,10 +327,6 @@ textarea{font-family: 'Homenaje', sans-serif;}
 		}
 	}
 }
-
-
-
-
 
 .modal-compare-images {
 	.body-compare-images{
@@ -2106,6 +2103,23 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 			position: absolute;left: 6px;top: 12px;
 		}
 	}
+	.columns-to-show{
+		position: absolute;
+		right: 50px;
+		top: 7px;
+		label{
+			position: absolute;
+			right: 30px;
+			top: 4px;
+		}
+		button.btn-select{
+			height: 26px;
+			color: white;
+			&:active, &.active {
+				background: #fff;
+			}
+		}
+	}
 	h4.viewer-selecteds{
 		margin-top: 20px;
 		text-align: center;
@@ -2200,8 +2214,11 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 		table.table-view tbody, table.table-view thead { display: block; }
 		thead tr th { height: 30px; padding-top: 0px;}
 		table.table-view tbody { height: 475px; overflow-y: auto; }
-		tbody tr td, thead tr th { min-width: 20px; }
+		tbody tr td, thead tr th { min-width: 20px;}
 		tbody td:last-child, thead th:last-child { border-right: none; }
+		th.tag_features, td.tag_features {
+			min-width: 200px;
+		}
 		a:focus, a:hover {
 			color: #f9190a;
 			text-decoration: underline;
