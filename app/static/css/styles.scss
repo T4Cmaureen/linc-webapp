@@ -2104,9 +2104,11 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 		}
 	}
 	h4.viewer-founds{
-		position: absolute;
-		left: 165px;
-		top: 55px;
+		// position: absolute;
+		// left: 165px;
+		// top: 55px;
+		margin-top: 0px;
+		margin-bottom: 6px;
 	}
 	.columns-to-show{
 		position: absolute;
