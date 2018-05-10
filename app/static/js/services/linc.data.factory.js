@@ -45,7 +45,7 @@ angular.module('linc.data.factory', [])
 			Location: { latitude:'', longitude: '', radius: '' },
 			Boundarys: ''
 		},
-		pages: { PerPage: 0, currentPage: 0},
+		Columns : ['age','dead','organization','gender','latitude','longitude','geopos_private','is_verified']
 	};
 	
 	var options = {

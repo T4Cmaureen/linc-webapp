@@ -23,9 +23,9 @@ angular.module('linc.view.imagesets.controller', [])
 .controller('ViewImageSetsCtrl', ['$scope', '$rootScope', '$state', '$timeout', '$q', '$interval', '$uibModal', 
   '$stateParams', '$bsTooltip', 'NotificationFactory', 'LincServices', 'AuthService', 'PollerService',
   'imagesets_options', 'default_options', 'imagesets', '$ModalPage', 'NgMap', 'LincDataFactory', 'TAG_LABELS', 
-  'TOOL_TITLE', function ($scope, $rootScope, $state, $timeout, $q, $interval, $uibModal, $stateParams, $bsTooltip, 
-  NotificationFactory, LincServices, AuthService, PollerService, imagesets_options, default_options, imagesets,
-  $ModalPage, NgMap, LincDataFactory, TAG_LABELS, TOOL_TITLE) {
+  'TOOL_TITLE', 'CONST_VIEWCOLUMNS', function ($scope, $rootScope, $state, $timeout, $q, $interval, $uibModal,
+  $stateParams, $bsTooltip, NotificationFactory, LincServices, AuthService, PollerService, imagesets_options,
+  default_options, imagesets, $ModalPage, NgMap, LincDataFactory, TAG_LABELS, TOOL_TITLE, CONST_VIEWCOLUMNS) {
 
 	$scope.user = AuthService.user;
 	$scope.$parent.isBatchMode = false;
@@ -180,14 +180,34 @@ angular.module('linc.view.imagesets.controller', [])
 	};
 	// Click in Photo - Show Big Image
 	$scope.show_photo = function(url){
-		var win = window.open(url, "_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=100, left=100, width=600, height=600");
-		win.focus();
+		if (!$scope.isBatchMode){
+			var win = window.open(url, "_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=100, left=100, width=600, height=600");
+			win.focus();
+		}
 	}
 	$scope.refreshSlider();
 
 	$scope.filters = imagesets_options.filters;
 	$scope.isCollapsed = imagesets_options.isCollapsed;
 	$scope.orderby = imagesets_options.orderby;
+
+	$scope.ShowColumn = function(col){
+		return $scope.columns ? _.includes($scope.columns, col) : false;
+	};
+	$scope.ColumnsSelect = function(){
+		$timeout(function () {
+			$scope.$apply(function () {
+				$scope.ResizeTable();
+			});
+		}, 0);
+		imagesets_options.Columns = $scope.columns;
+		LincDataFactory.set_imagesets(imagesets_options);
+	};
+
+	if(!imagesets_options.Columns)
+		imagesets_options.Columns = angular.copy(default_options.Columns);
+	$scope.columns = imagesets_options.Columns;
+	$scope.columns_to_view = CONST_VIEWCOLUMNS.columns.imagesets;
 
 	$scope.change = function(type){
 		imagesets_options.filters[type] = $scope.filters[type];
@@ -453,7 +473,8 @@ angular.module('linc.view.imagesets.controller', [])
 	};
 
 	$scope.goto_imageset = function(imageset){
-		$state.go('imageset',{id: imageset.id});
+		if (!$scope.isBatchMode)
+			$state.go('imageset',{id: imageset.id});
 	};
 
 	// Batch Mode

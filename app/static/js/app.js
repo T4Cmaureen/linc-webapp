@@ -85,6 +85,40 @@ app.constant('TAG_LABELS', {
   url: 'http://linclion.com/linc/linc-manual/'
 })
 
+.constant('CONST_VIEWCOLUMNS', {
+  columns: {
+    lions: [
+      {value: 'age', label: 'Age'},
+      {value: 'date_of_birth', label: 'Date of Birth'},
+      {value: 'dead', label: 'Dead'},
+      {value: 'organization', label: 'Organization'},
+      {value: 'gender', label: 'Gender'},
+      {value: 'latitude', label: 'Latitude'},
+      {value: 'longitude', label: 'Longitude'},
+      {value: 'tag_location', label: 'Tag Location'},
+      {value: 'geopos_private', label: 'GPS Points Private'},
+      {value: 'tag_features', label: 'Tag Features'},
+      {value: 'date_stamp', label: 'Time Stamp'},
+      {value: 'is_verified', label: 'Verified'}
+    ],
+    imagesets:[
+      {value: 'age', label: 'Age'},
+      {value: 'date_of_birth', label: 'Date of Birth'},
+      {value: 'dead', label: 'Dead'},
+      {value: 'organization', label: 'Organization'},
+      {value: 'gender', label: 'Gender'},
+      {value: 'latitude', label: 'Latitude'},
+      {value: 'longitude', label: 'Longitude'},
+      {value: 'tag_location', label: 'Tag Location'},
+      {value: 'geopos_private', label: 'GPS Points Private'},
+      {value: 'tag_features', label: 'Tag Features'},
+      {value: 'date_stamp', label: 'Time Stamp'},
+      {value: 'is_verified', label: 'Verified'},
+      {value: 'is_primary', label: 'Primary'}
+    ]
+  }
+})
+
 app.run(['$rootScope', '$state', '$stateParams', 'AuthService', function ($rootScope, $state, $stateParams, AuthService) {
 
     // It's very handy to add references to $state and $stateParams to the $rootScope

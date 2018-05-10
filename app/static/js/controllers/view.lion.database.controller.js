@@ -22,10 +22,10 @@ angular.module('linc.view.lion.database.controller', [])
 
 .controller('ViewLionDatabaseCtrl', ['$scope', '$rootScope', '$state', '$timeout', '$q', '$filter', '$stateParams',
   '$bsTooltip', 'AuthService', 'lions', 'lion_options', 'default_options', '$ModalPage', '$uibModal', 'NgMap', 
-  'LincServices', 'LincDataFactory', 'NotificationFactory', 'TAG_LABELS', 'TOOL_TITLE',
+  'LincServices', 'LincDataFactory', 'NotificationFactory', 'TAG_LABELS', 'TOOL_TITLE', 'CONST_VIEWCOLUMNS',
   function ($scope, $rootScope, $state, $timeout, $q, $filter, $stateParams, $bsTooltip, AuthService, lions, lion_options,
   default_options, $ModalPage, $uibModal, NgMap, LincServices, LincDataFactory, NotificationFactory, 
-  TAG_LABELS, TOOL_TITLE) {
+  TAG_LABELS, TOOL_TITLE, CONST_VIEWCOLUMNS) {
 
 	$scope.user = AuthService.user;
 	$scope.$parent.isBatchMode = false;
@@ -105,6 +105,24 @@ angular.module('linc.view.lion.database.controller', [])
 	$scope.filters = lion_options.filters;
 	$scope.isCollapsed = lion_options.isCollapsed;
 	$scope.orderby = lion_options.orderby;
+
+	$scope.ShowColumn = function(col){
+		return $scope.columns ? _.includes($scope.columns, col) : false;
+	};
+	$scope.ColumnsSelect = function(){
+		$timeout(function () {
+			$scope.$apply(function () {
+				$scope.ResizeTable();
+			});
+		}, 0);
+		lion_options.Columns = $scope.columns;
+		LincDataFactory.set_lions(lion_options);
+	};
+
+	if(!lion_options.Columns)
+		lion_options.Columns = angular.copy(default_options.Columns);
+	$scope.columns = lion_options.Columns;
+	$scope.columns_to_view = CONST_VIEWCOLUMNS.columns.lions;
 
 	$scope.change = function(type){
 		lion_options.filters[type] = $scope.filters[type];
