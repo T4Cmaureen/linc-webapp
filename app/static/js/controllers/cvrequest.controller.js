@@ -26,7 +26,7 @@ angular.module('linc.cvrequest.controller', [])
   $uibModalInstance, LincServices, LincDataFactory, NotificationFactory, imageset, lions, cvrequests_options,
   AuthService, TAG_LABELS, TOOL_TITLE) {
 
-  $scope.title = 'CV Search';
+  $scope.title = 'Find Lion Match';
   $scope.content = 'Search';
   $scope.imageset = imageset;
 
@@ -186,15 +186,21 @@ angular.module('linc.cvrequest.controller', [])
   $scope.selection = { allSel: false, allUnSel: false };
   $scope.Selecteds = [];
   $scope.check_all = function (val){
-    _.forEach($scope.lions, function(lion) {
-      lion.selected = val;
-      if(lion.selected){
-        if(!_.some($scope.Selecteds, lion))
-          $scope.Selecteds.push(lion);
-      }
-    });
-    if(!val)
+    if (val){
+      _.forEach($scope.filtered_lions, function(lion) {
+        lion.selected = val;
+        if(lion.selected){
+          if(!_.some($scope.Selecteds, lion))
+            $scope.Selecteds.push(lion);
+        }
+      });
+    }
+    else{
+      _.forEach($scope.lions, function(lion) {
+        lion.selected = val;
+      });
       $scope.Selecteds = [];
+    }
 
     check_selects();
   };

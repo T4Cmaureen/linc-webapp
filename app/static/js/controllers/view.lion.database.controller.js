@@ -206,16 +206,21 @@ angular.module('linc.view.lion.database.controller', [])
 	$scope.Selecteds = [];
 	// Select All Lions
 	$scope.check_all = function (val){
-		_.forEach($scope.lions, function(lion) {
-			lion.selected = val;
-			if(lion.selected){
-				if(!_.some($scope.Selecteds, lion))
-					$scope.Selecteds.push(lion);
-			}
-		});
-		if(!val)
+		if(val){
+			_.forEach($scope.filtered_lions, function(lion) {
+				lion.selected = val;
+				if(lion.selected){
+					if(!_.some($scope.Selecteds, lion))
+						$scope.Selecteds.push(lion);
+				}
+			});
+		}
+		else{
+			_.forEach($scope.lions, function(lion) {
+				lion.selected = val;
+			});
 			$scope.Selecteds = [];
-
+		}
 		check_selects();
 	};
 

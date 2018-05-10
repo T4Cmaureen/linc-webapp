@@ -31,6 +31,9 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       </span>
     </a> View Lion Database
   </h1>
+  <h4 class="viewer-founds">
+    {{! filtered_lions.length }} lions found.
+  </h4>
   <div class="columns-to-show pull-right form-group group-select">
     <label for="column_view">Columns to Show</label>
     <button type="button" id="column_view" class="btn btn-default btn-sm btn-select" placeholder="Select Columns"
@@ -285,8 +288,6 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         </div>
       </div>
       <h4 class="viewer-selecteds">
-        {{! lions.length }} lions found.
-        <br>
         {{! viewer_selected()}}
       </h4>
     </div>
