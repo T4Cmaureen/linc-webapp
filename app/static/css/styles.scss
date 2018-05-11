@@ -116,7 +116,7 @@ textarea{font-family: 'Homenaje', sans-serif;}
 
 @media(min-width: 768px){
 	// .modal-dialog{
-	.large-modal>.modal-lg {
+	.large-modal>.modal-lg, .large-modal1>.modal-lg {
 		width: 760px;
 		margin: 30px auto;
 	}
@@ -127,7 +127,7 @@ textarea{font-family: 'Homenaje', sans-serif;}
 }
 
 @media (min-width: 900px){
-	.large-modal>.modal-lg {
+	.large-modal>.modal-lg, .large-modal1>.modal-lg {
 		width: 860px;
 	}
 	.Boundary-Modal>.modal-lg {
@@ -137,7 +137,7 @@ textarea{font-family: 'Homenaje', sans-serif;}
 }
 
 @media (min-width: 1000px){
-	.large-modal>.modal-lg {
+	.large-modal>.modal-lg, .large-modal1>.modal-lg {
 		width: 980px;
 	}
 	.Boundary-Modal>.modal-lg {
@@ -148,10 +148,28 @@ textarea{font-family: 'Homenaje', sans-serif;}
 
 @media(min-width: 1200px){
 	.large-modal > .modal-lg {
-			width: 1100px;
+			width: 1200px;
 	}
 	.Boundary-Modal>.modal-lg {
 		width: 1200px;
+		// margin: 30px auto;
+	}
+}
+@media(min-width: 1300px){
+	.large-modal > .modal-lg {
+			width: 1300px;
+	}
+	.Boundary-Modal>.modal-lg {
+		width: 1300px;
+		// margin: 30px auto;
+	}
+}
+@media(min-width: 1400px){
+	.large-modal > .modal-lg {
+			width: 1400px;
+	}
+	.Boundary-Modal>.modal-lg {
+		width: 1400px;
 		// margin: 30px auto;
 	}
 }
@@ -1122,6 +1140,9 @@ hr.style-line {
 		table.table-cv-requests tbody { height: 475px; overflow-y: auto; }
 		tbody tr td, thead tr th { min-width: 20px; }
 		tbody td:last-child, thead th:last-child { border-right: none; }
+		th.tag_features, td.tag_features{
+			max-width: 200px;
+		}
 		a:focus, a:hover {
 			color: #f9190a;
 			text-decoration: underline;
@@ -1179,7 +1200,7 @@ hr.style-line {
 }
 
 
-.large-Modal .modal-dialog .modal-content{ max-height: 700px !important;}
+.large-modal .modal-dialog .modal-content{ max-height: 700px !important;}
 .modal-content {overflow-y: auto;}
 .modal-header-image{display: inline-block; padding: 6px;}
 .modal-title-image{display: inline-block; vertical-align: middle;}
