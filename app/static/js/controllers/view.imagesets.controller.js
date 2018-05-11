@@ -35,10 +35,6 @@ angular.module('linc.view.imagesets.controller', [])
 	$scope.is_modal_open = false;
 	$scope.tooltip = { features: { title: 'tips: ' + TOOL_TITLE, checked: true} };
 
-	$scope.column_view=function(){
-		angular.element(document.querySelector("#column_view_imagesets")).triggerHandler('mousedown');
-	}
-
 	var count = 0;
 	var cvrequest_pendings = [];
 	var Poller = function () {

@@ -32,17 +32,14 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     </a> View Image Sets
   </h1>
   <div class="columns-to-show pull-right form-group group-select">
-    <button type="button" id="column_view_imagesets" name="column_view" class="btn btn-default btn-sm btn-select" placeholder="Select Columns"
-            ng-model="columns" data-html="1" data-multiple="1" max-length=1
-            all-none-buttons="true" all-Text="All Columns" all-button="true"
-            none-button="false" none-Text="None"
-            unknown-button="false"
-            bs-options="column.value as column.label for column in columns_to_view"
-            bs-on-select="ColumnsSelect"
-            placement="bottom-right" bs-select>
+    <button type="button" id="columns_imagesets" class="btn btn-default btn-sm btn-select" placeholder=""
+      ng-model="columns" data-html="1" data-multiple="1" max-length=1 bs-on-select="ColumnsSelect"
+      all-none-buttons="true" all-Text="All Columns" all-button="true" none-button="false"
+      none-Text="None" unknown-button="false" trigger="click" placement="bottom-right"
+      bs-options="column.value as column.label for column in columns_to_view" bs-select>
       Action <span class="caret"></span>
     </button>
-    <label for="column_view_imagesets" ng-click="column_view()">Columns to Show</label>
+    <label for="columns_imagesets" ng-click="column_view('#columns_imagesets')">Columns to Show</label>
   </div>
   <div class="row main-row">
     <div class="col-sm-2 line-right">
