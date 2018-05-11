@@ -62,7 +62,7 @@ angular.module('linc.cvrequest.directive', [])
           controller:  scope.useCtrl,
           size: scope.formSize,
           scope: modalScope,
-          windowClass: 'large-Modal',
+          windowClass: 'large-modal',
           resolve: {
             imageset: function () {
               return scope.imageset;

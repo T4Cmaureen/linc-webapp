@@ -56,7 +56,7 @@ angular.module('linc.relatives.directive', [])
           controller:  scope.useCtrl,
           size: scope.formSize,
           scope: modalScope,
-          windowClass: 'large-Modal',
+          windowClass: 'large-modal',
           resolve: {
             animal: function(){
               return scope.lion;
