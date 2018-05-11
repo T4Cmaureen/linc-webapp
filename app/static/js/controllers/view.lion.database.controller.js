@@ -34,9 +34,6 @@ angular.module('linc.view.lion.database.controller', [])
 
 	$scope.tooltip = { features: { title: 'tips: ' + TOOL_TITLE, checked: true } };
 
-	$scope.column_view=function(){
-		angular.element(document.querySelector("#column_view_lions")).triggerHandler('mousedown');
-	}
 	var GET_FEATURES = function (lbs, TAGS){
 		var label = "";
 		TAGS.forEach(function (elem, i){
