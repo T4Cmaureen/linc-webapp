@@ -94,8 +94,8 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 		modalScope.title = 'Change your password?';
 		modalScope.showValidationMessages = false;
 		modalScope.user = {
-			'email': user.name, 
-			'id': user.id, 
+			'email': user.name,
+			'id': user.id,
 			'password': {
 				'password':'',
 				'confirm': ''
@@ -117,7 +117,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 			if(valid){
 				modalScope.dataSending = true;
 				var data = {
-					'user_id' : modalScope.user.id, 
+					'user_id' : modalScope.user.id,
 					'data': {'new_password': modalScope.user.password.password}
 				};
 				AuthService.ChangePassword(data).then(function(response){
@@ -148,7 +148,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 
 	$scope.isBatchMode = false;
 	$scope.BatchFilter = {};
-	
+
 	$scope.Select_BatchMode = function(){
 		$scope.batch.loading = true;
 		$timeout(function () {
@@ -185,7 +185,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 		var coordinates = path.getArray().map(function name(coord) {
 			return new jsts.geom.Coordinate(coord.lat(), coord.lng());
 		});
-		if(coordinates[0].compareTo(coordinates[coordinates.length-1]) != 0) 
+		if(coordinates[0].compareTo(coordinates[coordinates.length-1]) != 0)
 			coordinates.push(coordinates[0]);
 		var shell = geometryFactory.createLinearRing(coordinates);
 		return geometryFactory.createPolygon(shell);
@@ -200,7 +200,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 		var coordinates = _.map(path, function name(coord) {
 			return new jsts.geom.Coordinate(coord[0], coord[1]);
 		});
-		if(coordinates[0].compareTo(coordinates[coordinates.length-1]) != 0) 
+		if(coordinates[0].compareTo(coordinates[coordinates.length-1]) != 0)
 			coordinates.push(coordinates[0]);
 		var shell = geometryFactory.createLinearRing(coordinates);
 		return geometryFactory.createPolygon(shell);
@@ -219,7 +219,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 			var coordinate = new jsts.geom.Coordinate(pos.lat(), pos.lng());
 			coordinates.push(coordinate);
 		};
-		if(coordinates[0].compareTo(coordinates[coordinates.length-1]) != 0) 
+		if(coordinates[0].compareTo(coordinates[coordinates.length-1]) != 0)
 			coordinates.push(coordinates[0]);
 		var shell = geometryFactory.createLinearRing(coordinates);
 		return geometryFactory.createPolygon(shell);
@@ -238,7 +238,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 	$scope.CreateCircle = function (data){
 		var circle = new google.maps.Circle({
 			map: data.map,
-			center: data.center, 
+			center: data.center,
 			radius: data.radius
 		});
 		return circle;
@@ -305,7 +305,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 					if(!isNaN(Number(item)) && (parseInt(item, 10) == value.id)){
 						contain = true;
 						return false;
-					}					
+					}
 				}
 				if(item.length==1 && item[0]==="*"){
 					contain = true;
@@ -313,7 +313,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 				}
 			});
 			return contain;
-		});	
+		});
 		return filtered;
 	};
 })
@@ -335,7 +335,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 		var normal_filters = _.filter(name_pieces, function(item){return item.length && item[0] != '!';});
 		var normal_rules = _.filter(normal_filters, function(item){return item.length && item[0] != '-';});
 		var normal_filtered = $filter('filter_including')(input, normal_rules, null);
-		
+
 		var normal_exclude_rules = _.map(_.filter(normal_filters, function(item){return item.length>1 && item[0] == '-';}), function(val){return val.slice(1)});
 		var normal_exclude_filtered = $filter('filter_including')(input, normal_exclude_rules, null);
 
@@ -396,7 +396,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 				}
 			});
 		}
-		
+
 		var filtered = _.filter(input, function(value){
 			var val = value.tag_features.toLowerCase();
 			// For each piece test contained in input
@@ -407,7 +407,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 					return;
 				}
 			});
-			// Excluse NOT 
+			// Excluse NOT
 			if(contain){
 				toExcludes.forEach(function (piece, i){
 					if(val.indexOf(piece) != -1){
@@ -558,7 +558,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 					if(contain)
 						return false;
 				}
-				if (geobound.databound.type == 'polygon'){ 
+				if (geobound.databound.type == 'polygon'){
 					var polygon = geobound.overlay;
 					contain = Poly.containsLocation(input.location, polygon);
 					if(contain)

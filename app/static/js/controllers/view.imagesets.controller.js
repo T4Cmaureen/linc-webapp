@@ -20,9 +20,9 @@
 
 angular.module('linc.view.imagesets.controller', [])
 
-.controller('ViewImageSetsCtrl', ['$scope', '$rootScope', '$state', '$timeout', '$q', '$interval', '$uibModal', 
+.controller('ViewImageSetsCtrl', ['$scope', '$rootScope', '$state', '$timeout', '$q', '$interval', '$uibModal',
   '$stateParams', '$bsTooltip', 'NotificationFactory', 'LincServices', 'AuthService', 'PollerService',
-  'imagesets_options', 'default_options', 'imagesets', '$ModalPage', 'NgMap', 'LincDataFactory', 'TAG_LABELS', 
+  'imagesets_options', 'default_options', 'imagesets', '$ModalPage', 'NgMap', 'LincDataFactory', 'TAG_LABELS',
   'TOOL_TITLE', 'CONST_VIEWCOLUMNS', function ($scope, $rootScope, $state, $timeout, $q, $interval, $uibModal,
   $stateParams, $bsTooltip, NotificationFactory, LincServices, AuthService, PollerService, imagesets_options,
   default_options, imagesets, $ModalPage, NgMap, LincDataFactory, TAG_LABELS, TOOL_TITLE, CONST_VIEWCOLUMNS) {
@@ -34,6 +34,10 @@ angular.module('linc.view.imagesets.controller', [])
 
 	$scope.is_modal_open = false;
 	$scope.tooltip = { features: { title: 'tips: ' + TOOL_TITLE, checked: true} };
+
+	$scope.column_view=function(){
+		angular.element(document.querySelector("#column_view_imagesets")).triggerHandler('mousedown');
+	}
 
 	var count = 0;
 	var cvrequest_pendings = [];
@@ -121,7 +125,7 @@ angular.module('linc.view.imagesets.controller', [])
 
 			element['permissions'] = get_permissions($scope.user, element);
 			element['age'] = isNaN(parseInt(element['age'])) ? null : element['age'];
-			
+
 			var elem = {};
 			if(!element.is_primary){
 				if(element.lion_id){
@@ -257,7 +261,7 @@ angular.module('linc.view.imagesets.controller', [])
 		var modalScope = $scope.$new();
 		modalScope.title = 'Verify Associated Image Set';
 		modalScope.imageset = angular.copy(imageset);
-		
+
 		var modalInstance  = $uibModal.open({
 				templateUrl: 'verify_imageset.tpl.html',
 				scope: modalScope
@@ -326,7 +330,7 @@ angular.module('linc.view.imagesets.controller', [])
 				$scope.imagesets = angular.copy(results);
 				set_all_imagesets($scope.imagesets);
 				NotificationFactory.success({
-					title: message.title, 
+					title: message.title,
 					message: message.Sucess,
 					position: "right",
 					duration: 2000
@@ -334,7 +338,7 @@ angular.module('linc.view.imagesets.controller', [])
 			},
 			function (reason) {
 				NotificationFactory.error({
-					title: "Fail: " + message.title, 
+					title: "Fail: " + message.title,
 					message: message.Error,
 					position: 'right',
 					duration: 5000
@@ -371,7 +375,7 @@ angular.module('linc.view.imagesets.controller', [])
 			Sucess:'Imageset was successfully set as primary.',
 			Error: 'Unable to set this Image Set as primary.'
 		};
-		
+
 		var modalInstance = $uibModal.open({
 				templateUrl: 'Dialog.Delete.tpl.html',
 				scope: modalScope
@@ -394,7 +398,7 @@ angular.module('linc.view.imagesets.controller', [])
 					$scope.imagesets = angular.copy(results);
 					set_all_imagesets($scope.imagesets);
 					NotificationFactory.success({
-						title: modalScope.title, 
+						title: modalScope.title,
 						message: message.Sucess,
 						position: "right",
 						duration: 2000
@@ -402,7 +406,7 @@ angular.module('linc.view.imagesets.controller', [])
 				},
 				function (reason) {
 					NotificationFactory.error({
-						title: "Fail: " + modalScope.title, 
+						title: "Fail: " + modalScope.title,
 						message: message.Error,
 						position: 'right',
 						duration: 5000
@@ -412,7 +416,7 @@ angular.module('linc.view.imagesets.controller', [])
 			function(error){
 				if($scope.debug || (error.status != 401 && error.status != 403)){
 					NotificationFactory.error({
-						title: "Fail: " + modalScope.title, 
+						title: "Fail: " + modalScope.title,
 						message: message.Error,
 						position: 'right',
 						duration: 5000
@@ -591,7 +595,7 @@ angular.module('linc.view.imagesets.controller', [])
 		},function(error){
 			if($scope.debug || (error.status != 401 && error.status != 403)){
 				NotificationFactory.error({
-					title: "Fail: Data Export", 
+					title: "Fail: Data Export",
 					message: "Unable to export imagesets data",
 					position: 'right',
 					duration: 5000
@@ -633,7 +637,7 @@ angular.module('linc.view.imagesets.controller', [])
 			var overlay = null;
 			if (data['selected']){
 				if (data.type == 'polygon'){
-					overlay = $scope.CreatePolygon({'path': data.path, 'map': map});					
+					overlay = $scope.CreatePolygon({'path': data.path, 'map': map});
 				}
 				else if (data.type == 'circle'){ // EVENT TO MODE CIRCLE
 					overlay = $scope.CreateCircle({'center': data.center, 'radius': data.radius, 'map': map});
@@ -642,8 +646,8 @@ angular.module('linc.view.imagesets.controller', [])
 					overlay = $scope.CreateRectangle({'bounds': data.bounds, 'map': map})
 				}
 				var databound = {
-					'type': data.type , 
-					'overlay': overlay, 
+					'type': data.type ,
+					'overlay': overlay,
 					'index': index,
 					'selected': data['selected']
 				};
@@ -722,4 +726,5 @@ angular.module('linc.view.imagesets.controller', [])
 	$(window).resize(function() {
 		$scope.ResizeTable();
 	}).resize();
+
 }]);

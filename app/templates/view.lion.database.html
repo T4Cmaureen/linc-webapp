@@ -32,8 +32,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     </a> View Lion Database
   </h1>
   <div class="columns-to-show pull-right form-group group-select">
-    <label for="column_view">Columns to Show</label>
-    <button type="button" id="column_view" class="btn btn-default btn-sm btn-select" placeholder="Select Columns"
+    <button type="button" id="column_view_lions" class="btn btn-default btn-sm btn-select" placeholder="Select Columns"
             ng-model="columns" data-html="1" data-multiple="1" max-length=1
             all-none-buttons="true" all-Text="All Columns" all-button="true"
             none-button="false" none-Text="None"
@@ -43,6 +42,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             placement="bottom-right" bs-select>
       Action <span class="caret"></span>
     </button>
+    <label for="column_view_lions" ng-click="column_view()">Columns to Show</label>
   </div>
   <div class="row main-row">
     <div class="col-sm-2 line-right">
