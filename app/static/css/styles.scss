@@ -2125,9 +2125,6 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 		}
 	}
 	h4.viewer-founds{
-		// position: absolute;
-		// left: 165px;
-		// top: 55px;
 		margin-top: 0px;
 		margin-bottom: 6px;
 	}
@@ -2243,13 +2240,13 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 		table.table-view tbody, table.table-view thead { display: block; }
 		thead tr th { height: 30px; padding-top: 0px;}
 		table.table-view tbody { height: 475px; overflow-y: auto; }
-		tbody tr td, thead tr th { min-width: 20px;}
+		tbody tr td, thead tr th { min-width: 20px; max-width: 300px;}
 		tbody td:last-child, thead th:last-child { border-right: none; }
 		th.tag_features, td.tag_features {
 			min-width: 200px;
 		}
 		th.notes, td.notes{
-			min-width: 300px;
+			min-width: 200px;
 		}
 		a:focus, a:hover {
 			color: #f9190a;
