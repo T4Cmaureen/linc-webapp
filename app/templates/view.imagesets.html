@@ -32,8 +32,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     </a> View Image Sets
   </h1>
   <div class="columns-to-show pull-right form-group group-select">
-    <label for="column_view">Columns to Show</label>
-    <button type="button" id="column_view" class="btn btn-default btn-sm btn-select" placeholder="Select Columns"
+    <button type="button" id="column_view_imagesets" name="column_view" class="btn btn-default btn-sm btn-select" placeholder="Select Columns"
             ng-model="columns" data-html="1" data-multiple="1" max-length=1
             all-none-buttons="true" all-Text="All Columns" all-button="true"
             none-button="false" none-Text="None"
@@ -43,6 +42,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             placement="bottom-right" bs-select>
       Action <span class="caret"></span>
     </button>
+    <label for="column_view_imagesets" ng-click="column_view()">Columns to Show</label>
   </div>
   <div class="row main-row">
     <div class="col-sm-2 line-right">
@@ -167,7 +167,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             <form name="form">
               <div class="form-group control" ng-class="{'has-error': form.latitude.$dirty && form.latitude.$error.pattern}">
                 <label class="location_label" for="latitude">Latitude: </label>
-                <input ng-change="change('Location')" class="form-control input-sm" type="text" name="latitude" 
+                <input ng-change="change('Location')" class="form-control input-sm" type="text" name="latitude"
                   pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-model="filters.Location.latitude" limlatlng="90">
                 <div class="error-messages search" ng-messages="form.latitude.$error" ng-if="form.latitude.$error.limlatlng || form.latitude.$error.pattern">
                   <div ng-message="limlatlng">
@@ -250,7 +250,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         </div>
         <div uib-collapse="isCollapsed.Boundarys">
           <div class="panel-body geographical">
-            <button type="button" class="form-control btn btn-default" 
+            <button type="button" class="form-control btn btn-default"
               ng-click="SetBoundarys()">Search Areas</button>
             <div class="panel-body checkbox">
               <div ng-repeat="boundary in filters.Boundarys">
@@ -425,11 +425,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                   features_filter: filters.TagFeatures | gender_filter: filters.Genders | primary_filter: filters.Primary |
                   LatLngFilter: filters.Location : true | geographical: GeoBounds) | orderBy: orderby.predicate : orderby.reverse )"
                   repeat-done="ResizeTable()">
-              
+
               <td class="text-center" ng-if="isBatchMode">
                 <input type="checkbox" ng-model="imageset.selected" ng-click="Select_Imageset($event, imageset);$event.stopPropagation();">
               </td>
-              
+
               <td class="text-center" ng-click="goto_imageset(imageset);">
                 <a>{{!imageset.id}}</a>
               </td>
