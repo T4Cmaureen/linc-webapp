@@ -58,7 +58,7 @@ angular.module('linc.view.lion.database.controller', [])
 
 			element['permissions'] = get_permissions($scope.user, element);
 			element['age'] = isNaN(parseInt(element['age'])) ? null : element['age'];
-			
+
 			var elem = {};
 			var TAGS = [];
 			if(!element.gender) element.gender = 'unknown';
@@ -75,7 +75,7 @@ angular.module('linc.view.lion.database.controller', [])
 			elem['features'] = (tag_features.length > 0) ? true : false;
 			elem['tag_features'] = tag_features;
 			elem['selected'] = (selected && _.has(element, 'selected') ? element['selected'] : false);
-			
+
 			elem['location'] = (!element['latitude'] || !element['longitude']) ? null : new google.maps.LatLng(element['latitude'], element['longitude']);
 			if (element['tag_location']){
 				var circle = $scope.CreateCircle({'center': elem['location'], 'radius': element['tag_location']['value'] })
@@ -202,7 +202,7 @@ angular.module('linc.view.lion.database.controller', [])
 			});
 		}, 0);
 	});
-	
+
 	$scope.Selecteds = [];
 	// Select All Lions
 	$scope.check_all = function (val){
@@ -341,7 +341,7 @@ angular.module('linc.view.lion.database.controller', [])
 			var overlay = null;
 			if (data['selected']){
 				if (data.type == 'polygon'){
-					overlay = $scope.CreatePolygon({'path': data.path, 'map': map});					
+					overlay = $scope.CreatePolygon({'path': data.path, 'map': map});
 				}
 				else if (data.type == 'circle'){ // EVENT TO MODE CIRCLE
 					overlay = $scope.CreateCircle({'center': data.center, 'radius': data.radius, 'map': map});

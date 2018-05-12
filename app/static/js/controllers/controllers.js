@@ -146,10 +146,6 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 		}
 	};
 
-	$scope.column_view=function(id){
-		angular.element(document.querySelector(id)).triggerHandler('mousedown');
-	};
-
 	$scope.isBatchMode = false;
 	$scope.BatchFilter = {};
 

@@ -2128,14 +2128,10 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 		position: absolute;
 		right: 50px;
 		top: 7px;
-		label{
-			position: absolute;
-			right: 36px;
-			top: 4px;
-		}
 		button.btn-select{
 			height: 26px;
-			color: white;
+			color: #000;
+			text-align: center;
 			min-width: 160px;
 			&:active, &.active {
 				background: #fff;
