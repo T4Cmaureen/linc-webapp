@@ -32,14 +32,12 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     </a> View Lion Database
   </h1>
   <div class="columns-to-show pull-right form-group group-select">
-    <button type="button" id="columns_lions" class="btn btn-default btn-sm btn-select" placeholder=""
-            ng-model="columns" data-html="1" data-multiple="1" max-length=1 bs-on-select="ColumnsSelect"
-            all-none-buttons="true" all-Text="All Columns" all-button="true" none-button="false"
-            none-Text="None" unknown-button="false" trigger="click" placement="bottom-right"
-            bs-options="column.value as column.label for column in columns_to_view" bs-select>
+    <button type="button" id="columns_lions" class="btn btn-default btn-sm btn-select" ng-model="columns" data-html="1"
+      data-multiple="1" bs-on-select="ColumnsSelect" max-length=-1 max-length-html="Columns to Show" all-none-buttons="true"
+      all-Text="Select All" all-button="true" none-button="false" none-Text="Select None" unknown-button="false"
+      placement="bottom-right" bs-options="column.value as column.label for column in columns_to_view" bs-select>
       Action <span class="caret"></span>
     </button>
-    <label for="columns_lions" ng-click="column_view('#columns_lions')">Columns to Show</label>
   </div>
   <div class="row main-row">
     <div class="col-sm-2 line-right">
