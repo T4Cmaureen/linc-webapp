@@ -20,19 +20,23 @@
 
 angular.module('linc.metadata.batch.controller', [])
 
-.controller('MetadataBatchCtrl', ['$scope', '$sce', 'metadata', 'organizations', '$uibModalInstance',
+.controller('MetadataBatchCtrl', ['$scope', '$sce', '$timeout', 'metadata', 'organizations', '$uibModalInstance',
   '$uibModal', 'LincServices', 'NotificationFactory', 'CONST_LIST', 'TAGS_CONST',
-  function ($scope, $sce, metadata, organizations, $uibModalInstance, $uibModal, LincServices,
+  function ($scope, $sce, $timeout, metadata, organizations, $uibModalInstance, $uibModal, LincServices,
   NotificationFactory, CONST_LIST, TAGS_CONST) {
 
 	$scope.orderby = { reverse: false, predicate: 'id' };
 	$scope.order = function(predicate) {
 		$scope.orderby.reverse = ($scope.orderby.predicate === predicate) ? !$scope.orderby.reverse : false;
 		$scope.orderby.predicate = predicate;
+		$timeout(function () {
+			$scope.$apply(function () {
+				$scope.ResizeTable();
+			});
+		}, 0);
 	};
 
 	$scope.metadata = angular.copy(metadata);
-
 
 	$scope.ChangeWarning = function (org_id){
 		var org_ids = _.map(metadata.selected, 'organization_id', 'owner_organization_id')
@@ -263,4 +267,31 @@ angular.module('linc.metadata.batch.controller', [])
 			});
 		}
 	};
+
+	$scope.ResizeTable = function(){
+		var $table = $('table.batch'),
+		$bodyCells = $table.find('tbody tr:first').children(),
+		$headerCells = $table.find('thead tr:first').children();
+
+		var col0Width = $bodyCells.map(function(i, v) {
+			return v.offsetWidth;
+		}).get();
+		var colWidth = $headerCells.map(function(i, v) {
+			return Math.max(v.offsetWidth, col0Width[i]);
+		}).get();
+
+		$bodyCells.each(function(i, v) {
+			var min = Math.max(colWidth[i],30);
+			$(v).css({'min-width': min + 'px'});
+		});
+		$headerCells.each(function(i, v) {
+			var min = Math.max(colWidth[i],30);
+			$(v).css({'min-width': min + 'px'});
+		});
+	};
+
+	$(window).resize(function() {
+		$scope.ResizeTable();
+	}).resize();
+
 }]);

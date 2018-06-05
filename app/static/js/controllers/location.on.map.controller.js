@@ -47,7 +47,7 @@ angular.module('linc.location.on.map.controller', [])
 		position: google.maps.ControlPosition.RIGHT_BOTTOM
 	};
 
-	var drawingControlOptions = { 
+	var drawingControlOptions = {
 		position: google.maps.ControlPosition.TOP_CENTER,
 		drawingModes: [google.maps.drawing.OverlayType.MARKER]
 	};
@@ -64,10 +64,10 @@ angular.module('linc.location.on.map.controller', [])
 	$scope.tag_circle_settings = { auxMarker: null, listeners: [] };
 
 	$scope.location = {
-		latitude: angular.copy(metadata.latitude), 
-		longitude: angular.copy(metadata.longitude), 
+		latitude: angular.copy(metadata.latitude),
+		longitude: angular.copy(metadata.longitude),
 		name: angular.copy(metadata.name),
-		tag_location: angular.copy(metadata.tag_location) 
+		tag_location: angular.copy(metadata.tag_location)
 	};
 	$scope.location.tag_location.value = $scope.location.tag_location.value ? $scope.location.tag_location.value : default_tag_radius;
 
@@ -157,7 +157,7 @@ angular.module('linc.location.on.map.controller', [])
 		}
 	};
 
-	// Set Location Lat / Lng -> Marker Position Changed 
+	// Set Location Lat / Lng -> Marker Position Changed
 	$scope.UpdateLocation = function(position){
 		$scope.timeout=$timeout(function() {
 			$scope.$apply(function () {
@@ -203,7 +203,7 @@ angular.module('linc.location.on.map.controller', [])
 			});
 			$scope.tag_circle_settings.listeners.push(mouseout);
 			// Limit Update to max_radius
-			var update_tag_circle = false; 
+			var update_tag_circle = false;
 			var last_position = marker.getPosition();
 			var drag = google.maps.event.addListener(marker,  'drag', function(event){
 				var position = marker.getPosition();

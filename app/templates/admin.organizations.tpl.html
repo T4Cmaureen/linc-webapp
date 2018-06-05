@@ -88,8 +88,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         <td class="text-center"><input type="checkbox" ng-disabled="Org_Mode != ''" ng-model="org.selected" ng-click="Select_Org($event, org, 'checkbox-click');$event.stopPropagation();"></td>
         <td class="text-center">{{!org.id}}</td>
         <td class="text-center">{{!org.name}}</td>
-        <td class="text-center">{{!org.created_at}}</td>
-        <td class="text-center">{{!org.updated_at}}</td>
+        <td class="text-center">{{!org.created_at | date:'short'}}</td>
+        <td class="text-center">{{!org.updated_at | date:'short'}}</td>
       </tr>
     </tbody>
   </table>

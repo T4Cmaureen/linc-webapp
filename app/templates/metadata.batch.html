@@ -37,55 +37,136 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 	<div class="modal-body" ng-show="content">
 		<div class="row">
 			<div class="col-sm-6 line-right">
-				{{!TextCounts}}
-				<table class="table table-hover">
-					<thead>
-						<tr>
-							<th class="text-center">index</th>
-							<th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': orderby.predicate === 'id'}">Id</a>
-								<span class="sortorder" ng-show="orderby.predicate === 'id'" ng-class="{reverse: orderby.reverse}"></span>
-							</th>
-							<th class="text-center">Photo</th>
-							<th class="text-center">
-								<a href="" ng-click="order('name')" ng-class="{'order_class': orderby.predicate === 'name'}">Name</a>
-								<span class="sortorder" ng-show="orderby.predicate === 'name'" ng-class="{reverse: orderby.reverse}"></span>
-							</th>
-							<th class="text-center" ng-if="metadata.type == 'imagesets'">
-								<a href="" ng-click="order('lion_id')" ng-class="{'order_class': predicate === 'lion_id'}">Lion Id</a>
-								<span class="sortorder" ng-show="predicate === 'lion_id'" ng-class="{reverse:reverse}"></span>
-							</th>
-							<th class="text-center" ng-if="metadata.type == 'lions'">
-								<a href="" ng-click="order('primary_image_set_id')" ng-class="{'order_class': orderby.predicate === 'primary_image_set_id'}">Imageset Id</a>
-								<span class="sortorder" ng-show="orderby.predicate === 'primary_image_set_id'" ng-class="{reverse: orderby.reverse}"></span>
-							</th>
-							<th class="text-center" ng-if="metadata.type == 'imagesets'">
-								<a href="" ng-click="order('is_primary')" ng-class="{'order_class': predicate === 'is_primary'}">Primary</a>
-								<span class="sortorder" ng-show="predicate === 'is_primary'" ng-class="{reverse:reverse}"></span>
-							</th>
-							<th class="text-center">
-								<a href="" ng-click="order('organization')" ng-class="{'order_class': orderby.predicate === 'organization'}">Organization</a>
-								<span class="sortorder" ng-show="orderby.predicate === 'organization'" ng-class="{reverse: orderby.reverse}"></span>
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr class="link" ng-repeat="(key, lion) in metadata.selected | orderBy : orderby.predicate : orderby.reverse">
-							<td class="text-center">{{!key+1}}</td>
-							<td class="text-center">{{!lion.id}}</td>
-							<td class="text-center">
-								<img ng-src="{{!lion.thumbnail}}" width="40" height="40">
-							</td>
-							<td class="text-center">{{!lion.name}}</td>
-							<td class="text-center" ng-if="metadata.type == 'imagesets'">{{!lion.lion_id}}</td>
-							<td class="text-center" ng-if="metadata.type == 'lions'">{{!lion.primary_image_set_id}}</td>
-							<td class="text-center" ng-if="metadata.type == 'imagesets'">
-								<i ng-if="lion.is_primary" class="icon icon-check"></i>
-								<i ng-if="!lion.is_primary" class="icon icon-cross"></i>
-							</td>
-							<td class="text-center">{{!lion.organization}}</td>
-						</tr>
-					</tbody>
-				</table>
+				<div class="div-table">
+					<table class="table batch">
+						<thead>
+							<tr>
+								<th class="text-center index">n.</th>
+								<th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': orderby.predicate === 'id'}">Id</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'id'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+								<th class="text-center">Photo</th>
+								<th class="text-center">
+									<a href="" ng-click="order('name')" ng-class="{'order_class': orderby.predicate === 'name'}">Name</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'name'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+								<th class="text-center" ng-if="metadata.type == 'imagesets'">
+									<a href="" ng-click="order('lion_id')" ng-class="{'order_class': predicate === 'lion_id'}">Lion Id</a>
+									<span class="sortorder" ng-show="predicate === 'lion_id'" ng-class="{reverse:reverse}"></span>
+								</th>
+								<th class="text-center" ng-if="metadata.type == 'lions'">
+									<a href="" ng-click="order('primary_image_set_id')" ng-class="{'order_class': orderby.predicate === 'primary_image_set_id'}">Imageset Id</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'primary_image_set_id'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+								<th class="text-center">
+									<a href="" ng-click="order('dead')" ng-class="{'order_class': orderby.predicate === 'dead'}">Dead</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'dead'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+								<th class="text-center" ng-if="metadata.type == 'imagesets'">
+									<a href="" ng-click="order('is_primary')" ng-class="{'order_class': predicate === 'is_primary'}">Primary</a>
+									<span class="sortorder" ng-show="predicate === 'is_primary'" ng-class="{reverse:reverse}"></span>
+								</th>
+								<th class="text-center">
+									<a href="" ng-click="order('organization')" ng-class="{'order_class': orderby.predicate === 'organization'}">Organization</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'organization'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+
+								<th class="text-center">
+									<a href="" ng-click="order('gender')" ng-class="{'order_class': orderby.predicate === 'gender'}">Gender</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'gender'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+
+								<th class="text-center">
+									<a href="" ng-click="order('age')" ng-class="{'order_class': predicate === 'age'}">Age</a>
+									<span class="sortorder" ng-show="predicate === 'age'" ng-class="{reverse:reverse}"></span>
+								</th>
+
+								<th class="text-center">
+									<a href="" ng-click="order('date_of_birth')" ng-class="{'order_class': predicate === 'date_of_birth'}">Date of Birth</a>
+									<span class="sortorder" ng-show="predicate === 'date_of_birth'" ng-class="{reverse:reverse}"></span>
+								</th>
+
+								<th class="text-center"><a ng-click="order('latitude')" ng-class="{'order_class': orderby.predicate === 'latitude'}">Latitude</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'latitude'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+
+								<th class="text-center"><a ng-click="order('longitude')" ng-class="{'order_class': orderby.predicate === 'longitude'}">Longitude</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'longitude'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+
+								<th class="text-center"><a ng-click="order('tag_location')" ng-class="{'order_class': orderby.predicate === 'tag_location'}">Tag Location</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'tag_location'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+								<th class="text-center"><a ng-click="order('geopos_private')" ng-class="{'order_class': orderby.predicate === 'geopos_private'}">GPS Points<br>Private</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'geopos_private'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+								<th class="text-center">
+									<a href="" ng-click="order('features')" ng-class="{'order_class': predicate === 'features'}">Features</a>
+									<span class="sortorder" ng-show="predicate === 'features'" ng-class="{reverse:reverse}"></span>
+								</th>
+								<th class="text-center"><a ng-click="order('date_stamp')" ng-class="{'order_class': orderby.predicate === 'date_stamp'}">Time Stamp</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'date_stamp'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+								<th class="text-center">
+									<a href="" ng-click="order('is_verified')" ng-class="{'order_class': orderby.predicate === 'is_verified'}">Verified</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'is_verified'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="link" ng-repeat="(key, lion) in metadata.selected | orderBy : orderby.predicate : orderby.reverse" repeat-done="ResizeTable()">
+								<td class="text-center index">{{!key+1}}</td>
+								<td class="text-center">{{!lion.id}}</td>
+								<td class="text-center">
+									<img ng-src="{{!lion.thumbnail}}" width="40" height="40">
+								</td>
+								<td class="text-center">{{!lion.name}}</td>
+								<td class="text-center" ng-if="metadata.type == 'imagesets'">{{!lion.lion_id}}</td>
+								<td class="text-center" ng-if="metadata.type == 'lions'">{{!lion.primary_image_set_id}}</td>
+
+								<td class="text-center"><i ng-if="lion.dead" class="search-icon-dead"></i></td>
+
+								<td class="text-center" ng-if="metadata.type == 'imagesets'">
+									<i ng-if="lion.is_primary" class="icon icon-check"></i>
+									<i ng-if="!lion.is_primary" class="icon icon-cross"></i>
+								</td>
+								<td class="text-center">{{!lion.organization}}</td>
+
+								<td class="text-center">{{!lion.gender}}</td>
+
+								<td ng-if="lion.age!=null" class="text-center">{{!lion.age}} y/o</td>
+								<td ng-if="lion.age==null" class="text-center"></td>
+
+								<td ng-if="lion.age!=null" class="text-center">{{!lion.date_of_birth | date:'mediumDate'}}</td>
+								<td ng-if="lion.age==null" class="text-center"></td>
+
+								<td ng-if="lion.permissions.canLocate" class="text-center">{{!lion.latitude | number:6}}</td>
+								<td ng-if="!lion.permissions.canLocate"></td>
+								<td ng-if="lion.permissions.canLocate" class="text-center">{{!lion.longitude | number:6}}</td>
+								<td ng-if="!lion.permissions.canLocate"></td>
+
+								<td ng-if="lion.permissions.canLocate" class="text-center">
+								{{!tag_location_label(lion.tag_location)}}
+								</td>
+								<td class="text-center" ng-if="!lion.permissions.canLocate"></td>
+
+								<td class="text-center">
+									<i ng-if="lion.geopos_private" class="icon icon-check"></i>
+									<i ng-if="!lion.geopos_private" class="icon icon-cross"></i>
+								</td>
+								<td class="text-center">{{!lion.tag_features}}</td>
+								<td class="text-center">
+									<div class="div-date_stamp">{{!lion.date_stamp | date:'mediumDate'}}</div>
+								</td>
+								<td class="text-center">
+									<i ng-if="lion.is_verified" class="icon icon-check"></i>
+									<i ng-if="!lion.is_verified" class="icon icon-cross" bs-tooltip="lion.tooltip.need_verify"></i>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<h5 class="text-counts">{{!TextCounts}}</h5>
 			</div>
 			<div class="col-sm-6">
 				<form name="metadataForm" class="font-homenaje-1-1 metadata-batch" ng-submit="Submit(metadataForm)">
@@ -133,7 +214,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 									class="batch-checkbox">Date Stamp:
 								</label>
 								<input type="text" class="form-control meta_input" ng-model="selected.date_stamp"
-									data-date-format="yyyy-MM-dd" data-date-type="date" data-timezone="UTC"
+									data-date-format="mediumDate" data-date-type="date" data-timezone="UTC"
 									data-min-date="02/10/86" data-max-date="today" data-autoclose="1"
 									placeholder="Do not change" ng-disabled="!changed.date_stamp"
 									name="date" bs-datepicker placement="bottom-left"
@@ -209,7 +290,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 									</div>
 								</div>
 								<div class="form-inline group-select"
-								 	ng-class="{'has-error': metadataForm.isTagLocation.$dirty && metadataForm.isTagLocation.$error.required }">
+									ng-class="{'has-error': metadataForm.isTagLocation.$dirty && metadataForm.isTagLocation.$error.required }">
 									<label class="meta_label" for="isTagLocation">Tag Location: </label>
 									<div class="input-group width-100">
 										<input data-lpignore="true" class="form-control meta_input" type="text"
@@ -247,7 +328,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 										class="batch-checkbox">Date of Birth:
 								</label>
 								<input type="text" class="form-control meta_input" ng-model="selected.date_of_birth"
-									data-date-format="yyyy-MM-dd" data-date-type="date" data-timezone="UTC"
+									data-date-format="mediumDate" data-date-type="date" data-timezone="UTC"
 									data-max-date="today" data-autoclose="1" name="date1" bs-datepicker
 									placeholder="{{!changed.date_of_birth ? 'Please enter the Date of Birth' : 'Do not change'}}"
 									ng-disabled="!changed.date_of_birth" placement="bottom-right" ng-required="changed.date_of_birth">
@@ -290,13 +371,13 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 							<hr class="style-line" ng-if="metadata.type == 'lions'">
 						</div>
 						<div class="col-sm-6">
-							<div class="form-group group-select2">
+							<div class="form-group group-select3">
 								<label class="location text-right" for="location">
 								<input type="checkbox" ng-model="changed.tags" ng-change="clear_selection('tags');"
 									class="batch-checkbox">Tags:
 								</label>
 							</div>
-							<div class="form-group group-select2">
+							<div class="form-group group-select2 margin-top-10">
 								<label class="meta_label" for="id_ear_marking">Ear Markings: </label>
 								<label ng-hide="changed.tags" class="h-label">
 									Do not change</label>
@@ -382,7 +463,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 							<pre ng-show="debug">{{!selected.tags.broken_teeth}}</pre>
 							<div class="form-group group-select2">
 								<label class="meta_label" for="id_tail_marking">Tail Markings/Missing Tuft: </label>
-								<label ng-hide="changed.tags" class="h-label h-label2">
+								<label ng-hide="changed.tags" class="h-label2">
 									Do not change</label>
 								<button type="button" name="id_tail_marking" placeholder="Unknown"
 									class="btn btn-default btn-sm select_btn"
@@ -399,7 +480,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 							<pre ng-show="debug">{{!selected.tags.tail_marking}}</pre>
 							<div class="form-group group-select2">
 								<label class="meta_label" for="id_eye_damage">Eye Damage/Pigmentation: </label>
-								<label ng-hide="changed.tags" class="h-label2">
+								<label ng-hide="changed.tags" class="h-label3">
 									Do not change</label>
 								<button type="button" id="id_eye_damage" placeholder="Unknown"
 									class="btn btn-default btn-sm select_btn"
@@ -420,7 +501,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 									<input type="checkbox" ng-model="changed.notes" ng-change="clear_selection('notes');"
 										class="batch-checkbox">Notes:
 								</label>
-								<textarea class="form-control" rows="3" ng-model="selected.notes" ng-disabled="!changed.notes"
+								<textarea class="form-control" rows="2" ng-model="selected.notes" ng-disabled="!changed.notes"
 									placeholder="{{! !changed.notes ? 'Do not change':'Notes here'}}" ></textarea>
 							</div>
 							<pre ng-show="debug">{{!selected.notes}}</pre>

@@ -45,12 +45,13 @@ angular.module('linc.data.factory', [])
 			Location: { latitude:'', longitude: '', radius: '' },
 			Boundarys: ''
 		},
-		pages: { PerPage: 0, currentPage: 0},
+		Columns : ['age','dead','organization','gender','latitude','longitude','geopos_private','is_verified']
 	};
-	
+	var imagesets = angular.copy(default_options);
+	imagesets.Columns = ['age','dead','organization','gender','latitude','longitude','geopos_private','is_verified', 'is_primary'];
 	var options = {
 		lions: angular.copy(default_options),
-		imagesets: angular.copy(default_options),
+		imagesets: imagesets,
 		cvrequests: angular.copy(default_options),
 		relatives: {
 			orderby : { reverse: false, predicate: 'id' },

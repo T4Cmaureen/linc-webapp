@@ -141,8 +141,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           <i ng-if="user.admin" class="icon icon-check"></i>
           <i ng-if="!user.admin" class="icon icon-cross"></i>
         </td>
-        <td >{{!user.created_at}}</td>
-        <td >{{!user.updated_at}}</td>
+        <td >{{!user.created_at | date:'short'}}</td>
+        <td >{{!user.updated_at | date:'short'}}</td>
         <td>
           <a href data-animation="am-flip-x" data-html="true" placement="auto" bs-tooltip="user.tooltip">Info</a>
         </td>

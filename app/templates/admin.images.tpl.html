@@ -158,8 +158,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           <i ng-if="image.is_public" class="icon icon-check"></i>
           <i ng-if="!image.is_public" class="icon icon-cross"></i>
         </td>
-        <td class="text-center">{{!image.created_at}}</td>
-        <td class="text-center">{{!image.updated_at}}</td>
+        <td class="text-center">{{!image.created_at | date:'short'}}</td>
+        <td class="text-center">{{!image.updated_at | date:'short'}}</td>
       </tr>
     </tbody>
   </table>

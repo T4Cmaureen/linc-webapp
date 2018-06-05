@@ -22,12 +22,13 @@ angular.module('linc.view.lion.database.controller', [])
 
 .controller('ViewLionDatabaseCtrl', ['$scope', '$rootScope', '$state', '$timeout', '$q', '$filter', '$stateParams',
   '$bsTooltip', 'AuthService', 'lions', 'lion_options', 'default_options', '$ModalPage', '$uibModal', 'NgMap', 
-  'LincServices', 'LincDataFactory', 'NotificationFactory', 'TAG_LABELS', 'TOOL_TITLE',
+  'LincServices', 'LincDataFactory', 'NotificationFactory', 'TAG_LABELS', 'TOOL_TITLE', 'CONST_VIEWCOLUMNS',
   function ($scope, $rootScope, $state, $timeout, $q, $filter, $stateParams, $bsTooltip, AuthService, lions, lion_options,
   default_options, $ModalPage, $uibModal, NgMap, LincServices, LincDataFactory, NotificationFactory, 
-  TAG_LABELS, TOOL_TITLE) {
+  TAG_LABELS, TOOL_TITLE, CONST_VIEWCOLUMNS) {
 
 	$scope.user = AuthService.user;
+	$scope.$parent.isBatchMode = false;
 
 	$scope.ChangeStatus = $rootScope.ChangeStatus;
 
@@ -42,21 +43,22 @@ angular.module('linc.view.lion.database.controller', [])
 		return label;
 	};
 
-	var set_all_lions = function(sets){
-		var get_permissions = function (user,lion){
-			var permissions = {};
-			var lion_ismine  = user.organization_id == lion.organization_id;
+	var get_permissions = function (user,lion){
+		var permissions = {};
+		var lion_ismine  = user.organization_id == lion.organization_id;
 
-			permissions['canLocate'] = (!lion.geopos_private || user.admin || lion_ismine);
-			permissions['ismine'] = (user.admin || lion_ismine);
-			return permissions;
-		};
+		permissions['canLocate'] = (!lion.geopos_private || user.admin || lion_ismine);
+		permissions['ismine'] = (user.admin || lion_ismine);
+		return permissions;
+	};
+
+	var set_all_lions = function(sets, selected){
 
 		$scope.lions = _.map(sets, function(element, index) {
 
 			element['permissions'] = get_permissions($scope.user, element);
 			element['age'] = isNaN(parseInt(element['age'])) ? null : element['age'];
-			
+
 			var elem = {};
 			var TAGS = [];
 			if(!element.gender) element.gender = 'unknown';
@@ -72,8 +74,8 @@ angular.module('linc.view.lion.database.controller', [])
 			};
 			elem['features'] = (tag_features.length > 0) ? true : false;
 			elem['tag_features'] = tag_features;
-			elem['selected'] = false;
-			
+			elem['selected'] = (selected && _.has(element, 'selected') ? element['selected'] : false);
+
 			elem['location'] = (!element['latitude'] || !element['longitude']) ? null : new google.maps.LatLng(element['latitude'], element['longitude']);
 			if (element['tag_location']){
 				var circle = $scope.CreateCircle({'center': elem['location'], 'radius': element['tag_location']['value'] })
@@ -104,9 +106,27 @@ angular.module('linc.view.lion.database.controller', [])
 	$scope.isCollapsed = lion_options.isCollapsed;
 	$scope.orderby = lion_options.orderby;
 
+	$scope.ShowColumn = function(col){
+		return $scope.columns ? _.includes($scope.columns, col) : false;
+	};
+	$scope.ColumnsSelect = function(){
+		$timeout(function () {
+			$scope.$apply(function () {
+				$scope.ResizeTable();
+			});
+		}, 0);
+		lion_options.Columns = $scope.columns;
+		LincDataFactory.set_lions(lion_options);
+	};
+
+	if(!lion_options.Columns)
+		lion_options.Columns = angular.copy(default_options.Columns);
+	$scope.columns = lion_options.Columns;
+	$scope.columns_to_view = CONST_VIEWCOLUMNS.columns.lions;
+
 	$scope.change = function(type){
 		lion_options.filters[type] = $scope.filters[type];
-		$scope.setPage(0);
+		LincDataFactory.set_lions(lion_options);
 	};
 
 	// Click collapse
@@ -122,95 +142,13 @@ angular.module('linc.view.lion.database.controller', [])
 		LincDataFactory.set_lions(lion_options);
 	};
 
-	$scope.PerPages = [
-		{'index': 0, 'label' : '10 Lions', 'value': 10, 'disabled': false},
-		{'index': 1, 'label' : '20 Lions', 'value': 20, 'disabled': lions.length < 10 ?  true : false},
-		{'index': 2, 'label' : '30 Lions', 'value': 30, 'disabled': lions.length < 20 ?  true : false},
-		{'index': 3, 'label' : '60 Lions', 'value': 60, 'disabled': lions.length < 30 ?  true : false},
-		{'index': 4, 'label' : '100 Lions', 'value' : 100, 'disabled': lions.length < 60 ?  true : false},
-		{'index': 5, 'label' : 'All Lions', 'value' : $scope.lions.length, 'disabled': false}
-	];
-
-	$scope.pages = lion_options.pages;
-	$scope.changeItensPerPage = function(){
-		$scope.setPage(0);
-		var min_val = ($scope.filtered_lions==undefined) ? $scope.lions.length : $scope.filtered_lions.length;
-		switch ($scope.pages.PerPage){
-			case 0:
-				$scope.itemsPerPage = Math.min(10, min_val);
-			 lion_options.pages.PerPage = $scope.PerPages[0].index;
-			break;
-			case 1:
-				$scope.itemsPerPage = Math.min(20, min_val);
-			 lion_options.pages.PerPage = $scope.PerPages[1].index;
-			break;
-			case 2:
-				$scope.itemsPerPage = Math.min(30, min_val);
-				lion_options.pages.PerPage = $scope.PerPages[2].index;
-			break;
-			case 3:
-				$scope.itemsPerPage = Math.min(60, min_val);
-				lion_options.pages.PerPage = $scope.PerPages[3].index;
-			break;
-			case 4:
-				$scope.itemsPerPage = Math.min(100, min_val);
-				lion_options.pages.PerPage = $scope.PerPages[4].index;
-			break;
-			default:
-				$scope.itemsPerPage = $scope.PerPages[5].value;
-				lion_options.pages.PerPage = $scope.PerPages[5].index;
-		};
-		LincDataFactory.set_lions(lion_options);
-	};
-	
-	$scope.setPage = function(n) {
-		lion_options.pages.currentPage = $scope.pages.currentPage = n;
-	};
-	$scope.prevPage = function() {
-		if ($scope.pages.currentPage > 0)
-			$scope.setPage($scope.pages.currentPage - 1);
-	};
-	$scope.nextPage = function() {
-		if ($scope.pages.currentPage < $scope.pageCount()-1)
-			$scope.setPage($scope.pages.currentPage + 1);
-	};
-	$scope.firstPage = function() {
-		$scope.setPage(0)
-	};
-	$scope.lastPage = function() {
-		if ($scope.pages.currentPage < $scope.pageCount()-1)
-			$scope.setPage($scope.pageCount()-1);
-	};
-	$scope.prevPageDisabled = function() {
-		return $scope.pages.currentPage === 0 ? "disabled" : "";
-	};
-	$scope.nextPageDisabled = function() {
-		return ($scope.pages.currentPage === $scope.pageCount()-1 || !$scope.pageCount())? "disabled" : "";
-	};
-	$scope.pageCount = function() {
-		return Math.ceil($scope.filtered_lions.length/$scope.itemsPerPage);
-	};
-	$scope.range = function() {
-		var rangeSize = Math.min(5, $scope.pageCount());
-		var ret = [];
-		var start = $scope.pages.currentPage -3;
-		if ( start < 0 ) start = 0;
-		if ( start > $scope.pageCount()-(rangeSize-3) ) {
-			start = $scope.pageCount()-rangeSize+1;
-		}
-		var max = Math.min(start+rangeSize,$scope.pageCount());
-		for (var i=start; i<max; i++) {
-			ret.push(i);
-		}
-		return ret;
-	};
-
-	$scope.viewer_label = function(){
-		var label = "0 lions found";
-		if($scope.filtered_lions != undefined && $scope.filtered_lions.length){
-			label = ($scope.filtered_lions.length).toString() + " lions found - " +
-							($scope.pages.currentPage*$scope.itemsPerPage+1).toString() + " to " +
-							(Math.min((($scope.pages.currentPage+1)*$scope.itemsPerPage),$scope.filtered_lions.length)).toString();
+	$scope.viewer_selected = function(){
+		var label = "";
+		if($scope.Selecteds.length == $scope.lions.length)
+			label = "All " + $scope.Selecteds.length + " lions are selected";
+		else if($scope.Selecteds.length){
+			label = ($scope.Selecteds.length).toString();
+			label += ($scope.Selecteds.length == 1 ) ? ' is selected' : ' are selected';
 		}
 		return label;
 	};
@@ -235,14 +173,8 @@ angular.module('linc.view.lion.database.controller', [])
     	$scope.isCollapsed.Location = $scope.pfilters.hasOwnProperty('Location') ? false : 
     		(($scope.filters.Location.latitude && $scope.filters.Location.longitude && $scope.filters.Location.radius) ? false : true);
     	$scope.isCollapsed.Boundarys = $scope.pfilters.hasOwnProperty('Boundarys') ? false : ($scope.filters.Boundarys.length ? false : true);
-
-		$scope.changeItensPerPage();
 	}
 	else{
-		var cur_per_page = lion_options.pages.currentPage;
-		$scope.changeItensPerPage();
-		$scope.pages.currentPage = cur_per_page;
-
 		$scope.isCollapsed.NameOrId = $scope.filters.NameOrId ? false : true;
 		$scope.isCollapsed.Organization = _.every($scope.filters.Organizations, {checked: true});
 		$scope.isCollapsed.Age = (($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
@@ -253,53 +185,41 @@ angular.module('linc.view.lion.database.controller', [])
 	}
 
 	$scope.goto_lion = function(lion){
-		//ui-sref="lion({id: lion.id})" 
 		$state.go('lion',{id: lion.id});
 	};
 
 	// Batch Mode
 	$scope.is_modal_open = false;
-	$scope.message_select_all = { show: false, message: {selected: '', select: ''} };
-	$scope.selection = {
-		paginated:{ allSel: false, allUnSel: false },
-		allLions:{ allSel: false, allUnSel: false }
-	};
+	$scope.selection = { allSel: false, allUnSel: false };
 
 	$scope.$on('BatchModeUpdated', function(event, args) {
-		$scope.message_select_all.show = args.isBatchMode;
 		if(!$scope.isBatchMode){
-			$scope.check_all($scope.lions, false, 'paginated');
+			$scope.check_all(false);
 		}
+		$timeout(function () {
+			$scope.$apply(function () {
+				$scope.ResizeTable();
+			});
+		}, 0);
 	});
-	
+
 	$scope.Selecteds = [];
 	// Select All Lions
-	$scope.check_all = function (collections, val, type){
-		if (type =='all'){
-			$scope.loading = true;
-			$timeout(function () {
-				$scope.$apply(function () {
-					$scope.pages.PerPage = $scope.PerPages.length;
-					$scope.changeItensPerPage();
-					$scope.loading = false;
-					$scope.message_select_all.show = false;
-				});
-			}, 0);
+	$scope.check_all = function (val){
+		if(val){
+			_.forEach($scope.filtered_lions, function(lion) {
+				lion.selected = val;
+				if(lion.selected){
+					if(!_.some($scope.Selecteds, lion))
+						$scope.Selecteds.push(lion);
+				}
+			});
 		}
-		_.forEach(collections, function(lion) {
-			lion.selected = val;
-			if(lion.selected){
-				if(!_.some($scope.Selecteds, lion))
-					$scope.Selecteds.push(lion);
-			}
-		});
-		if(!val)
+		else{
+			_.forEach($scope.lions, function(lion) {
+				lion.selected = val;
+			});
 			$scope.Selecteds = [];
-
-		if (type == 'paginated' && val && collections.length < $scope.mine_lions.length){
-			$scope.message_select_all.message.selected = 'All ' + collections.length.toString() + ' lions on this page are selected.'
-			$scope.message_select_all.message.select = 'Select all ' + $scope.mine_lions.length.toString()  + ' lions from the database.'
-			$scope.message_select_all.show = true;
 		}
 		check_selects();
 	};
@@ -308,12 +228,12 @@ angular.module('linc.view.lion.database.controller', [])
 	$scope.Select_Lion = function ($event, lion){
 		var shiftKey = $event.shiftKey;
 		if(shiftKey && lastSelId>=0){
-			var index0 = _.findIndex($scope.paginated_lions, {'id': lastSelId});
-			var index1 = _.findIndex($scope.paginated_lions, {'id': lion.id});
+			var index0 = _.findIndex($scope.ordered_lions, {'id': lastSelId});
+			var index1 = _.findIndex($scope.ordered_lions, {'id': lion.id});
 			var first = Math.min(index0, index1);
 			var second = Math.max(index0, index1);
-			for(var i = first; i < second; i++){
-				var animal = $scope.paginated_lions[i];
+			for(var i = first; i <= second; i++){
+				var animal = $scope.ordered_lions[i];
 				animal.selected = lion.selected;
 				if(lion.selected){
 					if(!_.some($scope.Selecteds, animal))
@@ -336,17 +256,15 @@ angular.module('linc.view.lion.database.controller', [])
 	};
 	// Check to Set Checkbox
 	var check_selects = function (){
-		$scope.selection.paginated.allSel = _.every($scope.paginated_lions, {selected: true});
-		$scope.selection.paginated.allUnSel = _.every($scope.paginated_lions, {selected: false});	
+		$scope.selection.allSel = _.every($scope.ordered_lions, { selected: true });
+		$scope.selection.allUnSel = _.every($scope.ordered_lions, { selected: false });
 	};
 	// ACTION AFTER BATCH UPDATE
 	$scope.BatchUpdateLions = function (data){
-		console.log(data);
-		console.log($scope.Selecteds);
 		_.forEach($scope.Selecteds, function(sel){
 			_.merge(sel,data);
 		});
-		set_all_lions($scope.lions);
+		set_all_lions($scope.lions, true);
 	}
 	// Batch Delete
 	$scope.BatchDelete = function(type){
@@ -367,16 +285,18 @@ angular.module('linc.view.lion.database.controller', [])
 		}, function (error) {
 		});
 	};
-	// Batch Delete
+	// Batch Export
+	$scope.exporting = false;
 	$scope.BatchExport = function(type){
 		var now = new Date();
 		var date = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
 		var ids = _.map($scope.Selecteds, 'id');
-
+		$scope.exporting = true;
 		LincServices.DataExport({'data': {'lions': ids}}).then(function(res_data){
 			var blob = res_data.blob;
 			var fileName = 'Data-Lions-'+ date + '-' + (res_data.fileName || "").substring(res_data.fileName.lastIndexOf('/')+1) || 'images.csv';
-			saveAs(blob, fileName);	
+			saveAs(blob, fileName);
+			$scope.exporting = false;
 		},function(error){
 			if($scope.debug || (error.status != 401 && error.status != 403)){
 				NotificationFactory.error({
@@ -386,7 +306,7 @@ angular.module('linc.view.lion.database.controller', [])
 					duration: 5000
 				});
 			}
-			
+			$scope.exporting = false;
 		});
 	};
 	// Label to Tag Location
@@ -421,7 +341,7 @@ angular.module('linc.view.lion.database.controller', [])
 			var overlay = null;
 			if (data['selected']){
 				if (data.type == 'polygon'){
-					overlay = $scope.CreatePolygon({'path': data.path, 'map': map});					
+					overlay = $scope.CreatePolygon({'path': data.path, 'map': map});
 				}
 				else if (data.type == 'circle'){ // EVENT TO MODE CIRCLE
 					overlay = $scope.CreateCircle({'center': data.center, 'radius': data.radius, 'map': map});
@@ -484,4 +404,30 @@ angular.module('linc.view.lion.database.controller', [])
 			modalInstance.dismiss();
 		}
 	};
+
+	$scope.ResizeTable = function(){
+		var $table = $('table.table-view'),
+		$bodyCells = $table.find('tbody tr:first').children(),
+		$headerCells = $table.find('thead tr:first').children();
+
+		var col0Width = $bodyCells.map(function(i, v) {
+			return v.offsetWidth;
+		}).get();
+		var colWidth = $headerCells.map(function(i, v) {
+			return Math.max(v.offsetWidth, col0Width[i]);
+		}).get();
+
+		$bodyCells.each(function(i, v) {
+			var min = Math.max(colWidth[i],30);
+			$(v).css({'min-width': min + 'px'});
+		});
+		$headerCells.each(function(i, v) {
+			var min = Math.max(colWidth[i],30);
+			$(v).css({'min-width': min + 'px'});
+		});
+	};
+	$(window).resize(function() {
+		$scope.ResizeTable();
+	}).resize();
+
 }]);

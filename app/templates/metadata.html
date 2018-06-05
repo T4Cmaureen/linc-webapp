@@ -29,7 +29,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 		</div>
 	</div>
 </script>
-<div name="metatada" class="font-homenaje-1-1" ng-keyup="KeyEvent($event)">
+<div name="metatada" class="metadata font-homenaje-1-1" ng-keyup="KeyEvent($event)">
 	<form name="vm.form">
 		<div class="modal-header" ng-show="title">
 			<button type="button" class="close" ng-click="Cancel()">&times;</button>
@@ -70,14 +70,14 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 							<hr class="style-line">
 							<div class="form-inline group-input" ng-class="{'has-error': datepickerForm.date.$invalid}">
 								<label class="control-label meta_label"><i class="fa fa-calendar"></i>Date Stamp: </label>
-								<input type="text" class="form-control meta_input" ng-model="selected.date_stamp" data-date-format="yyyy-MM-dd"
+								<input type="text" class="form-control meta_input" ng-model="selected.date_stamp" data-date-format="mediumDate"
 									data-date-type="date" data-timezone="UTC" data-min-date="02/10/86" data-max-date="today" data-autoclose="1"
 									name="date" bs-datepicker placement="bottom-left">
 							</div>
 							<pre ng-if="debug">{{!selected.date_stamp}}</pre>
 							<hr class="style-line">
 							<!-- LOCATION / TAG LOCATION -->
-							<div class="form-group group-input">
+							<div class="form-group group-input location">
 								<!-- LATITUDE -->
 								<div class="form-inline">
 									<div class="form-group control div-width-100"
@@ -89,7 +89,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 												oninvalid="this.setCustomValidity('Please enter a valid latitude number')"
 												oninput="setCustomValidity('')" limlatlng="90">
 											<span class="input-group-addon" id="basic-addon2">
-												<location-on-map use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html"
+												<location-on-map class="location" use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html"
 													update-location="UpdateLocation(location)"
 													form-size="lg" modal-is-open="is_modal_open" meta-data="selected">
 												</location-on-map>
@@ -120,7 +120,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 												ng-model="selected.longitude" name="longitude" oninvalid="this.setCustomValidity('Please enter a valid longitude number')"
 												oninput="setCustomValidity('')" limlatlng="180">
 											<span class="input-group-addon" id="basic-addon2">
-												<location-on-map use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html" update-location="UpdateLocation(location)"
+												<location-on-map class="location" use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html" update-location="UpdateLocation(location)"
 												form-size="lg" modal-is-open="is_modal_open" meta-data="selected">
 												</location-on-map>
 											</span>
@@ -149,7 +149,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 										<input data-lpignore="true" class="form-control meta_input" type="text"
 											ng-model="selected.tag_location.text" name="tag_location" ng-readonly="true">
 										<span class="input-group-addon" id="basic-addon2">
-											<location-on-map use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html" update-location="UpdateLocation(location)"
+											<location-on-map class="location" use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html" update-location="UpdateLocation(location)"
 											form-size="lg" modal-is-open="is_modal_open" meta-data="selected">
 											</location-on-map>
 										</span>
@@ -212,7 +212,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 							<div class="form-inline group-input" ng-class="{'has-error': datepickerForm.date1.$invalid}">
 								<label class="control-label"><i class="fa fa-calendar"></i>Date of Birth: </label>
 								<input type="text" class="form-control meta_input" ng-model="selected.date_of_birth" ng-change='Calc_Age()'
-									data-date-format="yyyy-MM-dd" data-date-type="date" data-timezone="UTC" data-max-date="today"
+									data-date-format="mediumDate" data-date-type="date" data-timezone="UTC" data-max-date="today"
 									data-autoclose="1" name="date1" bs-datepicker placement="bottom-right">
 							</div>
 							<pre ng-show="debug">{{!selected.date_of_birth}}</pre>
