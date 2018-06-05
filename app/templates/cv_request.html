@@ -207,8 +207,27 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           </div>
 
         </div>
+
+        <div class="form-group" style="margin-left: 12px;">
+            <h4 style="margin: 20px 0 10px;">
+              Classifier
+            </h4>
+            <div class="checkbox">
+              <label style="padding-left: 10px;">
+                <input type="checkbox" checked ng-model="classifier.cv">
+                <span class="cr"><i class="cr-icon fa fa-check"></i></span> CV
+              </label>
+            </div>
+            <div class="checkbox">
+              <label style="padding-left: 10px;">
+                <input type="checkbox" checked ng-model="classifier.whisker">
+                <span class="cr"><i class="cr-icon fa fa-check"></i></span> Whisker
+              </label>
+            </div>      
+        </div>
+
         <div class="form-group custom-padding">
-          <button ng-disabled="!Selecteds.length" type="button" class="btn btn-primary" ng-click="requestCV()">
+          <button ng-disabled="!Selecteds.length || (!classifier.cv && !classifier.whisker)" type="button" class="btn btn-primary" ng-click="requestCV()">
             <span ng-if="loading" class="loading text-center">
               <img src="/static/images/loading.gif"/></span>
             <i class="icon icon-flash"></i>Find Lion Match

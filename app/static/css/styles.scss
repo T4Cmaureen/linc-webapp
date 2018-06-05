@@ -307,9 +307,6 @@ textarea{font-family: 'Homenaje', sans-serif;}
 	}
 }
 
-.btn-help{
-	//margin-top:30px;
-}
 .line-right{
 	border-right: 1px solid #ddd;
 	//padding-right: 20px;
@@ -523,7 +520,7 @@ textarea{font-family: 'Homenaje', sans-serif;}
 								font-size: 0.9em;
 								position: absolute;
 								bottom: 70px;
-								color: #95210;
+								color: #d95210;
 								z-index: 10;
 								label{
 									 color: #d95210;
@@ -626,7 +623,7 @@ textarea{font-family: 'Homenaje', sans-serif;}
 								font-size: 0.9em;
 								position: absolute;
 								bottom: 70px;
-								color: #95210;
+								color: #d95210;
 								z-index: 10;
 								label{
 									 color: #d95210;
@@ -823,11 +820,6 @@ textarea{font-family: 'Homenaje', sans-serif;}
 		}
 		ul.ui-select-choices.dropdown-menu {
 			li.ui-select-choices-group{
-				.ui-select-choices-row{
-					.ui-select-choices-row-inner{
-
-					}
-				}
 				.ui-select-choices-row.disabled, .ui-select-choices-row.disabled>span{
 					color: #ccc;
 				}
@@ -1055,7 +1047,7 @@ hr.style-line {
 .form-group-padding1 { @extend .form-group; padding-right: 20px !important; margin-bottom: 10px !important;}
 .form-control-inline {display: inline;
 	min-width: 120px;
-	height: 33px;
+	// height: 33px;
 	text-align: right;
 	font-size: 14px;
 	line-height: 1.42857143;
@@ -1071,7 +1063,7 @@ hr.style-line {
 	-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
 	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-	align: right;
+	// align: right;
 }
 .form-group.control{margin-bottom: 10px;}
 .form-control-inline1 {@extend .form-control-inline; width: 50%;     margin-left: 20px;}
@@ -1564,8 +1556,6 @@ i.icon-border.active{background: #999 !important;}
 				&:hover{text-shadow: 2px 0 6px #000;}
 			}
 		}
-		div.caption{
-		}
 	}
 	.row-gallery-order{
 		padding: 0px 10px;
@@ -1929,7 +1919,7 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 }
 //Animated Checkbox
 .checkbox label:after { content: ''; display: table; clear: both; }
-.checkbox .cr{ position: relative; display: inline-block; border: 1px solid #a9a9a9;
+.checkbox .cr{ position: relative; border: 1px solid #a9a9a9;
 								border-radius: .25em; width: 1.3em; height: 1.3em; float: left; margin-right: .5em; }
 .checkbox .cr .cr-icon { position: absolute; font-size: .8em; line-height: 0; top: 50%; left: 20%; }
 .checkbox label input[type="checkbox"]{ display: none; }
