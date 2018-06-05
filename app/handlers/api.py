@@ -47,11 +47,9 @@ class RelativesHandler(BaseHandler):
     @web_authenticated
     def get(self, lion_id=None):
         if lion_id:
-            resource_url = '/lions/' + lion_id + '/relatives'
-            url = self.settings['API_URL'] + resource_url
-            info(url)
-            headers = {'Linc-Api-AuthToken': self.current_user['token']}
-            response = yield Task(self.api, url=url, method='GET', headers=headers)
+            resource_url = self.settings['API_URL'] + '/lions/' + lion_id + '/relatives'
+            info(resource_url)
+            response = yield Task(self.api, url=resource_url, method='GET')
             self.set_json_output()
             if response.code == 404:
                 body = loads(response.body.decode("utf-8"))
@@ -116,6 +114,32 @@ class RelativesHandler(BaseHandler):
             self.response(401, 'Invalid request, you must provide lion id.')
         else:
             self.response(401, 'Invalid request, you must provide relative lion id.')
+
+
+class ImageSetsReqHandler(BaseHandler):
+    SUPPORTED_METHODS: ('GET')
+
+    @asynchronous
+    @coroutine
+    @web_authenticated
+    def get(self, imageset_id=None, cvrequirements=None):
+        if imageset_id:
+            resource_url = self.settings['API_URL'] + '/imagesets/' + imageset_id + '/cvrequirements'
+            info(resource_url)
+            response = yield Task(
+                self.api,
+                url=resource_url,
+                method='GET',
+                headers={'Linc-Api-AuthToken': self.current_user['token']})
+            self.set_json_output()
+            self.set_status(response.code)
+            if response.code == 200:
+                self.finish(response.body)
+            else:
+                self.finish(
+                    {'status': 'error', 'message': 'fail to get Image Sets GET.'})
+        else:
+            self.response(400, 'Invalid request.')
 
 
 class ImageSetsListHandler(BaseHandler):
