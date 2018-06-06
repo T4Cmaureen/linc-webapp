@@ -59,6 +59,8 @@ class BaseHandler(RequestHandler):
         AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
         http_client = AsyncHTTPClient()
         dictheaders = {"content-type": "application/json"}
+        if 'token' in self.corrent_user:
+            dictheaders['Linc-Api-AuthToken'] = self.current_user['token']
         if headers:
             for k, v in headers.items():
                 dictheaders[k] = v
@@ -123,13 +125,9 @@ class BaseHandler(RequestHandler):
         self.set_header('Content-Type', 'application/json; charset=UTF-8')
 
     def write_error(self, status_code=404, **kwargs):
-        exc_info = kwargs.pop('exc_info')
-        e = exc_info[1]
-        # info(e.status_code)
-        # info(e.log_message)
-        # info(e.reason)
         goto_url = 'https://linc.linclion.org'
-        self.render('error.page.html', status_code=status_code, http_error=e, goto_url=goto_url)
+        self.render('error.page.html', status_code=status_code,
+                    http_error=kwargs.pop('exc_info'), goto_url=goto_url)
 
 
 class VersionHandler(BaseHandler):
