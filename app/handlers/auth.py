@@ -34,30 +34,27 @@ class CheckAuthHandler(BaseHandler):
     @engine
     @web_authenticated
     def get(self):
-        resource_url = '/auth/check'
-        headers = {'Linc-Api-AuthToken': self.current_user['token']}
-        response = yield Task(self.api, url=self.settings['API_URL'] + resource_url, method='GET', headers=headers)
+        resource_url = self.settings['API_URL'] + '/auth/check'
+        response = yield Task(self.api_call, url=resource_url, method='GET')
         self.set_json_output()
         if response.code != 200:
-            resource_url = '/auth/login'
-            username = self.current_user['username']
-            password = self.current_user['password']
-            body = {'username': username,
-                    'password': password}
-            url = self.settings['API_URL'] + resource_url
-            response = yield Task(self.api, url=url, method='POST', body=self.json_encode(body))
+            resource_url = self.settings['API_URL'] + '/auth/login'
+            body = self.json_encode(
+                {'username': self.current_user['username'],
+                 'password': self.current_user['password']})
+            response = yield Task(self.api_call, url=resource_url, method='POST', body=body)
             if response and response.code == 200:
                 data = loads(response.body.decode('utf-8'))['data']
-                obj = {'username': username,
+                obj = {'username': self.current_user['username'],
                        'orgname': data['orgname'],
                        'admin': (data['role'] == 'admin'),
                        'token': data['token'],
                        'id': data['id'],
                        'organization_id': data['organization_id'],
-                       'password': password}
+                       'password': self.current_user['password']}
                 self.set_secure_cookie("userlogin", dumps(obj))
                 del obj['password']
-                self.response(200, 'User has a new token login in API.', obj)
+                self.response(200, 'The system executed an automatic new login on the API.', obj)
                 return
         elif response.code == 200:
             self.response(200, 'Token valid for the current user.')
@@ -70,24 +67,24 @@ class LoginHandler(BaseHandler):
     @engine
     def post(self):
         if self.input_data['username'] and self.input_data['password']:
-            username = self.input_data['username']
-            password = self.input_data['password']
             # Check authentication with the API
-            resource_url = '/auth/login'
-            body = {'username': username,
-                    'password': password}
-            url = self.settings['API_URL'] + resource_url
-            response = yield Task(self.api, url=url, method='POST', body=self.json_encode(body))
+            body = {'username': self.input_data['username'],
+                    'password': self.input_data['password']}
+            response = yield Task(
+                self.api_call,
+                url=self.settings['API_URL'] + '/auth/login',
+                method='POST',
+                body=self.json_encode(body))
             resp = loads(response.body.decode('utf-8'))
             if 200 <= response.code < 300:
                 data = resp['data']
-                obj = {'username': username,
+                obj = {'username': self.input_data['username'],
                        'orgname': data['orgname'],
                        'admin': (data['role'] == 'admin'),
                        'token': data['token'],
                        'id': data['id'],
                        'organization_id': data['organization_id'],
-                       'password': password}
+                       'password': self.input_data['password']}
                 self.set_secure_cookie("userlogin", dumps(obj))
                 del obj['password']
                 # this will be acquired with the api
@@ -103,11 +100,12 @@ class LogoutHandler(BaseHandler):
     @engine
     @web_authenticated
     def post(self):
-        print(self.current_user)
-        resource_url = '/auth/logout'
-        url = self.settings['API_URL'] + resource_url
-        headers = {'Linc-Api-AuthToken': self.current_user['token']}
-        response = yield Task(self.api, url=url, method='POST', body='{}', headers=headers)
+        info(self.current_user)
+        response = yield Task(
+            self.api_call,
+            url=self.settings['API_URL'] + '/auth/logout',
+            method='POST',
+            body='{}')
         if response and response.code == 200:
             self.clear_cookie("userlogin")
             self.response(200, 'Logout ok.')
@@ -120,11 +118,13 @@ class ResetPassword(BaseHandler):
     @coroutine
     def post(self):
         if 'email' in self.input_data.keys():
-            url = self.settings['API_URL'] + '/auth/recover'
-            body = {'email': self.input_data['email']}
-            response = yield Task(self.api, url=url, method='POST', body=self.json_encode(body))
-            rbody = loads(response.body.decode('utf-8'))
-            self.response(response.code, rbody['message'])
+            response = yield Task(
+                self.api_call,
+                url=self.settings['API_URL'] + '/auth/recover',
+                method='POST',
+                body=self.json_encode({'email': self.input_data['email']}))
+            resp = loads(response.body.decode('utf-8'))
+            self.response(response.code, resp['message'])
         else:
             self.response(400, 'An email is required to restart user\'s passwords.')
 
@@ -135,14 +135,15 @@ class ChangePassword(BaseHandler):
     @web_authenticated
     def post(self):
         if 'new_password' in self.input_data.keys():
-            url = self.settings['API_URL'] + '/auth/changepassword'
-            body = {'new_password': self.input_data['new_password']}
-            headers = {'Linc-Api-AuthToken': self.current_user['token']}
-            response = yield Task(self.api, url=url, method='POST', body=self.json_encode(body), headers=headers)
-            rbody = loads(response.body.decode('utf-8'))
-            self.response(response.code, rbody['message'])
+            response = yield Task(
+                self.api_call,
+                url=self.settings['API_URL'] + '/auth/changepassword',
+                method='POST',
+                body=self.json_encode({'new_password': self.input_data['new_password']}))
+            resp = loads(response.body.decode('utf-8'))
+            self.response(response.code, resp['message'])
         else:
-            self.response(400, 'Fail to change passwords.')
+            self.response(400, 'Fail to change the password.')
 
 
 class RequestAccessEmailHandler(BaseHandler):
@@ -158,8 +159,8 @@ class RequestAccessEmailHandler(BaseHandler):
                 'geographical': self.input_data['geographical']}
             info(url)
             info(body)
-            response = yield Task(self.api, url=url, method='POST', body=self.json_encode(body))
-            rbody = loads(response.body.decode('utf-8'))
-            self.response(response.code, rbody['message'])
+            response = yield Task(self.api_call, url=url, method='POST', body=self.json_encode(body))
+            resp = loads(response.body.decode('utf-8'))
+            self.response(response.code, resp['message'])
         else:
-            self.response(400, rbody['message'])
+            self.response(400, resp['message'])

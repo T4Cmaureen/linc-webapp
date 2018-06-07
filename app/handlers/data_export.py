@@ -71,11 +71,11 @@ class DataExportHandler(BaseHandler):
     @coroutine
     @web_authenticated
     def post(self):
-        resource_url = '/data/export/'
-        body = self.json_encode(self.input_data)
-        url = self.settings['API_URL'] + resource_url
-        headers = {'Linc-Api-AuthToken': self.current_user['token']}
-        response = yield Task(self.api, url=url, method='POST', body=body, headers=headers)
+        response = yield Task(
+            self.api_call,
+            url=self.settings['API_URL'] + '/data/export/',
+            method='POST',
+            body=self.json_encode(self.input_data))
         if response.code == 200:
             # Create the CSV file
             fn = yield Task(self.generate_fn)

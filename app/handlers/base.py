@@ -55,11 +55,11 @@ class BaseHandler(RequestHandler):
 
     @asynchronous
     @engine
-    def api(self, url, method, body=None, headers=None, callback=None):
+    def api_call(self, url, method, body=None, headers=None, callback=None):
         AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
         http_client = AsyncHTTPClient()
         dictheaders = {"content-type": "application/json"}
-        if 'token' in self.corrent_user:
+        if 'token' in self.current_user:
             dictheaders['Linc-Api-AuthToken'] = self.current_user['token']
         if headers:
             for k, v in headers.items():
