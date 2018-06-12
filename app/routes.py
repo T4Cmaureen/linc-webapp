@@ -24,7 +24,7 @@ from handlers.base import VersionHandler
 from handlers.auth import LogoutHandler, LoginHandler, CheckAuthHandler, ResetPassword, ChangePassword, RequestAccessEmailHandler
 from handlers.main import MainHandler, LoginMainHandler, HomeHandler, SideMenuHandler, RelativesTplHandler, CarouselGalleryHandler
 from handlers.main import LionMainHandler, ViewLionDatabaseHandler, ImageSetMainHandler, ViewImageSetsHandler, BoundaryMapHandler
-from handlers.main import ConservationistsHandler, ImageGalleryHandler, LocationHistoryHandler, CompareImagesHandler
+from handlers.main import ConservationistsHandler, ImageGalleryHandler, LocationHistoryHandler, ViewImagesHandler, CompareImagesHandler
 from handlers.main import EditMetadataHandler, CVResultsMainHandler, CVRequestMainHandler, UploadImagesHandler, VerifyImageSetHandler
 from handlers.main import PageAdminHandler, PageAdminUsersHandler, PageAdminOrganizationsHandler, PageAdminLionsHandler
 from handlers.main import PageAdminImageSetsHandler, PageAdminImagesHandler, PageAdminCVRequestsHandler, PageAdminCVResultsHandler
@@ -64,6 +64,7 @@ url_patterns = [
     (r"/cvrequest.html", CVRequestMainHandler),
     (r"/uploadimages.html", UploadImagesHandler),
     (r"/verify_imageset.tpl.html", VerifyImageSetHandler),
+    (r"/view.images.html", ViewImagesHandler),
     (r"/compare.images.html", CompareImagesHandler),
     (r"/boundary.map.tpl.html", BoundaryMapHandler),
     (r"/relatives.tpl.html", RelativesTplHandler),

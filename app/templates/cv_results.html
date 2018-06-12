@@ -21,9 +21,9 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 <div name="CVResults" class="cv-results font-homenaje">
   <div class="modal-header" ng-show="title">
     <button type="button" class="close" ng-click="!processing && Close()">&times;</button>
-    <div class="modal-header-image" ng-right-click="show_photo(imageset.image)">
-      <a ng-click="GoTo({type: 'imageset', 'params': {id: imageset.id}})">
-        <img ng-src="{{!imageset.thumbnail}}" width="40" height="40">
+    <div class="modal-header-image">
+      <a ng-right-click="small_image=!small_image;" ng-click="GoTo({type: 'imageset', 'params': {id: imageset.id}})">
+            <img ng-src="{{!imageset.image}}" ng-class="{'small-image': small_image, 'large-image': !small_image}">
       </a>
     </div>
     <h3 class="modal-title modal-title-image" ng-bind-html="title"></h3>
@@ -36,15 +36,17 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             <tr>
               <th colspan="6" class="text-center classifiers">
                   <span>CV Results:</span>
-                  <div class="radio">
+                  <div class="radio" ng-if="classifier.has_cv">
                     <label><input type="radio" ng-model="classifier.type" ng-value="'cv'">CV</label>
                   </div>
-                  <div class="radio">
+                  <div class="radio" ng-if="classifier.has_whisker">
                     <label><input type="radio" ng-model="classifier.type" ng-value="'whisker'">Whisker</label>
                   </div>
               </th>
               <th colspan="2" class="text-center predictions-labels">
-                  <span class="text">Request Groups: </span>CV <span class="dot cv"></span>  Whisker <span class="dot whisker"></span>
+                  <span class="text">Request Groups:</span>
+                  <span ng-if="classifier.has_cv" class="cv">CV<span class="dot cv"></span></span>
+                  <span ng-if="classifier.has_whisker" class="whisker">Whisker<span class="dot whisker"></span></span>
                   <button type="button" class="btn btn-primary pull-right" ng-click="OpenGraph()">View Graph</button>
               </th>
             </tr>
