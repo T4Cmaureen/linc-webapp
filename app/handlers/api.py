@@ -117,7 +117,7 @@ class RelativesHandler(BaseHandler):
 
 
 class ImageSetsReqHandler(BaseHandler):
-    SUPPORTED_METHODS: ('GET')
+    SUPPORTED_METHODS = ("GET")
 
     @asynchronous
     @coroutine
