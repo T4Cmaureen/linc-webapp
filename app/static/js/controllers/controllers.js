@@ -25,7 +25,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 	'linc.metadata.controller', 'linc.view.imagesets.controller', 'linc.view.lion.database.controller',
 	'linc.side.menu.controller', 'linc.upload.images.controller', 'linc.boundary.map.controller',
 	'linc.relatives.controller', 'request.access.controller', 'linc.metadata.batch.controller',
-	'linc.delete.batch.controller', 'linc.location.on.map.controller'])
+	'linc.delete.batch.controller', 'linc.location.on.map.controller', 'linc.classifier.graph.controller'])
 
 .controller('BodyCtrl', ['$scope', '$rootScope', '$state', '$interval', '$timeout', '$uibModal', 
   'AuthService', 'NotificationFactory',
@@ -76,15 +76,15 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 			var url = $state.href(data.type, params)
 			var win_params = win_params ? win_params : {name:'', specs:''};
 			window.open(url, win_params.name, win_params.specs);
-	    }, function () {
+		}, function () {
 
-	    });
-	    scopeGo.ok = function (){
-	      modalGoTo.close();
-	    }
-	    scopeGo.cancel = function(){
-	      modalGoTo.dismiss();
-	    }
+		});
+		scopeGo.ok = function (){
+		  modalGoTo.close();
+		}
+		scopeGo.cancel = function(){
+		  modalGoTo.dismiss();
+		}
 	};
 
 	$scope.changePWD = function(user){

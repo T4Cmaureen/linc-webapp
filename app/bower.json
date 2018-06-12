@@ -44,6 +44,7 @@
     "fontawesome": "^5.0.8",
     "file-saver": "^1.3.8",
     "lodash": "^4.17.5",
-    "angular-file-saver": "^1.1.3"
+    "angular-file-saver": "^1.1.3",
+    "highcharts": "^6.1.0"
   }
 }

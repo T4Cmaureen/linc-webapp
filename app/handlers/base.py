@@ -59,7 +59,7 @@ class BaseHandler(RequestHandler):
         AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
         http_client = AsyncHTTPClient()
         dictheaders = {"content-type": "application/json"}
-        if 'token' in self.current_user:
+        if hasattr(self, 'current_user') and self.current_user and 'token' in self.current_user:
             dictheaders['Linc-Api-AuthToken'] = self.current_user['token']
         if headers:
             for k, v in headers.items():

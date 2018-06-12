@@ -30,7 +30,7 @@ angular.module('linc.cvrequest.controller', [])
 	$scope.content = 'Search';
 	$scope.imageset = imageset;
 
-	$scope.classifier = {cv: true, whisker: true};
+	$scope.classifier = angular.copy($scope.cv_requirements); //{cv: true, whisker: true};
 	$scope.tooltip = { features: { title: 'tips: ' + TOOL_TITLE, checked: true } };
 
 	var GET_FEATURES = function (lbls, TAGS){
@@ -144,7 +144,7 @@ angular.module('linc.cvrequest.controller', [])
 	$scope.isCollapsed.Gender = _.every($scope.filters.Genders, {checked: true});
 	$scope.isCollapsed.TagFeatures = $scope.filters.TagFeatures ? false : true;
 	$scope.isCollapsed.Location = ($scope.filters.Location.latitude && $scope.filters.Location.longitude && $scope.filters.Location.radius) ? false : true;
-	
+
 	$scope.viewer_label = function(){
 		var label = "0 lion filtered";
 		if($scope.filtered_lions != undefined && $scope.filtered_lions.length){
@@ -266,5 +266,5 @@ angular.module('linc.cvrequest.controller', [])
 	$(window).resize(function() {
 		$scope.ResizeTable();
 	}).resize();
-	
+
 }]);

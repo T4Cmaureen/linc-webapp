@@ -132,7 +132,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               <form name="form1">
                 <div class="form-group control" ng-class="{'has-error': form1.latitude.$dirty && form1.latitude.$error.pattern}">
                   <label class="location_label" for="latitude">Latitude: </label>
-                  <input ng-change="change('Location')" class="form-control input-sm" type="text" name="latitude" 
+                  <input ng-change="change('Location')" class="form-control input-sm" type="text" name="latitude"
                     pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-model="filters.Location.latitude" limlatlng="90">
                   <div class="error-messages cv-search" ng-messages="form1.latitude.$error" ng-if="form1.latitude.$error.limlatlng || form1.latitude.$error.pattern">
                     <div ng-message="limlatlng">
@@ -208,26 +208,30 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 
         </div>
 
-        <div class="form-group" style="margin-left: 12px;">
+        <div class="form-group" style="margin-left: 12px;" uib-tooltip='You must select at least 1 classifier.'
+        tooltip-placement="bottom" tooltip-trigger="'none'" tooltip-is-open="!classifier.whisker && !classifier.cv">
             <h4 style="margin: 20px 0 10px;">
               Classifier
             </h4>
             <div class="checkbox">
               <label style="padding-left: 10px;">
-                <input type="checkbox" checked ng-model="classifier.cv">
-                <span class="cr"><i class="cr-icon fa fa-check"></i></span> CV
+                <input type="checkbox" checked ng-model="classifier.cv" ng-disabled="!cv_requirements.cv">
+                <span class="cr" uib-tooltip='This option is disabled because there are no images defined with "CV" type.'
+                tooltip-enable="!cv_requirements.cv" tooltip-placement="right"><i class="cr-icon fa fa-check"></i></span> CV
               </label>
             </div>
             <div class="checkbox">
               <label style="padding-left: 10px;">
-                <input type="checkbox" checked ng-model="classifier.whisker">
-                <span class="cr"><i class="cr-icon fa fa-check"></i></span> Whisker
+                <input type="checkbox" checked ng-model="classifier.whisker"  ng-disabled="!cv_requirements.whisker">
+                <span class="cr" uib-tooltip='This option is disabled because there are no images defined with "Whisker" type.'
+                tooltip-enable="!cv_requirements.whisker" tooltip-placement="right"><i class="cr-icon fa fa-check"></i></span> Whisker
               </label>
-            </div>      
+            </div>
         </div>
 
         <div class="form-group custom-padding">
-          <button ng-disabled="!Selecteds.length || (!classifier.cv && !classifier.whisker)" type="button" class="btn btn-primary" ng-click="requestCV()">
+          <button ng-disabled="!Selecteds.length || (!classifier.cv && !classifier.whisker)"
+          type="button" class="btn btn-primary" ng-click="requestCV()">
             <span ng-if="loading" class="loading text-center">
               <img src="/static/images/loading.gif"/></span>
             <i class="icon icon-flash"></i>Find Lion Match
@@ -310,8 +314,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               </thead>
               <tbody>
                 <tr class="link" ng-repeat="lion in filtered_lions = (lions | filter: {dead: false} |
-                  nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages | 
-                  organization_filter: filters.Organizations | features_filter: filters.TagFeatures | 
+                  nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages |
+                  organization_filter: filters.Organizations | features_filter: filters.TagFeatures |
                   gender_filter: filters.Genders | LatLngFilter: filters.Location : true) |
                   orderBy: orderby.predicate : orderby.reverse"
                   repeat-done="ResizeTable()">

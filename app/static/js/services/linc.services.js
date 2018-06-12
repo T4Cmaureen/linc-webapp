@@ -126,7 +126,7 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 	};
 
 	// Get Imageset by Id
-	var GetImageSet= function (id) {
+	var GetImageSet = function (id) {
 		var deferred = $q.defer();
 		var url = databases['imagesets'].url + '/' + id + '/profile';
 		HTTPGet(url, {}).then(function (results) {
@@ -175,6 +175,33 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 				deferred.reject(error);
 			}
 		});
+		return deferred.promise;
+	};
+	// Get CV Request Requirements
+	var CVRequirements = function(id){
+		var deferred = $q.defer();
+		var url = databases['imagesets'].url + '/' + id + '/cvrequirements';
+		HTTPGet(url,{ignoreLoadingBar: true}).then(function (results) {
+				deferred.resolve(results.data);
+		},
+		function (error) {
+			if(debug || (error.status != 401 && error.status != 403)){
+				NotificationFactory.error({
+					title: "Error", message: 'Unable to load CV Requirements',
+					position: 'right', // right, left, center
+					duration: 5000   // milisecond
+				});
+			}
+			if(error.status == 401 || error.status == 403){
+				console.log("cv requirements resolve error");
+				deferred.resolve({});
+			}
+			else{
+				console.log("cv requirements reject error");
+				deferred.reject(error);
+			}
+		});
+		// deferred.resolve({cv: true, whisker: true});
 		return deferred.promise;
 	};
 	// Get Lion by Id
@@ -365,10 +392,10 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 		if(data_in.method=='PUT'){
 			url += '/relatives/' + data_in.rel_id;
 			var data = data_in.data;
-			HTTP('PUT', url, data, {}, function (response) { 
-				deferred.resolve(response.data); 
+			HTTP('PUT', url, data, {}, function (response) {
+				deferred.resolve(response.data);
 			},
-			function(error){ 
+			function(error){
 				if(debug || (error.status != 401 && error.status != 403)){
 					NotificationFactory.error({
 						title: "Error", message: 'Unable to Update a Relation',
@@ -376,16 +403,16 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 						duration: 5000   // milisecond
 					});
 				}
-				deferred.reject(error); 
+				deferred.reject(error);
 			});
 		}
 		if(data_in.method=='DELETE'){
 			url += '/relatives/' + data_in.rel_id;
 			HTTP('DELETE', url, null, {},
-			function (response) { 
-				deferred.resolve(response.data); 
+			function (response) {
+				deferred.resolve(response.data);
 			},
-			function(error){ 
+			function(error){
 				if(debug || (error.status != 401 && error.status != 403)){
 					NotificationFactory.error({
 						title: "Error", message: 'Unable to Delete a Relation',
@@ -393,7 +420,7 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 						duration: 5000   // milisecond
 					});
 				}
-				deferred.reject(error); 
+				deferred.reject(error);
 			});
 		}
 		return deferred.promise;
@@ -472,12 +499,12 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 			var xsrfcookie = $cookies.get('_xsrf');
 			var result_data;
 			var data = {lion: input_data.lion, imageset: input_data.imageset}
-			var req = { 
+			var req = {
 				method: 'POST', url: '/lions/', data: data,
-				headers: { 'Content-Type': 'application/json','X-XSRFToken' : xsrfcookie}, 
+				headers: { 'Content-Type': 'application/json','X-XSRFToken' : xsrfcookie},
 				config: {ignoreLoadingBar: true}
 			};
-			
+
 			$http(req).then(function(response) {
 				success(response);
 			}, error);
@@ -491,9 +518,9 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
 			// Lion
-			var req = { 
+			var req = {
 				method: 'POST', url: '/lions/', data: input_data,
-				headers: { 'Content-Type': 'application/json','X-XSRFToken' : xsrfcookie}, 
+				headers: { 'Content-Type': 'application/json','X-XSRFToken' : xsrfcookie},
 				config: {ignoreLoadingBar: true}
 			};
 			$http(req).then(function(response) {
@@ -583,14 +610,14 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 		return HTTP('DELETE', '/lions/' + lion_id, {}, {}, success, error);
 	};
 
-	// Batch Delete Lions / Imagesets / Images 
+	// Batch Delete Lions / Imagesets / Images
 	var BatchDelete = function(data, success, error){
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
 			var url = '/'+ data.type + '/';
 			var items = data.items;
 			var promises = _.map(items, function(item) {
-				var req = { 
+				var req = {
 					method: 'DELETE',
 					url: url + item.id,
 					data: {'_xsrf':xsrfcookie},
@@ -611,7 +638,7 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 		});
 	};
 
-	// Batch Delete Lions / Imagesets / Images 
+	// Batch Delete Lions / Imagesets / Images
 	var BatchUpdate = function(input_data, success, error){
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
@@ -623,11 +650,11 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 				var prom = _.map(item.ids, function(id, k){
 					var url = base_url + id;
 					console.log(url);
-					return $http({ 
-						method: 'PUT', 
-						url: url, 
+					return $http({
+						method: 'PUT',
+						url: url,
 						data: data,
-						headers: { 'Content-Type': 'application/json','X-XSRFToken' : xsrfcookie}, 
+						headers: { 'Content-Type': 'application/json','X-XSRFToken' : xsrfcookie},
 						config: {ignoreLoadingBar: true}
 					});
 				});
@@ -658,13 +685,34 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 				var associated_id = results.data.data.associated.id;
 				var status = results.data.data.status;
 				var req_id = results.data.data.req_id;
+				var type = 'both'; // 'cv', 'whisker'
 				var cvresults = _.map(data, function(element, index) {
 					var elem = {};
 					if(associated_id == element.id) elem["associated"] = true;
 					else elem["associated"] = false;
+
+					delete element.cv;
+					delete element.cn;
+
+					//Temporário
+					var cn = Math.random();
+					var pd = Math.random();
+					elem['cv'] = {
+						'prediction': pd,
+						'confidence': cn
+					};
+					elem['whisker'] = {
+						'prediction': 1.- pd,
+						'confidence': 1.- cn
+					};
+
+					delete element.gender;
+					delete element.age;
+					delete element.tags;
+
 					return _.extend({}, element, elem);
 				});
-				deferred.resolve({'cvresults': cvresults, 'req_id': req_id, 'status': status});
+				deferred.resolve({cvresults: cvresults, type: type, req_id: req_id, status: status});
 			},
 			function(error){
 				if(debug || (error.status != 401 && error.status != 403)){
@@ -708,15 +756,15 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 			var xsrfcookie = $cookies.get('_xsrf');
 			var url = '/data/export';
 			// Lion
-			var req = { 
-				method: 'POST', 
-				url: url, 
+			var req = {
+				method: 'POST',
+				url: url,
 				data: data,
-				headers: { 
-					accept: 'application/zip', 
+				headers: {
+					accept: 'application/zip',
 					'Content-Type': 'application/json',
 					'X-XSRFToken' : xsrfcookie
-				}, 
+				},
 				responseType: 'arraybuffer',
 				cache: false,
 				config: { ignoreLoadingBar: true },
@@ -748,7 +796,7 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 					deferred.reject(error.data);
 				}
 			});
-			
+
 		},function(err){
 			deferred.reject(err);
 		});
@@ -802,6 +850,8 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 	dataFactory.GetImageGallery = GetImageGallery;
 	// Relatives
 	dataFactory.Relatives = Relatives;
+	// CV Requirements
+	dataFactory.CVRequirements = CVRequirements;
 
 	dataFactory.Download = Download;
 	return dataFactory;

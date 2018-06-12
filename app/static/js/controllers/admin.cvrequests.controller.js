@@ -99,11 +99,11 @@ angular.module('linc.admin.cvrequests.controller', [])
     modalScope.imagesets = angular.copy($scope.$parent.imagesets);
 
     modalScope.cvrequest = {
-      'requesting_organization_id': undefined, 
+      'requesting_organization_id': undefined,
       'image_set_id': undefined,
       'server_uuid': '',
-      'status': '', 
-      'request_body': '', 
+      'status': '',
+      'request_body': '',
       'selected': true
     }
 
@@ -124,7 +124,7 @@ angular.module('linc.admin.cvrequests.controller', [])
       if(valid){
         var data = {
           'requesting_organization_id': modalScope.cvrequest.requesting_organization_id,
-          'image_set_id': modalScope.cvrequest.image_set_id, 
+          'image_set_id': modalScope.cvrequest.image_set_id,
           'status': modalScope.cvrequest.status,
           'request_body': modalScope.cvrequest.request_body
         };
@@ -190,22 +190,22 @@ angular.module('linc.admin.cvrequests.controller', [])
         $scope.CVRequest_Mode = '';
         modalScope.dataSending = false;
       });
-      
+
       modalScope.submit = function (valid){
         if(valid){
           var data = {
             'requesting_organization_id': modalScope.cvrequest.requesting_organization_id,
-            'image_set_id': modalScope.cvrequest.image_set_id, 
+            'image_set_id': modalScope.cvrequest.image_set_id,
             'status': modalScope.cvrequest.status,
             'request_body': modalScope.cvrequest.request_body
           };
           modalScope.dataSending = true;
           $scope.LincApiServices.CVRequests({'method': 'put', 'cvrequest_id' : $scope.cvrequest.id, 'data': data}).then(function(response){
             $scope.Notification.success({
-              title: 'CV Request Info', 
+              title: 'CV Request Info',
               message: 'CV Request data successfully updated',
-              position: "right", 
-              duration: 2000     
+              position: "right",
+              duration: 2000
             });
 
             var cvrequest = $scope.Selecteds[0];

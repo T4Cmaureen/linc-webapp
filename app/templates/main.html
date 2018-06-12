@@ -71,7 +71,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                   <input class="form-control" type="password" name="
                     confirm_password" ng-model="user.password.confirm" placeholder="confirm the new password" required oninput="setCustomValidity('')" nx-equal-ex="user.password.password"
                     oninvalid="this.setCustomValidity('please repeat the Password in this field')"
-                    data-animation="am-flip-x" data-html="true" data-type="info" 
+                    data-animation="am-flip-x" data-html="true" data-type="info"
                     placement="bottom" bs-tooltip="tooltip" data-template-url='tooltip.password.tpl.html'
                     data-trigger="manual"
                     data-bs-show="showValidationMessages && (form.confirm_password.$error.nxEqualEx!=undefined)">
@@ -90,7 +90,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         <ul tabindex="-1" class="select dropdown-menu custom-bs-select" ng-show="$isVisible()" role="select">
           <li ng-if="$showAllNoneButtons" class="show-all-button">
             <div class="btn-group class-all-btn">
-              <button ng-show="$showAllButton" type="button" class="btn btn-default btn-xs" ng-click="$selectAll()">{{!$allText}}</button> 
+              <button ng-show="$showAllButton" type="button" class="btn btn-default btn-xs" ng-click="$selectAll()">{{!$allText}}</button>
               <button ng-show="$showNoneButton" type="button" class="btn btn-default btn-xs text-right" ng-click="$selectNone()">{{!$noneText}}</button>
               <button ng-show="$showUnknownButton" type="button" class="btn btn-default btn-xs text-right" ng-click="$selectUnknown()">{{!$unknownText}}</button>
             </div>
@@ -99,20 +99,20 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             <a ng-if="match.value!='NONE' && match.value!='NOSE_COLOUR_NONE' && match.value!=undefined"
               class="a-match-values"
               role="menuitem" tabindex="-1" ng-click="$select($index, $event)">
-              <i class="{{!$iconCheckmark}} pull-right" ng-if="$isMultiple && $isActive($index)"></i> 
+              <i class="{{!$iconCheckmark}} pull-right" ng-if="$isMultiple && $isActive($index)"></i>
               <span ng-bind="match.label"></span>
             </a>
-            <a ng-if="match.value=='NOSE_COLOUR_NONE' || match.value==undefined" 
+            <a ng-if="match.value=='NOSE_COLOUR_NONE' || match.value==undefined"
               class="a-match-values nose-color"
               role="menuitem" tabindex="-1" ng-click="$select($index, $event)">
-              <i class="{{!$iconCheckmark}} pull-right" ng-if="$isMultiple && $isActive($index)"></i> 
+              <i class="{{!$iconCheckmark}} pull-right" ng-if="$isMultiple && $isActive($index)"></i>
               <span ng-bind="match.label" class="select-none-btn"></span>
             </a>
             <a ng-if="match.value=='NONE'" class="a-match-values nose-color"
               role="menuitem" tabindex="-1" ng-click="$selectNone()">
-              <i class="{{!$iconCheckmark}} pull-right" ng-if="$isMultiple && $isActive($index)"></i> 
+              <i class="{{!$iconCheckmark}} pull-right" ng-if="$isMultiple && $isActive($index)"></i>
               <span ng-bind="match.label" class="select-none-btn"></span>
-            </a>    
+            </a>
           </li>
         </ul>
       </script>
@@ -170,7 +170,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     <script type="text/javascript" src="{{ static_url("js/controllers/metadata.batch.controller.js") }}" ></script>
     <script type="text/javascript" src="{{ static_url("js/controllers/delete.batch.controller.js") }}" ></script>
     <script type="text/javascript" src="{{ static_url("js/controllers/location.on.map.controller.js") }}" ></script>
-    
+    <script type="text/javascript" src="{{ static_url("js/controllers/classifier.graph.controller.js") }}" ></script>
+
     <script type="text/javascript" src="{{ static_url("js/directives/directives.js") }}" ></script>
     <script type="text/javascript" src="{{ static_url("js/directives/cvrequest.directive.js") }}" ></script>
     <script type="text/javascript" src="{{ static_url("js/directives/cvresults.directive.js") }}" ></script>
@@ -184,7 +185,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     <script type="text/javascript" src="{{ static_url("js/directives/request.access.directive.js") }}" ></script>
     <script type="text/javascript" src="{{ static_url("js/directives/metadata.batch.directive.js") }}" ></script>
     <script type="text/javascript" src="{{ static_url("js/directives/location.on.map.directive.js") }}" ></script>
-    
+
     <script type="text/javascript" src="{{ static_url("js/services/linc.services.js") }}" ></script>
     <script type="text/javascript" src="{{ static_url("js/services/linc.api.services.js") }}" ></script>
     <script type="text/javascript" src="{{ static_url("js/services/notification.factory.js") }}" ></script>

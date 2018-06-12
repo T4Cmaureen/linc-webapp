@@ -36,10 +36,10 @@ angular.module('linc.compare.images.controller', [])
 	$scope.$parent.show_navbar = false;
 
 	// Image Set Types Filter
-	$scope.ImageSetTags = [ 
+	$scope.ImageSetTags = [
 		{checked: true, type: 'cv', label: 'CV Image'},
-		{checked: true, type: 'full-body', label: 'Full Body'}, 
-		{checked: true, type: 'main-id', label: 'Main Id'}, 
+		{checked: true, type: 'full-body', label: 'Full Body'},
+		{checked: true, type: 'main-id', label: 'Main Id'},
 		{checked: true, type: 'marking', label: 'Marking'},
 		{checked: true, type: 'whisker', label: 'Whisker (No use in Algorithm)'},
 		{checked: true, type: 'whisker-left', label: 'Whisker Left'},
@@ -51,15 +51,15 @@ angular.module('linc.compare.images.controller', [])
 	// Lion Primary Image Set Types Filter
 	$scope.LionTags = [
 		{checked: true, type: 'cv', label: 'CV Image'},
-		{checked: true, type: 'full-body', label: 'Full Body'}, 
-		{checked: true, type: 'main-id', label: 'Main Id'}, 
+		{checked: true, type: 'full-body', label: 'Full Body'},
+		{checked: true, type: 'main-id', label: 'Main Id'},
 		{checked: true, type: 'marking', label: 'Marking'},
 		{checked: true, type: 'whisker', label: 'Whisker (No use in Algorithm)'},
 		{checked: true, type: 'whisker-left', label: 'Whisker Left'},
 		{checked: true, type: 'whisker-right', label: 'Whisker Right'}
 	];
 	// Collapse Image Set Filter Panel
-	$scope.isLionCollapsed = true; 
+	$scope.isLionCollapsed = true;
 
 	// Carousel Options
 	$scope.carousel = { interval: 500000, noWrapSlides: false, no_transition : false};
@@ -72,7 +72,7 @@ angular.module('linc.compare.images.controller', [])
 		var photos = _.map(gallery.images, function(photo, index) {
 			var elem = {};
 			elem['name'] = 'Name: ' + photo.filename;
-			var date = photo.date_stamp ? ('date stamp: '+ photo.date_stamp.toLocaleString()) : 
+			var date = photo.date_stamp ? ('date stamp: '+ photo.date_stamp.toLocaleString()) :
 				(photo.created_at ? 'created at: ' + photo.created_at.toLocaleString() : ('updated at: ' + photo.updated_at.toLocaleString()));
 			var texto = name + '<br> ' + date + '<br> tags: ' + photo.tags.join();
 			if(photo.joined)
@@ -94,7 +94,7 @@ angular.module('linc.compare.images.controller', [])
 		if ($set.Page > 1){
 			$set.Page--;
 			$set.Begin -= $set.Count;
-			if($set.Begin < 0) 
+			if($set.Begin < 0)
 				$set.Begin = 0
 		}
 	};
@@ -156,14 +156,14 @@ angular.module('linc.compare.images.controller', [])
 			while (!done){
 				end += $set.Count;
 				page++;
-				if(id < end) 
+				if(id < end)
 					done = true;
 			}
 			$set.Page = page;
 			$set.Begin = ($set.Page-1)*$set.Count;
 		}
 	}
-	
+
 	SetCarousel($scope.carouselImg);
 	SetCarousel($scope.carouselLion);
 
@@ -174,9 +174,9 @@ angular.module('linc.compare.images.controller', [])
 		ChangePage($set);
 		$set.paginated = $filter('limitTo')($set.filtered, $set.Count, $set.Begin);
 		if ($set.name == 'imageset')
-			$scope.ImagesetTitle = "Image Set "+ $scope.imageset.id + " - Gallery ( " + $set.filtered.length + " Images )"; 
+			$scope.ImagesetTitle = "Image Set "+ $scope.imageset.id + " - Gallery ( " + $set.filtered.length + " Images )";
 		else
-			$scope.TitleLion = "CV Result (Image Set: "+ $scope.lion.primary_image_set_i + ") - Gallery ( " + $set.filtered.length + " Images )"; 
+			$scope.TitleLion = "CV Result (Image Set: "+ $scope.lion.primary_image_set_i + ") - Gallery ( " + $set.filtered.length + " Images )";
 	}
 
 	$scope.resizeChange = function(h,w){
@@ -184,25 +184,25 @@ angular.module('linc.compare.images.controller', [])
 		$scope.carouselImg.Count = 6, $scope.carouselLion.Count = 6, $scope.carouselCV.Count = 7;
 		}
 		else if(w < 1200 && w > 1000){
-		 	$scope.carouselImg.Count = 5, $scope.carouselLion.Count = 5, $scope.carouselCV.Count = 6;
+			$scope.carouselImg.Count = 5, $scope.carouselLion.Count = 5, $scope.carouselCV.Count = 6;
 		}
 		else if(w <= 1000 && w >= 900){
 		 	$scope.carouselImg.Count = 4, $scope.carouselLion.Count = 4, $scope.carouselCV.Count = 4;
 		}
 		else if(w < 900 && w >= 768){
-		 	$scope.carouselImg.Count = 3,  
-		 	$scope.carouselLion.Count = 3, 
+		 	$scope.carouselImg.Count = 3,
+		 	$scope.carouselLion.Count = 3,
 		 	$scope.carouselCV.Count = 4;
 		}
 		else if(w < 768){
-			$scope.carouselImg.Count = 9, 
-			$scope.carouselLion.Count = 9, 
+			$scope.carouselImg.Count = 9,
+			$scope.carouselLion.Count = 9,
 			$scope.carouselCV.Count = 9;
 		}
 		SetCarousel($scope.carouselImg), SetCarousel($scope.carouselLion), SetCarouselCV();
 		ChangePage($scope.carouselImg); ChangePage($scope.carouselLion);
 		$scope.isImageSetCollapsed = true;
-		$scope.isLionCollapsed = true; 
+		$scope.isLionCollapsed = true;
 	};
 	// Matches
 	$scope.carouselCV={ gallery: [], Page: 1, Begin: 0, Count: 4};
@@ -211,11 +211,13 @@ angular.module('linc.compare.images.controller', [])
 	_.forEach($scope.cvresults, function(lion, index){
 		lion.index = index;
 
-		var cv = (lion.cv == null) ? 'CV: (null)' : 'CV: ' + (lion.cv * 100.) + '%';
-		var cn = (lion.cn == null) ? 'CN: (null)' : (lion.cn > 1.) ? 'CN: ' + lion.cn + '%': 'CN: ' + lion.cn * 100. + '%';
+		var cv = { prediction: 100.*lion.cv.prediction, confidence: 100.*lion.cv.confidence };
+		var whisker = { prediction: 100.*lion.whisker.prediction, confidence: 100.*lion.whisker.confidence };
 
-		var name = 'Lion: ' + lion.id + '<br>Name: ' + lion.name + 
-			'<br>Prymary Image Set: ' + lion.primary_image_set_id + '<br>' + cv + '<br>'+ cn;
+		var name = 'Lion: ' + lion.id + '<br>Name: ' + lion.name +
+			'<br>Prymary Image Set: ' + lion.primary_image_set_id + '<br>' +
+			'CV: <br>prediction: ' + cv.prediction.toFixed(2) + '%<br>confidence: ' + cv.confidence.toFixed(2) + '% <br>' +
+			'Whisker: <br>prediction: ' + whisker.prediction.toFixed(2) + '%<br> confidence: ' + whisker.confidence.toFixed(2) + '%';
 		lion.tooltip = {title: name, checked: true};
 		photos.push(lion);
 	});
@@ -238,15 +240,15 @@ angular.module('linc.compare.images.controller', [])
 			done=true;
 		}
 		else if($set.active >= $set.gallery.length){
-			page = $set.TotalPages; 
-			$set.active = $set.gallery.length-1; 
+			page = $set.TotalPages;
+			$set.active = $set.gallery.length-1;
 			done=true;
 		}
 		var end = $set.Count;
 		while (!done){
 			end += $set.Count;
 			page++;
-			if($set.active < end) 
+			if($set.active < end)
 				done = true;
 		}
 		return page;
@@ -282,7 +284,7 @@ angular.module('linc.compare.images.controller', [])
 			$scope.dataLoading = false;
 		});
 	}
-	$scope.ImagesetTitle = "Image Set "+ $scope.imageset.id + " - Gallery ( " + $scope.carouselImg.gallery.length + " Images )"; 
-	$scope.TitleLion = "CV Result (Image Set: "+ $scope.lion.primary_image_set_id + ") - Gallery ( " + $scope.carouselLion.gallery.length + " Images )"; 
+	$scope.ImagesetTitle = "Image Set "+ $scope.imageset.id + " - Gallery ( " + $scope.carouselImg.gallery.length + " Images )";
+	$scope.TitleLion = "CV Result (Image Set: "+ $scope.lion.primary_image_set_id + ") - Gallery ( " + $scope.carouselLion.gallery.length + " Images )";
 }]);
 

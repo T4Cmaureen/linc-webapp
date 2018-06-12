@@ -230,3 +230,10 @@ class SelectBoundarysHandler(BaseHandler):
     @web_authenticated
     def get(self):
         self.render('select.boundarys.tpl.html')
+
+
+class ClassifierGraphHandler(BaseHandler):
+    @web_authenticated
+    def get(self):
+        self.render('classifier.graph.tpl.html')
+
