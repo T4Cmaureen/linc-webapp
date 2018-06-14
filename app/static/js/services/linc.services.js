@@ -683,6 +683,7 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 			function (results){
 				var data = results.data.data.table;
 				var associated_id = results.data.data.associated.id;
+				var classifiers = results.data.data.classifiers;
 				var status = results.data.data.status;
 				var req_id = results.data.data.req_id;
 				var cvresults = _.map(data, function(element, index) {
@@ -690,28 +691,26 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 					if(associated_id == element.id) elem["associated"] = true;
 					else elem["associated"] = false;
 
-					delete element.cv;
-					delete element.cn;
-
-					//Temporário
-					var cn = Math.random();
-					var pd = Math.random();
 					elem['cv'] = {
-						'prediction': pd,
-						'confidence': cn
+						'prediction': element.cv_prediction,
+						'confidence': element.cv_confidence
 					};
 					elem['whisker'] = {
-						'prediction': 1.- pd,
-						'confidence': 1.- cn
+						'prediction': element.whisker_prediction,
+						'confidence': element.whisker_confidence
 					};
 
+					delete element.cv_prediction
+					delete element.cv_confidence
+					delete element.whisker_prediction
+					delete element.whisker_confidence
 					delete element.gender;
 					delete element.age;
 					delete element.tags;
 
 					return _.extend({}, element, elem);
 				});
-				deferred.resolve({cvresults: cvresults, type: { has_cv: true, has_whisker: true }, req_id: req_id, status: status});
+				deferred.resolve({cvresults: cvresults, type: { has_cv: classifiers.cv, has_whisker: classifiers.whisker }, req_id: req_id, status: status});
 			},
 			function(error){
 				if(debug || (error.status != 401 && error.status != 403)){

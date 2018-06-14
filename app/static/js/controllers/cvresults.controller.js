@@ -47,7 +47,7 @@ angular.module('linc.cvresults.controller', [])
 
 	var Predictions = function(data){
 		var prediction = {
-			options: { ceil: 100, floor: 0, showTicksValues: false, hidePointerLabels: false, readOnly: true }
+			options: { ceil: 100, floor: 0, showTicksValues: false, hidePointerLabels: false, readOnly: true , disabled: false}
 		};
 
 		if ($scope.classifier.has_cv && $scope.classifier.has_whisker){
@@ -61,14 +61,17 @@ angular.module('linc.cvresults.controller', [])
 				prediction['maxValue'] = data.cv.prediction *100;
 				prediction['prediction_type'] = true;
 			}
+			prediction.options.disabled = (isNaN(prediction['minValue']) || isNaN(prediction['maxValue']));
 		}
 		else if ($scope.classifier.has_cv){
 				prediction['minValue'] = data.cv.prediction *100;
 				prediction['prediction_type'] = false;
+				prediction.options.disabled = isNaN(prediction['minValue']);
 		}
 		else{
 			prediction['minValue'] = data.whisker.prediction *100;
 			prediction['prediction_type'] = true;
+			prediction.options.disabled = isNaN(prediction['minValue']);
 		}
 		return prediction;
 	};
@@ -276,6 +279,9 @@ angular.module('linc.cvresults.controller', [])
 			old_selected_id = lion.id;
 		}
 		$scope.show_lion_image = _.some($scope.orderd_lions, { show_image: true });
+		$timeout(function(){
+			$scope.ResizeTable();
+		},0, false);
 		$scope.refreshSlider();
 	};
 
@@ -294,41 +300,47 @@ angular.module('linc.cvresults.controller', [])
 
 	};
 
+	var valid_cv_data = function(cvresults){
+		var data = [];
+		_.forEach(cvresults, function(cvresult){
+			var prediction = cvresult.cv.prediction;
+			var confidence = cvresult.cv.confidence;
+			if (prediction && confidence && !isNaN(prediction) && !isNaN(confidence)){
+				data.push({
+					name: cvresult.name,
+					id: cvresult.id,
+					c_type: 'cv',
+					x: parseFloat((prediction * 100).toFixed(2)),
+					y: parseFloat((confidence * 100).toFixed(2))
+				});
+			}
+		});
+		return data;
+	};
+	var valid_whisker_data = function(cvresults){
+		var data = [];
+		_.forEach(cvresults, function(cvresult){
+			var prediction = cvresult.whisker.prediction;
+			var confidence = cvresult.whisker.confidence;
+			if (prediction && confidence && !isNaN(prediction) && !isNaN(confidence)){
+				data.push({
+					name: cvresult.name,
+					id: cvresult.id,
+					c_type: 'whisker',
+					x: parseFloat((prediction * 100).toFixed(2)),
+					y: parseFloat((confidence * 100).toFixed(2))
+				});
+			}
+		});
+		return data;
+	};
 	$scope.OpenGraph = function(){
 		var series = [];
 		if ($scope.classifier.has_cv){
-			series.push(
-				{
-					name: 'CV',
-					color: 'rgba(250, 101, 75, 1)',
-					data: _.map($scope.cvresults, function(lion){
-						return {
-							name: lion.name,
-							id: lion.id,
-							c_type: 'cv',
-							x: lion.cv.prediction * 100,
-							y: lion.cv.confidence * 100
-						};
-					})
-				}
-			);
+			series.push({ name: 'CV', color: 'rgba(250, 101, 75, 1)', data: valid_cv_data($scope.cvresults) });
 		}
 		if ($scope.classifier.has_whisker){
-			series.push(
-				{
-					name: 'Whisker',
-					color: 'rgba(173, 174, 175, 1)',
-					data:  _.map($scope.cvresults, function(lion){
-						return {
-							name: lion.name,
-							id: lion.id,
-							c_type: 'whisker',
-							x: lion.whisker.prediction * 100,
-							y: lion.whisker.confidence * 100
-						};
-					})
-				}
-			);
+			series.push({ name: 'Whisker', color: 'rgba(173, 174, 175, 1)', data: valid_whisker_data($scope.cvresults) });
 		}
 		var data = {
 			title: 'CV Results',
@@ -367,7 +379,7 @@ angular.module('linc.cvresults.controller', [])
 		var colWidth = [];
 		$table.find('tbody tr').each(function(j,tr){
 			colWidth = $(tr).find('td').map(function(i, v) {
-				return Math.max(v.offsetWidth, _.isNaN(colWidth[i]) ? 0 : colWidth[i]);
+				return Math.max(v.offsetWidth, isNaN(colWidth[i]) ? 0 : colWidth[i]);
 			}).get();
 		});
 

@@ -33,23 +33,23 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       <table class="table table-cv-results">
           <!-- <table class="table table-hover"> -->
         <thead>
-            <tr>
-              <th colspan="6" class="text-center classifiers">
-                  <span>CV Results:</span>
-                  <div class="radio" ng-if="classifier.has_cv">
-                    <label><input type="radio" ng-model="classifier.type" ng-value="'cv'">CV</label>
-                  </div>
-                  <div class="radio" ng-if="classifier.has_whisker">
-                    <label><input type="radio" ng-model="classifier.type" ng-value="'whisker'">Whisker</label>
-                  </div>
-              </th>
-              <th colspan="2" class="text-center predictions-labels">
-                  <span class="text">Request Groups:</span>
-                  <span ng-if="classifier.has_cv" class="cv">CV<span class="dot cv"></span></span>
-                  <span ng-if="classifier.has_whisker" class="whisker">Whisker<span class="dot whisker"></span></span>
-                  <button type="button" class="btn btn-primary pull-right" ng-click="OpenGraph()">View Graph</button>
-              </th>
-            </tr>
+          <tr>
+            <th colspan="6" class="text-center classifiers">
+                <span>CV Results:</span>
+                <div class="radio" ng-if="classifier.has_cv">
+                  <label><input type="radio" ng-model="classifier.type" ng-value="'cv'">CV</label>
+                </div>
+                <div class="radio" ng-if="classifier.has_whisker">
+                  <label><input type="radio" ng-model="classifier.type" ng-value="'whisker'">Whisker</label>
+                </div>
+            </th>
+            <th colspan="2" class="text-center predictions-labels">
+                <span class="text">Request Groups:</span>
+                <span ng-if="classifier.has_cv" class="cv">CV<span class="dot cv"></span></span>
+                <span ng-if="classifier.has_whisker" class="whisker">Whisker<span class="dot whisker"></span></span>
+                <button type="button" class="btn btn-primary pull-right" ng-click="OpenGraph()">View Graph</button>
+            </th>
+          </tr>
           <tr>
             <th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': predicate === 'id'}">Id</a>
               <span class="sortorder" ng-show="predicate === 'id'" ng-class="{reverse:reverse}"></span>
@@ -156,7 +156,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               </span>
             </td>
 
-            <td class="text-center prediction" ng-hide="show_lion_image">
+            <td class="text-center prediction" ng-hide="show_lion_image" ng-if="!lion.prediction.options.disabled">
               <div class="div-slider">
                 <rzslider class="prediction-slider" ng-class="{'whisker-type': lion.prediction.prediction_type}" rz-slider-model="lion.prediction.minValue"
                   rz-slider-high="lion.prediction.maxValue" rz-slider-options="lion.prediction.options">
@@ -164,7 +164,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               </div>
             </td>
 
-            <td class="text-center prediction show_lion_image" ng-show="show_lion_image">
+            <td class="text-center prediction show_lion_image" ng-show="show_lion_image" ng-if="!lion.prediction.options.disabled">
               <div class="div-slider show_lion_image">
                 <rzslider class="prediction-slider" ng-class="{'whisker-type': lion.prediction.prediction_type}" rz-slider-model="lion.prediction.minValue"
                   rz-slider-high="lion.prediction.maxValue" rz-slider-options="lion.prediction.options">

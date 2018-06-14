@@ -39,7 +39,13 @@ angular.module('linc.classifier.graph.controller', [])
 		credits: {style:{ color: '#d95210', fontSize: '10px' },  href: "http://www.venidera.com", text: "Venidera.com"},
 		xAxis: { title: { enabled: true, text: 'Prediciton (%)' }, max: 100, startOnTick: true, endOnTick: true, showLastLabel: true },
 		yAxis: { title: { text: 'Confidence (%)' }, max: 100 },
-		tooltip: { enabled: false },
+		tooltip: {
+			enabled: true,
+			formatter: function() {
+				return '<div style="color: ' + this.color + ';">Lion (' + this.point.id +') ' + this.key + '<div><br>' +
+				'Prediction: <b>' + this.x + ' %</b><br>Confidence: <b>' + this.y + ' %</b>';
+			}
+		},
 		legend: { layout: 'horizontal', align: 'right', verticalAlign: 'top', y: 5, floating: false, backgroundColor: '#FFFFFF', borderWidth: 1 },
 		plotOptions: {
 			series: {
