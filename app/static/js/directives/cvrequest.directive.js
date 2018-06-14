@@ -54,7 +54,7 @@ angular.module('linc.cvrequest.directive', [])
 
 				LincServices.CVRequirements({ id: scope.imageset.id }).then(function(response){
 
-					if(!_.keys(_.pickBy(response)).length){
+					if(!response.cv && !response.whisker){
 						NotificationFactory.warning({
 							title: "Waring", message: 'There are no images defined with "CV" or "Whisker" type.\n'+
 							"You must define, in the image gallery, at least one image with the cv or whisker tag.",
