@@ -60,7 +60,7 @@ class BaseHandler(RequestHandler):
         http_client = AsyncHTTPClient()
         dictheaders = {"content-type": "application/json"}
         if hasattr(self, 'current_user') and self.current_user and 'token' in self.current_user:
-            dictheaders['Linc-Api-AuthToken'] = self.current_user['token']
+            dictheaders['Linc-Api-AuthToken'] = self.current_user.get('token', '')
         if headers:
             for k, v in headers.items():
                 dictheaders[k] = v

@@ -178,9 +178,9 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 		return deferred.promise;
 	};
 	// Get CV Request Requirements
-	var CVRequirements = function(id){
+	var CVRequirements = function(data){
 		var deferred = $q.defer();
-		var url = databases['imagesets'].url + '/' + id + '/cvrequirements';
+		var url = databases['imagesets'].url + '/' + data.id + '/cvrequirements';
 		HTTPGet(url,{ignoreLoadingBar: true}).then(function (results) {
 				deferred.resolve(results.data);
 		},
