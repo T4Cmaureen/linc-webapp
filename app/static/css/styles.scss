@@ -1096,6 +1096,9 @@ hr.style-line {
 
 // CV Search Modal
 .cv-request{
+	img.small-image{ width: 40px; height: 40px; }
+	img.large-image{ width: 400px; height: 400px; }
+
 	.Container-Panel-1 { display: flex; overflow: hidden; height: 75vh; position: relative; width: 100%; backface-visibility: hidden; will-change: overflow; }
 	.Container-Panel-2 { display: flex; overflow: hidden; height: 75vh; position: relative; width: 100%; backface-visibility: hidden; will-change: overflow; }
 	.Left-Panel {
@@ -1170,6 +1173,8 @@ hr.style-line {
 	}
 }
 .cv-results{
+	img.small-image{ width: 40px; height: 40px; }
+	img.large-image{ width: 400px; height: 400px; }
 	.div-table {
 		overflow: auto;
 		padding: 0px 15px;

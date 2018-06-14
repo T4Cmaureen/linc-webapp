@@ -29,7 +29,12 @@ angular.module('linc.cvresults.controller', [])
 	$scope.content = 'Form';
 	$scope.imageset = imageset;
 	$scope.processing = false;
-	$scope.classifier = { type : (data_cvresults.type == 'whisker' ? 'whisker' : 'cv') };
+	$scope.small_image = true;
+	$scope.classifier = {
+		type : data_cvresults.type.has_cv ? 'cv' : 'whisker' ,
+		has_cv: data_cvresults.type.has_cv,
+		has_whisker: data_cvresults.type.has_whisker
+	};
 
 	var GET_FEATURES = function (lbs, TAGS){
 		var label = "";
@@ -45,7 +50,7 @@ angular.module('linc.cvresults.controller', [])
 			options: { ceil: 100, floor: 0, showTicksValues: false, hidePointerLabels: false, readOnly: true }
 		};
 
-		if (data.type == 'both'){
+		if ($scope.classifier.has_cv && $scope.classifier.has_whisker){
 			if (data.cv.prediction < data.whisker.prediction){
 				prediction['minValue'] = data.cv.prediction *100;
 				prediction['maxValue'] = data.whisker.prediction *100;
@@ -57,10 +62,14 @@ angular.module('linc.cvresults.controller', [])
 				prediction['prediction_type'] = true;
 			}
 		}
-		else{
-
+		else if ($scope.classifier.has_cv){
+				prediction['minValue'] = data.cv.prediction *100;
+				prediction['prediction_type'] = false;
 		}
-
+		else{
+			prediction['minValue'] = data.whisker.prediction *100;
+			prediction['prediction_type'] = true;
+		}
 		return prediction;
 	};
 
@@ -70,17 +79,17 @@ angular.module('linc.cvresults.controller', [])
 
 		elem['show_image'] = false;
 		elem['dataloading'] = false;
-		elem['prediction'] = Predictions({type: data_cvresults.type, cv: element['cv'], whisker: element['whisker']});
+		elem['prediction'] = Predictions({ cv: element['cv'], whisker: element['whisker'] });
 
 		return _.extend({}, element, elem);
 	});
 
 	var count = 0;
 
-	$scope.show_photo = function(image){
-		var win = window.open(image, "_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=100, left=100, width=600, height=600");
-		win.focus();
-	};
+	// $scope.show_photo = function(image){
+	// 	var win = window.open(image, "_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=100, left=100, width=600, height=600");
+	// 	win.focus();
+	// };
 
 	$scope.CompareImages = function (lion){
 		var data = {
@@ -286,33 +295,41 @@ angular.module('linc.cvresults.controller', [])
 	};
 
 	$scope.OpenGraph = function(){
-		var series = [
-			{
-				name: 'CV',
-				color: 'rgba(250, 101, 75, 1)',
-				data: _.map($scope.cvresults, function(lion){
-					return {
-						name: lion.name,
-						id: lion.id,
-						c_type: 'cv',
-						x: lion.cv.prediction * 100,
-						y: lion.cv.confidence * 100
-					};
-				})
-			},{
-				name: 'Whisker',
-				color: 'rgba(173, 174, 175, 1)',
-				data:  _.map($scope.cvresults, function(lion){
-					return {
-						name: lion.name,
-						id: lion.id,
-						c_type: 'whisker',
-						x: lion.whisker.prediction * 100,
-						y: lion.whisker.confidence * 100
-					};
-				})
-			}
-		];
+		var series = [];
+		if ($scope.classifier.has_cv){
+			series.push(
+				{
+					name: 'CV',
+					color: 'rgba(250, 101, 75, 1)',
+					data: _.map($scope.cvresults, function(lion){
+						return {
+							name: lion.name,
+							id: lion.id,
+							c_type: 'cv',
+							x: lion.cv.prediction * 100,
+							y: lion.cv.confidence * 100
+						};
+					})
+				}
+			);
+		}
+		if ($scope.classifier.has_whisker){
+			series.push(
+				{
+					name: 'Whisker',
+					color: 'rgba(173, 174, 175, 1)',
+					data:  _.map($scope.cvresults, function(lion){
+						return {
+							name: lion.name,
+							id: lion.id,
+							c_type: 'whisker',
+							x: lion.whisker.prediction * 100,
+							y: lion.whisker.confidence * 100
+						};
+					})
+				}
+			);
+		}
 		var data = {
 			title: 'CV Results',
 			subtitle: 'Request Id: '+ data_cvresults.req_id + ' - Status: ' + data_cvresults.status,

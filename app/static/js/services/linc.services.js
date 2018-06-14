@@ -685,7 +685,6 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 				var associated_id = results.data.data.associated.id;
 				var status = results.data.data.status;
 				var req_id = results.data.data.req_id;
-				var type = 'both'; // 'cv', 'whisker'
 				var cvresults = _.map(data, function(element, index) {
 					var elem = {};
 					if(associated_id == element.id) elem["associated"] = true;
@@ -712,7 +711,7 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 
 					return _.extend({}, element, elem);
 				});
-				deferred.resolve({cvresults: cvresults, type: type, req_id: req_id, status: status});
+				deferred.resolve({cvresults: cvresults, type: { has_cv: true, has_whisker: true }, req_id: req_id, status: status});
 			},
 			function(error){
 				if(debug || (error.status != 401 && error.status != 403)){

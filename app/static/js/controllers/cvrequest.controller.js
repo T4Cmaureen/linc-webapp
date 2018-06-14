@@ -26,9 +26,10 @@ angular.module('linc.cvrequest.controller', [])
 	$uibModalInstance, LincServices, LincDataFactory, NotificationFactory, imageset, lions, cvrequests_options,
 	AuthService, TAG_LABELS, TOOL_TITLE) {
 
-	$scope.title = 'Find Lion Match';
+	$scope.title = 'Find Lion Match (Imageset Id: '+ imageset.id + '  age: ' + imageset.age + ' y/o  gender: ' + imageset.gender +' )';
 	$scope.content = 'Search';
 	$scope.imageset = imageset;
+	$scope.small_image = true;
 
 	$scope.classifier = angular.copy($scope.cv_requirements); //{cv: true, whisker: true};
 	$scope.tooltip = { features: { title: 'tips: ' + TOOL_TITLE, checked: true } };
@@ -46,6 +47,8 @@ angular.module('linc.cvrequest.controller', [])
 		if(angular.isObject(object)){
 			var url = $state.href("viewimages", {'images':{'imageset': imageset, 'lion': object}},  {absolute: true});
 			window.open(url,"_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=100, left=100, width=1200");
+			// $state.go("viewimages", {'images':{'imageset': imageset, 'lion': object}});
+
 		}
 		else if (angular.isString(object)){
 			var win = window.open(object, "_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=100, left=100, width=600, height=600");
