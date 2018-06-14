@@ -52,9 +52,9 @@ angular.module('linc.cvrequest.directive', [])
 			scope.show = function(){
 				if(scope.modalIsOpen) return;
 
-				LincServices.CVRequirements({id: scope.imageset.id}).then(function(cv_requirements){
+				LincServices.CVRequirements({ id: scope.imageset.id }).then(function(response){
 
-					if(!_.keys(_.pickBy(cv_requirements)).length){
+					if(!_.keys(_.pickBy(response)).length){
 						NotificationFactory.warning({
 							title: "Waring", message: 'There are no images defined with "CV" or "Whisker" type.\n'+
 							"You must define, in the image gallery, at least one image with the cv or whisker tag.",
@@ -64,7 +64,7 @@ angular.module('linc.cvrequest.directive', [])
 						return;
 					}
 
-					scope.cv_requirements = cv_requirements;
+					scope.cv_requirements = { cv: response.cv, whisker: response.whisker };
 					scope.modalIsOpen = true;
 					var modalScope = scope.$new();
 					modalScope.debug = scope.debug;
@@ -82,7 +82,16 @@ angular.module('linc.cvrequest.directive', [])
 								return scope.imageset;
 							},
 							lions: ['LincServices', function(LincServices) {
-								return LincServices.Lions();
+								return LincServices.Lions().then(function(lions){
+									return _.map(lions, function(lion){
+										var elem = {};
+										elem['has_data'] = {
+											cv: _.includes(response.cv_lion_list, lion.id),
+											whisker: _.includes(response.whisker_lion_list, lion.id)
+										};
+										return _.extend({}, lion, elem);
+									});
+								});
 							}],
 							cvrequests_options: ['LincDataFactory', function(LincDataFactory) {
 								return LincDataFactory.get_cvrequests();

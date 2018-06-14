@@ -20,9 +20,9 @@
 
 angular.module('linc.imageset.controller', [])
 
-.controller('ImageSetCtrl', ['$scope', '$rootScope', '$q', '$state', '$timeout', '$uibModal', '$bsTooltip', 
+.controller('ImageSetCtrl', ['$scope', '$rootScope', '$q', '$state', '$timeout', '$uibModal', '$bsTooltip',
   '$interval', 'NotificationFactory', 'LincServices', 'AuthService', 'PollerService', 'organizations',
-  'imageset', 'TAGS_CONST', 'TAGS_BY_TYPE', 
+  'imageset', 'TAGS_CONST', 'TAGS_BY_TYPE',
   function ($scope, $rootScope, $q, $state, $timeout,$uibModal, $bsTooltip, $interval, NotificationFactory,
     LincServices, AuthService, PollerService, organizations, imageset, TAGS_CONST, TAGS_BY_TYPE) {
 
@@ -89,10 +89,10 @@ angular.module('linc.imageset.controller', [])
     permissions['canShow'] = (user.admin || imageset_ismine);
     permissions['canDisassociate'] = (!user.admin && (imageset_ismine && !imageset.is_primary && lion_exist && imageset.is_verified));
     permissions['NeedVerify'] = ((user.admin || (!imageset_ismine && lion_ismy)) && !imageset.is_primary && lion_exist);
-  
-    permissions['CanSetPrimary'] = (!imageset.is_primary && lion_exist && imageset.is_verified) && 
+
+    permissions['CanSetPrimary'] = (!imageset.is_primary && lion_exist && imageset.is_verified) &&
                                    (user.admin || (imageset_ismine && imageset.lions_org_id==user.organization_id));
-  
+
     permissions['showGeoPos'] = (user.admin || imageset_ismine) || !imageset.geopos_private;
     permissions['canDelete'] = ((user.admin || imageset_ismine) && !imageset.is_primary);
     return permissions;
@@ -141,9 +141,9 @@ angular.module('linc.imageset.controller', [])
     $scope.imageset.scars = LABELS(TAGS_BY_TYPE['SCARS'],_.intersection(TAGS, TAGS_CONST['SCARS']));
 
     // Image Gallery
-    $scope.gallery_options = { 
-      type: 'imageset', 
-      edit: 'edit', 
+    $scope.gallery_options = {
+      type: 'imageset',
+      edit: 'edit',
       id: $scope.imageset.id,
       is_primary_imageset: $scope.imageset.is_primary,
       is_associated: ($scope.imageset.lion_id == null) ? false : true
@@ -153,21 +153,21 @@ angular.module('linc.imageset.controller', [])
     var date = (new Date($scope.imageset.updated_at)).toLocaleDateString();
     var has_position = ($scope.imageset.longitude!=null && $scope.imageset.latitude!=null);
     var location = [{
-      id: $scope.imageset.id, 
-      label: label, 
+      id: $scope.imageset.id,
+      label: label,
       name: $scope.imageset.name,
-      updated_at: date, 
+      updated_at: date,
       date_stamp: $scope.imageset.date_stamp,
-      longitude: $scope.imageset.longitude, 
+      longitude: $scope.imageset.longitude,
       latitude: $scope.imageset.latitude ,
       geopos_private: $scope.imageset.geopos_private,
       organization_id: $scope.imageset.organization_id
     }];
 
-    $scope.location_options = { 
-      type: 'imageset', 
+    $scope.location_options = {
+      type: 'imageset',
       id: $scope.imageset.id,
-      is_primary: $scope.imageset.is_primary, 
+      is_primary: $scope.imageset.is_primary,
       lion_id: $scope.imageset.lion_id,
       history: {
         count: has_position ? 1 : 0,
@@ -265,7 +265,7 @@ angular.module('linc.imageset.controller', [])
       Sucess:'Image Set was successfully deleted.',
       Error: 'Unable to delete this Image Set.'
     };
-    
+
     var modalDel = $uibModal.open({
         templateUrl: 'Dialog.Delete.tpl.html',
         scope: scopeDel
@@ -274,7 +274,7 @@ angular.module('linc.imageset.controller', [])
     modalDel.result.then(function (result) {
       LincServices.DeleteImageSet($scope.imageset.id, function(results){
         NotificationFactory.success({
-          title: scopeDel.title, 
+          title: scopeDel.title,
           message: message.Sucess,
           position: "right",
           duration: 2000
@@ -285,7 +285,7 @@ angular.module('linc.imageset.controller', [])
       function(error){
         if($scope.debug || (error.status != 401 && error.status != 403)){
           NotificationFactory.error({
-            title: "Fail: " + scopeDel.title, 
+            title: "Fail: " + scopeDel.title,
             message: message.Error,
             position: 'right',
             duration: 5000
@@ -424,7 +424,7 @@ angular.module('linc.imageset.controller', [])
       Sucess:'Imageset was successfully set as primary.',
       Error: 'Unable to set this Image Set as primary.'
     };
-    
+
     var modalSetP = $uibModal.open({
         templateUrl: 'Dialog.Delete.tpl.html',
         scope: scopeSetP
@@ -434,7 +434,7 @@ angular.module('linc.imageset.controller', [])
       var data = {'primary_image_set_id': $scope.imageset.id};
       LincServices.SetPrimary($scope.imageset.lion_id, data, function(results){
         NotificationFactory.success({
-          title: scopeSetP.title, 
+          title: scopeSetP.title,
           message: message.Sucess,
           position: "right",
           duration: 2000
@@ -446,7 +446,7 @@ angular.module('linc.imageset.controller', [])
       function(error){
         if($scope.debug || (error.status != 401 && error.status != 403)){
           NotificationFactory.error({
-            title: "Fail: " + scopeSetP.title, 
+            title: "Fail: " + scopeSetP.title,
             message: message.Error,
             position: 'right',
             duration: 5000
@@ -466,9 +466,9 @@ angular.module('linc.imageset.controller', [])
 
   $scope.tag_label = function(tag_location){
     if (tag_location && tag_location.title && tag_location.value)
-      return (tag_location.title + ' : ' + 
-        (tag_location.value > 1000) ? 
-        ((tag_location.value/1000).toFixed(3).toString() + ' km') : 
+      return (tag_location.title + ' : ' +
+        (tag_location.value > 1000) ?
+        ((tag_location.value/1000).toFixed(3).toString() + ' km') :
         (tag_location.value.toFixed(2).toString() + ' m'));
     else
       return null;

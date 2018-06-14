@@ -1141,6 +1141,9 @@ hr.style-line {
 			color: #f9190a;
 			text-decoration: underline;
 		}
+		tr.disabled, tr:disabled{
+			background-color: #b1afaf6c;
+		}
 	}
 	.Left-Panel::-webkit-scrollbar, .Right-Panel::-webkit-scrollbar, .Scroll-Panel::-webkit-scrollbar { display: none; }
 	span.loading{

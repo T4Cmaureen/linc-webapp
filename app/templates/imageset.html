@@ -26,12 +26,12 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       <div class="wrapper">
         <div class="form-group">
           <input class="form-control" type="text" name="name" ng-model="lion.name" required
-            oninvalid="this.setCustomValidity('Please enter a new lion name')" 
+            oninvalid="this.setCustomValidity('Please enter a new lion name')"
             oninput="setCustomValidity('')">
         </div>
       </div>
       <div class="form-actions pull-right-btn-16">
-        <button type="submit" class="btn btn-primary">Switch</button>      
+        <button type="submit" class="btn btn-primary">Switch</button>
       </div>
     </div>
   </form>
@@ -153,12 +153,12 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       <h4 class="h4data h4-notes"><br>{{!imageset.notes}}</h4>
     </div>
     <div class="col-sm-3 line-left padding-top-12">
-      <image-gallery ng-show="imageset" use-ctrl="ImageGalleryCtrl" use-template-url="image.gallery.html" 
-        form-size="lg" options-set="gallery_options" debug="debug" modal-is-open="is_modal_open" 
-        gallery-updated="Reload_Page()" show-privated="permissions.canShow">  
+      <image-gallery ng-show="imageset" use-ctrl="ImageGalleryCtrl" use-template-url="image.gallery.html"
+        form-size="lg" options-set="gallery_options" debug="debug" modal-is-open="is_modal_open"
+        gallery-updated="Reload_Page()" show-privated="permissions.canShow">
       </image-gallery>
-      <location-history ng-if="imageset && permissions.showGeoPos" use-ctrl="LocationHistoryCtrl" 
-        use-template-url="location.history.html" form-size="lg" type="imageset" options="location_options" 
+      <location-history ng-if="imageset && permissions.showGeoPos" use-ctrl="LocationHistoryCtrl"
+        use-template-url="location.history.html" form-size="lg" type="imageset" options="location_options"
         location-goto="location_goto(imageset_Id)" debug="debug" modal-is-open="is_modal_open">
       </location-history>
       <metadata ng-if="imageset && permissions.canShow" use-ctrl="MetadataCtrl" use-template-url="metadata.html"
@@ -172,7 +172,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           debug="debug" modal-is-open="is_modal_open">
         </cvresults>
         <cvrequest class="cvrequest" use-ctrl="CVRequesCtrl" use-template-url="cvrequest.html" form-size="lg" imageset="imageset"
-          ng-if="imageset.action == 'cvrequest'" cv-request-success="CVReqSuccess(imageset_Id, request_Obj)" 
+          ng-if="imageset.action == 'cvrequest'" cv-request-success="CVReqSuccess(imageset_Id, request_Obj)"
           debug="debug" modal-is-open="is_modal_open">
         </cvrequest>
         <p ng-if="imageset.action == 'cvpending'">
@@ -183,14 +183,14 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       </div>
 
       <p ng-if="imageset && !imageset.is_primary && permissions.canShow">
-        <a class="btn btn-lg btn-default btn-block btn-minwidth-180" data-animation="am-fade-and-slide-top" 
+        <a class="btn btn-lg btn-default btn-block btn-minwidth-180" data-animation="am-fade-and-slide-top"
           ng-click="SwitchLion()"><i class="fa fa-exchange"></i> Switch To New Lion
         </a>
       </p>
 
       <p ng-if="imageset && permissions.canShow">
         <a class="btn btn-lg btn-default btn-block btn-minwidth-180" ng-click="permissions.canDelete && Delete()"
-          data-placement="auto top" data-trigger="hover" data-animation="am-fade-and-scale" data-html=true 
+          data-placement="auto top" data-trigger="hover" data-animation="am-fade-and-scale" data-html=true
           bs-tooltip="tooltip" bs-enabled="tooltip.checked"><i class="icon icon-trash"></i> DELETE IMAGE SET
         </a>
       </p>

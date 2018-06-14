@@ -31,7 +31,7 @@ angular.module('linc.cvrequest.controller', [])
 	$scope.imageset = imageset;
 	$scope.small_image = true;
 
-	$scope.classifier = angular.copy($scope.cv_requirements); //{cv: true, whisker: true};
+	$scope.classifier = { cv: $scope.cv_requirements.cv, whisker: $scope.cv_requirements.whisker };
 	$scope.tooltip = { features: { title: 'tips: ' + TOOL_TITLE, checked: true } };
 
 	var GET_FEATURES = function (lbls, TAGS){
@@ -64,6 +64,16 @@ angular.module('linc.cvrequest.controller', [])
 		permissions['canLocate'] = (!lion.geopos_private || user.admin || lion_ismine);
 		return permissions;
 	};
+	var classifier_enabled = function(lion){
+		if ($scope.classifier.cv && $scope.classifier.whisker)
+			return (lion.has_data.cv || lion.has_data.whisker);
+		else if ($scope.classifier.cv)
+			return lion.has_data.cv;
+		else if ($scope.classifier.whisker)
+			return lion.has_data.whisker;
+		else
+			return false;
+	};
 
 	$scope.lions = _.map(lions, function(element, index) {
 
@@ -79,10 +89,13 @@ angular.module('linc.cvrequest.controller', [])
 		if(TAGS==null) TAGS = [];
 
 		var tag_features = GET_FEATURES(TAG_LABELS, TAGS);
-		elem['tooltip'] = { features: {title: tag_features, checked: true} };
+		var test = 'cv: ' + (element.has_data.cv ? 'true' : 'false') + ' whisker: ' + (element.has_data.whisker ? 'true' : 'false');
+		elem['tooltip'] = {
+			features: {title: test, checked: true}
+		};
 		elem['features'] = (tag_features.length > 0) ? true : false;
 		elem['tag_features'] = tag_features;
-
+		elem['disabled'] = !classifier_enabled(element);
 		return _.extend({}, element, elem);
 	});
 
@@ -194,10 +207,12 @@ angular.module('linc.cvrequest.controller', [])
 	$scope.check_all = function (val){
 		if (val){
 			_.forEach($scope.filtered_lions, function(lion) {
-				lion.selected = val;
-				if(lion.selected){
-					if(!_.some($scope.Selecteds, lion))
-						$scope.Selecteds.push(lion);
+				if(!lion.disabled){
+					lion.selected = val;
+					if(lion.selected){
+						if(!_.some($scope.Selecteds, lion))
+							$scope.Selecteds.push(lion);
+					}
 				}
 			});
 		}
@@ -220,13 +235,15 @@ angular.module('linc.cvrequest.controller', [])
 			var second = Math.max(index0, index1);
 			for(var i = first; i <= second; i++){
 				var animal = $scope.filtered_lions[i];
-				animal.selected = lion.selected;
-				if(lion.selected){
-					if(!_.some($scope.Selecteds, animal))
-						$scope.Selecteds.push(animal);
+				if (!animal.disabled){
+					animal.selected = lion.selected;
+					if(lion.selected){
+						if(!_.some($scope.Selecteds, animal))
+							$scope.Selecteds.push(animal);
+					}
+					else
+						$scope.Selecteds = _.without($scope.Selecteds, animal);
 				}
-				else
-					$scope.Selecteds = _.without($scope.Selecteds, animal);
 			}
 		}
 		else{
@@ -245,6 +262,23 @@ angular.module('linc.cvrequest.controller', [])
 		$scope.selection.allSel = _.every($scope.filtered_lions, { selected: true });
 		$scope.selection.allUnSel = _.every($scope.filtered_lions, { selected: false });
 	};
+
+	// Update Classifier List
+	$scope.ChangeClassifier = function(){
+		_.forEach($scope.filtered_lions, function(lion) {
+			var enabled = classifier_enabled(lion);
+			if (!enabled){
+				if (!lion.disabled && lion.selected){
+					lion.selected = false;
+					_.remove($scope.Selecteds, { id: lion.id });
+				}
+				lion.disabled = true;
+			}
+			else
+				lion.disabled = false;
+		});
+	};
+
 	$scope.ResizeTable = function(){
 		var $table = $('table.table-cv-requests'),
 		$bodyCells = $table.find('tbody tr:first').children(),

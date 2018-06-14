@@ -112,7 +112,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             </h4>
           </div>
           <div uib-collapse="isCollapsed.TagFeatures">
-            <div class="panel-body"  data-placement="auto top" data-trigger="hover"
+            <div class="panel-body" data-placement="auto top" data-trigger="hover"
               data-animation="am-fade-and-scale" bs-tooltip="tooltip.features">
               <input ng-change="change('TagFeatures')" type="text" class="form-control" ng-model="filters.TagFeatures">
             </div>
@@ -214,14 +214,14 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             </h4>
             <div class="checkbox">
               <label style="padding-left: 10px;">
-                <input type="checkbox" checked ng-model="classifier.cv" ng-disabled="!cv_requirements.cv">
+                <input type="checkbox" checked ng-model="classifier.cv" ng-disabled="!cv_requirements.cv" ng-change="ChangeClassifier()">
                 <span class="cr" uib-tooltip='This option is disabled because there are no images defined with "CV" type.'
                 tooltip-enable="!cv_requirements.cv" tooltip-placement="right"><i class="cr-icon fa fa-check"></i></span> CV
               </label>
             </div>
             <div class="checkbox">
               <label style="padding-left: 10px;">
-                <input type="checkbox" checked ng-model="classifier.whisker"  ng-disabled="!cv_requirements.whisker">
+                <input type="checkbox" checked ng-model="classifier.whisker"  ng-disabled="!cv_requirements.whisker" ng-change="ChangeClassifier()">
                 <span class="cr" uib-tooltip='This option is disabled because there are no images defined with "Whisker" type.'
                 tooltip-enable="!cv_requirements.whisker" tooltip-placement="right"><i class="cr-icon fa fa-check"></i></span> Whisker
               </label>
@@ -312,68 +312,70 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 </tr>
               </thead>
               <tbody>
-                <tr class="link" ng-repeat="lion in filtered_lions = (lions | filter: {dead: false} |
+                <tr class="link" ng-class="{'disabled': lion.disabled}"
+                  ng-repeat="lion in filtered_lions = (lions | filter: {dead: false} |
                   nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages |
                   organization_filter: filters.Organizations | features_filter: filters.TagFeatures |
                   gender_filter: filters.Genders | LatLngFilter: filters.Location : true) |
                   orderBy: orderby.predicate : orderby.reverse"
                   repeat-done="ResizeTable()">
 
-                  <td class="text-center">
-                    <input type="checkbox" ng-model="lion.selected" ng-click="Select_Lion($event, lion);$event.stopPropagation();">
+                  <td class="text-center" uib-tooltip="You need to add more pictures to this lion primary imageset so that it become selectable in the future."
+                  tooltip-placement="right" tooltip-enable="lion.disabled" tooltip-append-to-body="true">
+                    <input type="checkbox" ng-disabled="lion.disabled" ng-model="lion.selected" ng-click="Select_Lion($event, lion);$event.stopPropagation();">
                   </td>
                   <td class="text-center">
-                    <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.id}}</a>
+                    <a ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.id}}</a>
                   </td>
 
                   <td class="text-center" ng-right-click="show_photo(lion)">
-                    <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">
+                    <a ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})">
                       <img ng-src="{{!lion.thumbnail}}" width="40" height="40">
                     </a>
                   </td>
 
                   <td class="text-center">
-                    <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.name}}</a>
+                    <a ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.name}}</a>
                   </td>
 
                   <td class="text-center">
-                    <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.age}} y/o</a>
+                    <a ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.age}} y/o</a>
                   </td>
 
                   <td class="text-center">
-                    <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.primary_image_set_id}}</a>
+                    <a ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.primary_image_set_id}}</a>
                   </td>
 
                   <td class="text-center">
-                    <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.organization}}</a>
+                    <a ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.organization}}</a>
                   </td>
 
                   <td class="text-center">
-                    <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.gender}}</a>
+                    <a ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.gender}}</a>
                   </td>
 
                   <td ng-if="lion.permissions.canLocate" class="text-center">
-                    <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.latitude | number:6}}</a>
+                    <a ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.latitude | number:6}}</a>
                   </td>
                   <td ng-if="!lion.permissions.canLocate"></td>
 
                   <td ng-if="lion.permissions.canLocate" class="text-center">
-                    <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.longitude | number:6}}</a>
+                    <a ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.longitude | number:6}}</a>
                   </td>
 
                   <td ng-if="!lion.permissions.canLocate"></td>
 
-                  <td class="text-center" ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">
+                  <td class="text-center" ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})">
                     <i ng-if="lion.geopos_private" class="icon icon-check"></i>
                     <i ng-if="!lion.geopos_private" class="icon icon-cross"></i>
                   </td>
 
                   <td class="text-center tag_features">
-                    <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.tag_features}}</a>
+                    <a ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.tag_features}}</a>
                   </td>
 
                   <td class="text-center">
-                    <a ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})" target="_blank">
+                    <a ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})" target="_blank">
                       <i ng-if="lion.is_verified" class="icon icon-check"></i>
                       <i ng-if="!lion.is_verified" class="icon icon-cross"></i>
                     </a>
