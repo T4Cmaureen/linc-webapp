@@ -126,11 +126,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             </td>
 
             <td class="text-center" ng-show="classifier.type=='cv'" ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">
-              <span class="badge">{{!lion.cv.prediction | percentage:2}}</span>
+              <span class="badge" ng-if="lion.cv.prediction != undefined">{{!lion.cv.prediction | percentage:2}}</span>
             </td>
 
             <td class="text-center" ng-show="classifier.type=='whisker'" ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">
-                <span class="badge">{{!lion.whisker.prediction | percentage:2}}</span>
+                <span class="badge" ng-if="lion.whisker.prediction != undefined">{{!lion.whisker.prediction | percentage:2}}</span>
             </td>
 
             <td class="text-center confidence" ng-show="classifier.type=='cv'" ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">

@@ -686,6 +686,7 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 				var classifiers = results.data.data.classifiers;
 				var status = results.data.data.status;
 				var req_id = results.data.data.req_id;
+				var execution = results.data.data.execution;
 				var cvresults = _.map(data, function(element, index) {
 					var elem = {};
 					if(associated_id == element.id) elem["associated"] = true;
@@ -710,7 +711,13 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 
 					return _.extend({}, element, elem);
 				});
-				deferred.resolve({cvresults: cvresults, type: { has_cv: classifiers.cv, has_whisker: classifiers.whisker }, req_id: req_id, status: status});
+				deferred.resolve({
+					cvresults: cvresults,
+					type: { has_cv: classifiers.cv, has_whisker: classifiers.whisker },
+					req_id: req_id,
+					status: status,
+					execution: execution
+				});
 			},
 			function(error){
 				if(debug || (error.status != 401 && error.status != 403)){

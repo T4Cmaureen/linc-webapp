@@ -25,7 +25,10 @@ angular.module('linc.cvresults.controller', [])
 	function ($scope, $state, $timeout, $interval, $uibModalInstance, $uibModal, $ModalPage, $filter, LincServices,
 	NotificationFactory, imageset, cvrequestId, cvresultsId, data_cvresults, TAG_LABELS) {
 
-	$scope.title = 'CV Results (CV Request Id: '+ data_cvresults.req_id + ' - Status: ' + data_cvresults.status + ')';
+	$scope.title = 'CV Results (CV Request Id: '+ data_cvresults.req_id + ' - Status: ' + data_cvresults.status;
+	if (data_cvresults.status == 'finished')
+	  $scope.title +=  ' execution time: ' + parseFloat(data_cvresults.execution,2) + ' sec';
+	$scope.title += ')';
 	$scope.content = 'Form';
 	$scope.imageset = imageset;
 	$scope.processing = false;
@@ -51,17 +54,29 @@ angular.module('linc.cvresults.controller', [])
 		};
 
 		if ($scope.classifier.has_cv && $scope.classifier.has_whisker){
-			if (data.cv.prediction < data.whisker.prediction){
+			if (data.cv.prediction && data.whisker.prediction){
+				if (data.cv.prediction < data.whisker.prediction){
+					prediction['minValue'] = data.cv.prediction *100;
+					prediction['maxValue'] = data.whisker.prediction *100;
+					prediction['prediction_type'] = false;
+				}
+				else{
+					prediction['minValue'] = data.whisker.prediction *100;
+					prediction['maxValue'] = data.cv.prediction *100;
+					prediction['prediction_type'] = true;
+				}
+				prediction.options.disabled = (isNaN(prediction['minValue']) || isNaN(prediction['maxValue']));
+			}
+			else if(data.cv.prediction){
 				prediction['minValue'] = data.cv.prediction *100;
-				prediction['maxValue'] = data.whisker.prediction *100;
 				prediction['prediction_type'] = false;
+				prediction.options.disabled = isNaN(prediction['minValue']);
 			}
 			else{
 				prediction['minValue'] = data.whisker.prediction *100;
-				prediction['maxValue'] = data.cv.prediction *100;
 				prediction['prediction_type'] = true;
+				prediction.options.disabled = isNaN(prediction['minValue']);
 			}
-			prediction.options.disabled = (isNaN(prediction['minValue']) || isNaN(prediction['maxValue']));
 		}
 		else if ($scope.classifier.has_cv){
 				prediction['minValue'] = data.cv.prediction *100;
