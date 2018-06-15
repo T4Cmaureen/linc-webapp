@@ -72,22 +72,27 @@ angular.module('linc.cvresults.controller', [])
 				prediction['prediction_type'] = false;
 				prediction.options.disabled = isNaN(prediction['minValue']);
 			}
-			else{
+			else if(data.whisker.prediction){
 				prediction['minValue'] = data.whisker.prediction *100;
 				prediction['prediction_type'] = true;
 				prediction.options.disabled = isNaN(prediction['minValue']);
 			}
+			else
+				prediction.options.disabled = true;
 		}
-		else if ($scope.classifier.has_cv){
+		else if ($scope.classifier.has_cv && data.cv.prediction){
 				prediction['minValue'] = data.cv.prediction *100;
 				prediction['prediction_type'] = false;
 				prediction.options.disabled = isNaN(prediction['minValue']);
 		}
-		else{
+		else if ($scope.classifier.has_whisker && data.whisker.prediction){
 			prediction['minValue'] = data.whisker.prediction *100;
 			prediction['prediction_type'] = true;
 			prediction.options.disabled = isNaN(prediction['minValue']);
 		}
+		else
+			prediction.options.disabled = true;
+
 		return prediction;
 	};
 
