@@ -27,7 +27,7 @@ angular.module('linc.cvresults.controller', [])
 
 	$scope.title = 'CV Results (CV Request Id: '+ data_cvresults.req_id + ' - Status: ' + data_cvresults.status;
 	if (data_cvresults.status == 'finished')
-	  $scope.title +=  ' execution time: ' + parseFloat(data_cvresults.execution,2) + ' sec';
+	  $scope.title +=  ' execution time: ' + data_cvresults.execution.toFixed(0) + ' sec';
 	$scope.title += ')';
 	$scope.content = 'Form';
 	$scope.imageset = imageset;
