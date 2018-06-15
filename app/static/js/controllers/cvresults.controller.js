@@ -26,8 +26,15 @@ angular.module('linc.cvresults.controller', [])
 	NotificationFactory, imageset, cvrequestId, cvresultsId, data_cvresults, TAG_LABELS) {
 
 	$scope.title = 'CV Results (CV Request Id: '+ data_cvresults.req_id + ' - Status: ' + data_cvresults.status;
-	if (data_cvresults.status == 'finished')
-	  $scope.title +=  ' execution time: ' + data_cvresults.execution.toFixed(0) + ' sec';
+	if (data_cvresults.status == 'finished'){
+		if (data_cvresults.execution > 60){
+			var minutes = Math.floor(data_cvresults.execution / 60);
+			var seconds = data_cvresults.execution - minutes * 60;
+			$scope.title +=  ' - Execution time: ' + minutes.toFixed(0) + ' min ' + seconds.toFixed(0) + ' sec';
+		}
+		else
+			$scope.title +=  ' - Execution time: ' + data_cvresults.execution.toFixed(0) + ' sec';
+	}
 	$scope.title += ')';
 	$scope.content = 'Form';
 	$scope.imageset = imageset;
@@ -244,7 +251,7 @@ angular.module('linc.cvresults.controller', [])
 	};
 
 	$scope.reverse = true;
-	$scope.predicate = 'cv';
+	$scope.predicate = 'cv.prediction';
 
 	$scope.order = function(predicate) {
 		$scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
@@ -444,4 +451,31 @@ angular.module('linc.cvresults.controller', [])
 		$scope.refreshSlider();
 	});
 
-}]);
+}])
+
+.filter("emptyToEnd", function () {
+    return function (array, key) {
+		var keys = key.split(".");
+		if(keys.length>1){
+			console.log('keys', keys)
+			var key_a = keys[0];
+			var key_b = keys[1]
+			var present = array.filter(function (item) {
+				return item[key_a][key_b];
+			});
+			var empty = array.filter(function (item) {
+				return !item[key_a][key_b];
+			});
+			return present.concat(empty);
+
+		}else{
+			var present = array.filter(function (item) {
+				return item[key];
+			});
+			var empty = array.filter(function (item) {
+				return !item[key]
+			});
+			return present.concat(empty);
+		}
+    };
+});

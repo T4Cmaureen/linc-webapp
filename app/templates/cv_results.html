@@ -103,7 +103,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         </thead>
         <tbody>
           <tr class="link" ng-class="{active:lion.associated}" ng-right-click="!processing && CompareImages(lion)"
-            ng-repeat="lion in orderd_lions = cvresults | orderBy:predicate:reverse" repeat-done="ResizeTable()">
+            ng-repeat="lion in orderd_lions = cvresults | orderBy:predicate:reverse | emptyToEnd:predicate" repeat-done="ResizeTable()">
 
             <td class="text-center">
               <a target="_blank">{{!lion.id}}</a>
