@@ -288,7 +288,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         {{! filtered_lions.length }} lions found.
       </h4>
       <div class="div-table">
-        <table class="table table-view">
+        <!-- <table class="table table-view"> -->
+        <table class="table table-hover">
           <thead>
             <tr>
 
@@ -387,8 +388,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                   nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages |
                   organization_filter: filters.Organizations | features_filter: filters.TagFeatures | 
                   gender_filter: filters.Genders | LatLngFilter: filters.Location : true | geographical: GeoBounds) | 
-                  orderBy : orderby.predicate : orderby.reverse )"
-                  repeat-done="ResizeTable()">
+                  orderBy : orderby.predicate : orderby.reverse )">
 
               <td class="text-center" ng-if="isBatchMode">
                 <input type="checkbox" ng-model="lion.selected" ng-click="Select_Lion($event, lion);$event.stopPropagation();">

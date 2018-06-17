@@ -308,7 +308,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         {{! filtered_image_sets.length }} image sets found.
       </h4>
       <div class="div-table">
-        <table class="table table-view">
+        <!-- <table class="table table-view"> -->
+        <table class="table table-hover">
           <thead>
             <tr>
 
@@ -417,8 +418,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 ((mine_imagesets = (imagesets | filter:BatchFilter)) | nameid_filter: filters.NameOrId : 'lion_id' |
                   age_filter: filters.Ages | organization_filter: filters.Organizations |
                   features_filter: filters.TagFeatures | gender_filter: filters.Genders | primary_filter: filters.Primary |
-                  LatLngFilter: filters.Location : true | geographical: GeoBounds) | orderBy: orderby.predicate : orderby.reverse )"
-                  repeat-done="ResizeTable()">
+                  LatLngFilter: filters.Location : true | geographical: GeoBounds) | orderBy: orderby.predicate : orderby.reverse )">
 
               <td class="text-center" ng-if="isBatchMode">
                 <input type="checkbox" ng-model="imageset.selected" ng-click="Select_Imageset($event, imageset);$event.stopPropagation();">

@@ -2355,7 +2355,9 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 			}
 		}
 	}
-	.div-table{overflow-x: auto;
+	.div-table{
+		overflow-y: scroll;
+		height: 450px;
 		table.table-view { border-spacing: 0; }
 		table.table-view tbody, table.table-view thead { display: block; }
 		thead tr th { height: 30px; padding-top: 0px;}
@@ -2584,9 +2586,9 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 				}
 				.tag-inputs{
 					display: inline-flex;
-					// input{
-					// 	min-width: 100px;
-					// }
+					input{
+						width: 50% !important;
+					}
 				}
 			}
 			.custom-slider{

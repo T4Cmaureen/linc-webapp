@@ -41,7 +41,7 @@ angular.module('linc.compare.images.controller', [])
 		{checked: true, type: 'full-body', label: 'Full Body'},
 		{checked: true, type: 'main-id', label: 'Main Id'},
 		{checked: true, type: 'marking', label: 'Marking'},
-		{checked: true, type: 'whisker', label: 'Whisker (No use in Algorithm)'},
+		{checked: true, type: 'whisker', label: 'Whisker (Not used in algorithm)'},
 		{checked: true, type: 'whisker-left', label: 'Whisker Left'},
 		{checked: true, type: 'whisker-right', label: 'Whisker Right'}
 	];
@@ -54,7 +54,7 @@ angular.module('linc.compare.images.controller', [])
 		{checked: true, type: 'full-body', label: 'Full Body'},
 		{checked: true, type: 'main-id', label: 'Main Id'},
 		{checked: true, type: 'marking', label: 'Marking'},
-		{checked: true, type: 'whisker', label: 'Whisker (No use in Algorithm)'},
+		{checked: true, type: 'whisker', label: 'Whisker (Not used in algorithm)'},
 		{checked: true, type: 'whisker-left', label: 'Whisker Left'},
 		{checked: true, type: 'whisker-right', label: 'Whisker Right'}
 	];

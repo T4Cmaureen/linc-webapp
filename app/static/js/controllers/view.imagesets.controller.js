@@ -195,11 +195,6 @@ angular.module('linc.view.imagesets.controller', [])
 		return $scope.columns ? _.includes($scope.columns, col) : false;
 	};
 	$scope.ColumnsSelect = function(){
-		$timeout(function () {
-			$scope.$apply(function () {
-				$scope.ResizeTable();
-			});
-		}, 0);
 		imagesets_options.Columns = $scope.columns;
 		LincDataFactory.set_imagesets(imagesets_options);
 	};
@@ -486,11 +481,6 @@ angular.module('linc.view.imagesets.controller', [])
 		if(!$scope.isBatchMode){
 			$scope.check_all(false);
 		}
-		$timeout(function () {
-			$scope.$apply(function () {
-				$scope.ResizeTable();
-			});
-		}, 0);
 	});
 
 	$scope.Selecteds = [];
@@ -696,31 +686,4 @@ angular.module('linc.view.imagesets.controller', [])
 			modalInstance.dismiss();
 		}
 	};
-
-	$scope.ResizeTable = function(){
-		var $table = $('table.table-view'),
-		$bodyCells = $table.find('tbody tr:first').children(),
-		$headerCells = $table.find('thead tr:first').children();
-
-		var col0Width = $bodyCells.map(function(i, v) {
-			return v.offsetWidth;
-		}).get();
-		var colWidth = $headerCells.map(function(i, v) {
-			return Math.max(v.offsetWidth, col0Width[i]);
-		}).get();
-
-		var maxcols = $table.find('thead tr').children().length;
-		$bodyCells.each(function(i, v) {
-			var min = Math.max(colWidth[i],30);
-			$(v).css({'min-width': min + 'px'});
-		});
-		$headerCells.each(function(i, v) {
-			var min = Math.max(colWidth[i],30);
-			$(v).css({'min-width': min + 'px'});
-		});
-	};
-	$(window).resize(function() {
-		$scope.ResizeTable();
-	}).resize();
-
 }]);
