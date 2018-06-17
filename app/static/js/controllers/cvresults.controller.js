@@ -132,7 +132,7 @@ angular.module('linc.cvresults.controller', [])
 		};
 		// $state.go("comparecvresults", {data: data});
 		var url = $state.href("comparecvresults", {data: data})
-		window.open(url,"_blank", "location=0, scrollbars=yes, resizable=yes, top=100, left=100, width=800");
+		window.open(url,"_blank", "location=no, scrollbars=yes, resizable=yes, top=100, left=100, height=600, width=1200");
 	};
 
 	var Poller = function () {

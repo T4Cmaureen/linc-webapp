@@ -180,30 +180,83 @@ angular.module('linc.compare.images.controller', [])
 	}
 
 	$scope.resizeChange = function(h,w){
-		if(w >= 1200){
-		$scope.carouselImg.Count = 6, $scope.carouselLion.Count = 6, $scope.carouselCV.Count = 7;
+		if (w >= 1770){
+			$scope.carouselLion.Count = 13;
+			$scope.carouselImg.Count = 13;
 		}
-		else if(w < 1200 && w > 1000){
-			$scope.carouselImg.Count = 5, $scope.carouselLion.Count = 5, $scope.carouselCV.Count = 6;
+		else if (w >= 1650){
+			$scope.carouselLion.Count = 12;
+			$scope.carouselImg.Count = 12;
 		}
-		else if(w <= 1000 && w >= 900){
-		 	$scope.carouselImg.Count = 4, $scope.carouselLion.Count = 4, $scope.carouselCV.Count = 4;
+		else if (w >= 1550){
+			$scope.carouselLion.Count = 11;
+			$scope.carouselImg.Count = 11;
 		}
-		else if(w < 900 && w >= 768){
-		 	$scope.carouselImg.Count = 3,
-		 	$scope.carouselLion.Count = 3,
-		 	$scope.carouselCV.Count = 4;
+		else if (w >= 1450){
+			$scope.carouselLion.Count = 10;
+			$scope.carouselImg.Count = 10;
 		}
-		else if(w < 768){
-			$scope.carouselImg.Count = 9,
-			$scope.carouselLion.Count = 9,
+		else if (w >= 1350){
+			$scope.carouselLion.Count = 9;
+			$scope.carouselImg.Count = 9;
+		}
+		else if (w >= 1250){
+			$scope.carouselLion.Count = 8;
+			$scope.carouselImg.Count = 8;
+		}
+		else if(w >= 1140){
+			$scope.carouselLion.Count = 7;
+			$scope.carouselImg.Count = 7;
+		}
+		else if(w >= 1020){
+			$scope.carouselLion.Count = 6;
+			$scope.carouselImg.Count = 6;
+		}
+		else if(w >= 900){
+			 $scope.carouselLion.Count = 5;
+			 $scope.carouselImg.Count = 5;
+		}
+		else if(w >= 790){
+			 $scope.carouselLion.Count = 4;
+			 $scope.carouselImg.Count = 4;
+		}
+		else{
+			$scope.carouselLion.Count = 3;
+			$scope.carouselImg.Count = 3;
+		}
+
+		if (w >= 1820)
+			$scope.carouselCV.Count = 12;
+		else if (w >= 1730)
+			$scope.carouselCV.Count = 11;
+		else if (w >= 1620)
+			$scope.carouselCV.Count = 10;
+		else if (w >= 1490)
 			$scope.carouselCV.Count = 9;
-		}
-		SetCarousel($scope.carouselImg), SetCarousel($scope.carouselLion), SetCarouselCV();
-		ChangePage($scope.carouselImg); ChangePage($scope.carouselLion);
+		else if (w >= 1390)
+			$scope.carouselCV.Count = 8;
+		else if(w >= 1280)
+			$scope.carouselCV.Count = 7;
+		else if(w >= 1170)
+			$scope.carouselCV.Count = 6;
+		else if(w >= 1060)
+			 $scope.carouselCV.Count = 5;
+		else if(w >= 980)
+			$scope.carouselCV.Count = 4;
+		else if(w >= 850)
+			$scope.carouselCV.Count = 3;
+		else
+			$scope.carouselCV.Count = 2;
+
+		SetCarousel($scope.carouselImg);
+		SetCarousel($scope.carouselLion);
+		SetCarouselCV();
+		ChangePage($scope.carouselImg);
+		ChangePage($scope.carouselLion);
 		$scope.isImageSetCollapsed = true;
 		$scope.isLionCollapsed = true;
 	};
+
 	// Matches
 	$scope.carouselCV={ gallery: [], Page: 1, Begin: 0, Count: 4};
 	// Matches Gallery

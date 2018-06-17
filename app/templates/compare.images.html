@@ -16,6 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 For more information or to contact visit linclion.org or email tech@linclion.org -->
+<script type="text/ng-template" id="custom.caourlse.tpl.html">
+  <div class="carousel-inner" ng-style="slide.Style"  ng-transclude></div>
+</script>
 <div name="CompareImages" class="modal-compare-images font-homenaje-1-1" ng-cloak>
 
   <div class="body-compare-images" ng-style="resize()"
@@ -38,7 +41,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
            interval="carousel.interval"
            no-wrap="carousel.noWrapSlides"
            ng-show="carouselImg.showslide">
-          <div uib-slide ng-repeat="photo in carouselImg.gallery track by photo.index"
+          <div template-url="custom.caourlse.tpl.html" uib-slide ng-repeat="photo in carouselImg.gallery track by photo.index"
              index="photo.index"
              class="carousel-pagination">
             <div class="div-image">
@@ -92,7 +95,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
            interval="carousel.interval"
            no-wrap="carousel.noWrapSlides"
            ng-show="carouselLion.showslide">
-          <div uib-slide ng-repeat="photo in carouselLion.gallery track by photo.index"
+          <div template-url="custom.caourlse.tpl.html" uib-slide ng-repeat="photo in carouselLion.gallery track by photo.index"
              index="photo.index"
              class="carousel-pagination">
             <div class="div-image">

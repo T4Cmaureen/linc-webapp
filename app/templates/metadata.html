@@ -145,8 +145,10 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 								<!-- TAG LOCATION -->
 								<div class="form-group control div-width-100">
 									<label class="meta-label" for="isTagLocation">Tag Location: </label>
-									<div class="input-group width-100">
+									<div class="input-group width-100  tag-location">
 										<input data-lpignore="true" class="form-control meta_input" type="text"
+											placeholder="Select On Map"
+											uib-tooltip="Select Location on Map" tooltip-is-open="tooltip.open" tooltip-enable="!selected.tag_location.text"
 											ng-model="selected.tag_location.text" name="tag_location" ng-readonly="true">
 										<span class="input-group-addon" id="basic-addon2">
 											<location-on-map class="location" use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html" update-location="UpdateLocation(location)"
