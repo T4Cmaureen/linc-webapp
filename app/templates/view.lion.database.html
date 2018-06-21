@@ -120,7 +120,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           <h4>
             <a bs-collapse-toggle ng-click="collapse('TagFeatures')">
               <i ng-if="isCollapsed.TagFeatures" class="pull-right fa fa-expand" aria-hidden="true"></i>
-              <i ng-if="!isCollapsed.TagFeatures" class="pull-right fa fa-compress" aria-hidden="true"></i>  
+              <i ng-if="!isCollapsed.TagFeatures" class="pull-right fa fa-compress" aria-hidden="true"></i>
               Features
             </a>
           </h4>
@@ -145,7 +145,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             <form name="form">
               <div class="form-group control" ng-class="{'has-error': form.latitude.$dirty && form.latitude.$error.pattern}">
                 <label class="location_label" for="latitude">Latitude: </label>
-                <input ng-change="change('Location')" class="form-control input-sm" type="text" name="latitude" 
+                <input ng-change="change('Location')" class="form-control input-sm" type="text" name="latitude"
                   pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-model="filters.Location.latitude" limlatlng="90">
                 <div class="error-messages search" ng-messages="form.latitude.$error" ng-if="form.latitude.$error.limlatlng || form.latitude.$error.pattern">
                   <div ng-message="limlatlng">
@@ -172,7 +172,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               </div>
               <div class="form-group control" ng-class="{'has-error': form.longitude.$dirty && form.longitude.$error.pattern}">
                 <label class="location_label" for="longitude">Longitude: </label>
-                <input ng-change="change('Location')" class="form-control input-sm" type="text" name="longitude" 
+                <input ng-change="change('Location')" class="form-control input-sm" type="text" name="longitude"
                   pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-model="filters.Location.longitude" limlatlng="180">
                 <div class="error-messages search" ng-messages="form.longitude.$error" ng-if="form.longitude.$error.limlatlng || form.longitude.$error.pattern">
                   <div ng-message="limlatlng">
@@ -229,7 +229,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         </div>
         <div uib-collapse="isCollapsed.Boundarys">
           <div class="panel-body geographical">
-            <button type="button" class="form-control btn btn-default" 
+            <button type="button" class="form-control btn btn-default"
               ng-click="SetBoundarys()">Search Areas</button>
             <div class="panel-body checkbox">
               <div ng-repeat="boundary in filters.Boundarys">
@@ -237,7 +237,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                   <i class="cr-icon fa fa-times"></i>
                 </span>
                 <label>
-                 <input type="checkbox" ng-model="boundary.selected" 
+                 <input type="checkbox" ng-model="boundary.selected"
                   ng-checked="boundary.selected" ng-change="Update_Boundarys()">{{! boundary.title}}
                </label>
              </div>
@@ -286,17 +286,17 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     <div class="col-sm-10">
       <h4 class="viewer-founds">
         {{! filtered_lions.length }} lions found.
+        <p class="clearfix" ng-if="isBatchMode">
+          <a class="btn btn-default btn-xs" ng-disabled="selection.allSel" ng-click="check_all(true)">Select All</a>
+          <a class="btn btn-default btn-xs" ng-disabled="selection.allUnSel" ng-click="check_all(false)">Select None</a>
+        </p>
       </h4>
       <div class="div-table">
         <!-- <table class="table table-view"> -->
         <table class="table table-hover">
           <thead>
             <tr>
-
-              <th class="text-center" ng-if="isBatchMode">
-                <i class="icon icon-check icon-border" ng-class="{active:selection.allSel}" ng-click="check_all(true)"></i>
-                <i class="icon icon-cross icon-border" ng-class="{active:selection.allUnSel}" ng-click="check_all(false)"></i>
-              </th>
+              <th class="text-center" ng-if="isBatchMode"></th>
 
               <th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': orderby.predicate === 'id'}">Id</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'id'" ng-class="{reverse: orderby.reverse}"></span>
@@ -350,7 +350,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               </th>
 
               <th class="text-center" ng-show="ShowColumn('tag_location')">
-                <a ng-click="order('tag_location')" ng-class="{'order_class': orderby.predicate === 'tag_location'}">Tag Location</a>
+                <a ng-click="order('tag_location')" ng-class="{'order_class': orderby.predicate === 'tag_location'}">Location Tag</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'tag_location'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
@@ -383,11 +383,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           </thead>
           <tbody>
 
-              <tr class="link" ng-click="!isBatchMode && goto_lion(lion);" 
-                ng-repeat="lion in ordered_lions = (filtered_lions = ((mine_lions = (lions | filter: BatchFilter)) | 
+              <tr class="link" ng-click="!isBatchMode && goto_lion(lion);"
+                ng-repeat="lion in ordered_lions = (filtered_lions = ((mine_lions = (lions | filter: BatchFilter)) |
                   nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages |
-                  organization_filter: filters.Organizations | features_filter: filters.TagFeatures | 
-                  gender_filter: filters.Genders | LatLngFilter: filters.Location : true | geographical: GeoBounds) | 
+                  organization_filter: filters.Organizations | features_filter: filters.TagFeatures |
+                  gender_filter: filters.Genders | LatLngFilter: filters.Location : true | geographical: GeoBounds) |
                   orderBy : orderby.predicate : orderby.reverse )">
 
               <td class="text-center" ng-if="isBatchMode">

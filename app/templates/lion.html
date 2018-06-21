@@ -79,7 +79,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         <h4 class="h4data">{{!lion.longitude | number:4}}</h4>
       </div>
       <div class="meta-info" ng-if="permissions.showGeoPos && lion.latitude && lion.longitude && lion.tag_location">
-        <h4 class="h4inline">Tag Location:</h4>
+        <h4 class="h4inline">Location Tag:</h4>
         <h4 class="h4data">{{!tag_label(lion.tag_location)}}</h4>
       </div>
       <div class="meta-info">
@@ -149,19 +149,19 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       </div>
     </div>
     <div class="col-sm-3 line-left padding-top-12" >
-      <image-gallery ng-show="lion" use-ctrl="ImageGalleryCtrl" use-template-url="image.gallery.html" 
+      <image-gallery ng-show="lion" use-ctrl="ImageGalleryCtrl" use-template-url="image.gallery.html"
         form-size="lg" options-set="gallery_options" debug="debug" modal-is-open="is_modal_open"
         gallery-updated="Reload_Page()" show-privated="permissions.canShow">
       </image-gallery>
-      <location-history ng-if="lion && permissions.showGeoPos" use-ctrl="LocationHistoryCtrl" 
-        use-template-url="location.history.html" form-size="lg" type="lion" options="location_options" 
+      <location-history ng-if="lion && permissions.showGeoPos" use-ctrl="LocationHistoryCtrl"
+        use-template-url="location.history.html" form-size="lg" type="lion" options="location_options"
         location-goto="location_goto(imageset_Id)" debug="debug" modal-is-open="is_modal_open">
       </location-history>
       <metadata ng-if="lion && permissions.canShow" use-ctrl="MetadataCtrl" use-template-url="metadata.html"
         form-size="lg" type="edit" options-set="metadata_options" update-action="update_lion(data)" debug="debug"
         modal-is-open="is_modal_open">
       </metadata>
-      
+
       <relatives class="relatives" use-ctrl="RelativesCtrl" use-template-url="relatives.tpl.html" form-size="lg"
         lion="lion" lions-relatives="relatives" debug="debug" modal-is-open="is_modal_open"
         update-action="update_relatives(data)">

@@ -70,19 +70,19 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       <div class="col-sm-3 text-center">
         <div class="list-group list-locations">
           <div class="form-group location-group" ng-repeat="location in locations">
-           <button ng-class="{'btn btn-default': !location.selected, 'btn btn-primary': location.selected}" 
+           <button ng-class="{'btn btn-default': !location.selected, 'btn btn-primary': location.selected}"
              ng-style="location.selected && location.style" ng-model="location.selected"
              class="btn-min-width-165"
-             ng-click="Animate(location)" ng-dblclick="Open_Imageset(location.id)">{{!location.label}} - 
-              <span class="badge" ng-class="{update_at: !location.date_stamp}" data-animation="am-flip-x" 
-                data-html="true" data-type="info" placement="auto" bs-tooltip="location.tooltip" 
+             ng-click="Animate(location)" ng-dblclick="Open_Imageset(location.id)">{{!location.label}} -
+              <span class="badge" ng-class="{update_at: !location.date_stamp}" data-animation="am-flip-x"
+                data-html="true" data-type="info" placement="auto" bs-tooltip="location.tooltip"
                 bs-enabled="location.tooltip.checked">{{!location.date}}
               </span>
             </button>
           </div>
         </div>
         <div class="btn-group show-arrow" ng-show="locations.length>1">
-          <button type="button" class="btn btn-default" ng-class="{'disabled-btn':!show.arrow}" 
+          <button type="button" class="btn btn-default" ng-class="{'disabled-btn':!show.arrow}"
             ng-model="show.arrow" uib-btn-checkbox ng-click="Show_Arrows()"
             ng-disabled="coord.length<2">
             <span>{{!show.arrow ? 'Click to Hide' : 'Click to Show'}} </span>
@@ -90,9 +90,9 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           </button>
         </div>
         <div class="btn-group show-tag-location" ng-show="tag_circles.length">
-          <button type="button" class="btn btn-default" ng-class="{'disabled-btn':!show.tag_location}" 
+          <button type="button" class="btn btn-default" ng-class="{'disabled-btn':!show.tag_location}"
             ng-model="show.tag_location" uib-btn-checkbox ng-click="Show_TagLocations()">
-            <span>{{!show.tag_location ? 'Hide Tag Location' : 'Show Tag Location'}} </span>
+            <span>{{!show.tag_location ? 'Hide Location Tag' : 'Show Location Tag'}} </span>
             <i class="fa fa-location-arrow" aria-hidden="true"></i>
           </button>
         </div>

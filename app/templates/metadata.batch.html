@@ -38,7 +38,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 		<div class="row">
 			<div class="col-sm-6 line-right">
 				<div class="div-table">
-					<table class="table batch">
+					<!-- <table class="table batch"> -->
+					<table class="table table-hover">
 						<thead>
 							<tr>
 								<th class="text-center index">n.</th>
@@ -94,13 +95,13 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 									<span class="sortorder" ng-show="orderby.predicate === 'longitude'" ng-class="{reverse: orderby.reverse}"></span>
 								</th>
 
-								<th class="text-center"><a ng-click="order('tag_location')" ng-class="{'order_class': orderby.predicate === 'tag_location'}">Tag Location</a>
+								<th class="text-center"><a ng-click="order('tag_location')" ng-class="{'order_class': orderby.predicate === 'tag_location'}">Location Tag</a>
 									<span class="sortorder" ng-show="orderby.predicate === 'tag_location'" ng-class="{reverse: orderby.reverse}"></span>
 								</th>
 								<th class="text-center"><a ng-click="order('geopos_private')" ng-class="{'order_class': orderby.predicate === 'geopos_private'}">GPS Points<br>Private</a>
 									<span class="sortorder" ng-show="orderby.predicate === 'geopos_private'" ng-class="{reverse: orderby.reverse}"></span>
 								</th>
-								<th class="text-center">
+								<th class="text-center tag_features">
 									<a href="" ng-click="order('features')" ng-class="{'order_class': predicate === 'features'}">Features</a>
 									<span class="sortorder" ng-show="predicate === 'features'" ng-class="{reverse:reverse}"></span>
 								</th>
@@ -154,7 +155,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 									<i ng-if="lion.geopos_private" class="icon icon-check"></i>
 									<i ng-if="!lion.geopos_private" class="icon icon-cross"></i>
 								</td>
-								<td class="text-center">{{!lion.tag_features}}</td>
+								<td class="text-center tag_features">{{!lion.tag_features}}</td>
 								<td class="text-center">
 									<div class="div-date_stamp">{{!lion.date_stamp | date:'mediumDate'}}</div>
 								</td>
@@ -193,7 +194,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 							<div ng-show="metadata.type === 'lions'" class="form-inline group-select"
 								ng-class="{'has-error': metadataForm.organization_id.$dirty && metadataForm.organization_id.$error.required }">
 								<label class="meta_label" for="organization_id">
-									<input type="checkbox" ng-model="changed.organization_id" 
+									<input type="checkbox" ng-model="changed.organization_id"
 										ng-change="clear_selection('organization_id');"
 										class="batch-checkbox">Organization:
 								</label>
@@ -291,7 +292,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 								</div>
 								<div class="form-inline group-select"
 									ng-class="{'has-error': metadataForm.isTagLocation.$dirty && metadataForm.isTagLocation.$error.required }">
-									<label class="meta_label" for="isTagLocation">Tag Location: </label>
+									<label class="meta_label" for="isTagLocation">Location Tag: </label>
 									<div class="input-group width-100">
 										<input data-lpignore="true" class="form-control meta_input" type="text"
 										ng-model="selected.location.tag_location.text" name="tag_location" ng-readonly="true">

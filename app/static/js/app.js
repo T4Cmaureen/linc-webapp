@@ -24,14 +24,14 @@ var app = angular.module('linc', ['ngStorage', 'ngAnimate', 'ui.bootstrap', 'ngS
 'use strict';
 
 app.constant('TAG_LABELS', {
-    EYE_DAMAGE_YES:'Eye Damage',EYE_DAMAGE_NONE:'No Eye Damage',TEETH_BROKEN_CANINE_LEFT:'Broken Teeth Canine Left', 
-    TEETH_BROKEN_CANINE_RIGHT:'Broken Teeth Canine Right',TEETH_BROKEN_INCISOR_LEFT:'Broken Teeth Incisor Left', 
-    TEETH_BROKEN_INCISOR_RIGHT:'Broken Teeth Incisor Right',TEETH_BROKEN_NONE:'No Broken Teeth', 
+    EYE_DAMAGE_YES:'Eye Damage',EYE_DAMAGE_NONE:'No Eye Damage',TEETH_BROKEN_CANINE_LEFT:'Broken Teeth Canine Left',
+    TEETH_BROKEN_CANINE_RIGHT:'Broken Teeth Canine Right',TEETH_BROKEN_INCISOR_LEFT:'Broken Teeth Incisor Left',
+    TEETH_BROKEN_INCISOR_RIGHT:'Broken Teeth Incisor Right',TEETH_BROKEN_NONE:'No Broken Teeth',
     EAR_MARKING_LEFT:'Ear Marking Left',EAR_MARKING_RIGHT:'Ear Marking Right',EAR_MARKING_BOTH:'Ear Marking Both',
     EAR_MARKING_NONE:'No Ear Marking',MOUTH_MARKING_YES:'Mouth Marking',MOUTH_MARKING_NONE:'No Mouth Marking',
     TAIL_MARKING_MISSING_TUFT_YES:'Tail Marking Missing Tuft',TAIL_MARKING_MISSING_TUFT_NONE:'No Missing Tuft',
     NOSE_COLOUR_BLACK:'Nose Color Black',NOSE_COLOUR_PATCHY:'Nose Color Patchy',NOSE_COLOUR_PINK:'Nose Color Pink',
-    NOSE_COLOUR_SPOTTED:'Nose Color Spotted',NOSE_COLOUR_NONE:'No Nose Colour',SCARS_BODY_LEFT:'Scars Body Left', 
+    NOSE_COLOUR_SPOTTED:'Nose Color Spotted',NOSE_COLOUR_NONE:'No Nose Colour',SCARS_BODY_LEFT:'Scars Body Left',
     SCARS_BODY_RIGHT:'Scars Body Right',SCARS_FACE:'Scars Face',SCARS_TAIL:'Scars Tail',SCARS_NONE:'No Scars'
 })
 .constant('TAGS_CONST_OLD', {
@@ -57,7 +57,7 @@ app.constant('TAG_LABELS', {
   "Tail Marking: Missing Tuft; Nose Color: Black, Patchy, Pink, or Spotted; Scars: Body Left/Right, Face and Tail")
 .constant('TAGS_BY_TYPE', {
   EYE_DAMAGE:{EYE_DAMAGE_YES:'Yes',EYE_DAMAGE_NONE:'None'},
-  TEETH_BROKEN:{TEETH_BROKEN_CANINE_LEFT:'Canine Left',TEETH_BROKEN_CANINE_RIGHT:'Canine Right', 
+  TEETH_BROKEN:{TEETH_BROKEN_CANINE_LEFT:'Canine Left',TEETH_BROKEN_CANINE_RIGHT:'Canine Right',
     TEETH_BROKEN_INCISOR_LEFT:'Incisor Left',TEETH_BROKEN_INCISOR_RIGHT:'Incisor Right',TEETH_BROKEN_NONE:'None'},
   EAR_MARKING:{EAR_MARKING_LEFT:'Left',EAR_MARKING_RIGHT:'Right',EAR_MARKING_BOTH:'Both',EAR_MARKING_NONE:'None'},
   MOUTH_MARKING:{MOUTH_MARKING_YES:'Yes',MOUTH_MARKING_NONE:'None'},
@@ -71,12 +71,12 @@ app.constant('TAG_LABELS', {
   MOUTH_MARKING:[{value:'MOUTH_MARKING_YES',label:'Yes',chekall:true},{value:'NONE',label:'None',chekall:false}],
   TAIL_MARKING:[{value:'TAIL_MARKING_MISSING_TUFT_YES',label:'Yes',chekall:true},{value:'NONE',label:'None',chekall:false}],
   EYE_DAMAGE:[{value:'EYE_DAMAGE_YES',label:'Yes',chekall:true},{value:'NONE',label:'None',chekall:false}],
-  NOSE_COLOUR:[{value:undefined,label:'Unknown'}, {value:'NOSE_COLOUR_BLACK',label:'Black'},{value:'NOSE_COLOUR_PATCHY',label:'Patchy'}, 
+  NOSE_COLOUR:[{value:undefined,label:'Unknown'}, {value:'NOSE_COLOUR_BLACK',label:'Black'},{value:'NOSE_COLOUR_PATCHY',label:'Patchy'},
     {value:'NOSE_COLOUR_PINK',label:'Pink'},{value:'NOSE_COLOUR_SPOTTED',label:'Spotted'},{value:'NOSE_COLOUR_NONE',label:'None'}],
-  TEETH_BROKEN: [{value:'TEETH_BROKEN_CANINE_LEFT',label:'Canine Left',chekall:true},{value:'TEETH_BROKEN_CANINE_RIGHT',label:'Canine Right',chekall:true}, 
+  TEETH_BROKEN: [{value:'TEETH_BROKEN_CANINE_LEFT',label:'Canine Left',chekall:true},{value:'TEETH_BROKEN_CANINE_RIGHT',label:'Canine Right',chekall:true},
     {value:'TEETH_BROKEN_INCISOR_LEFT',label:'Incisor Left',chekall:true},{value:'TEETH_BROKEN_INCISOR_RIGHT',label:'Incisor Right',chekall:true},
     {value:'NONE',label:'None',chekall:false}],
-  SCARS:[{value:'SCARS_BODY_LEFT',label:'Body Left',chekall:true},{value:'SCARS_BODY_RIGHT',label:'Body Right',chekall:true}, 
+  SCARS:[{value:'SCARS_BODY_LEFT',label:'Body Left',chekall:true},{value:'SCARS_BODY_RIGHT',label:'Body Right',chekall:true},
     {value:'SCARS_FACE',label:'Face',chekall:true},{value:'SCARS_TAIL',label: 'Tail',chekall:true},
     {value:'NONE',label:'None',chekall:false}]
 })
@@ -95,7 +95,7 @@ app.constant('TAG_LABELS', {
       {value: 'gender', label: 'Gender'},
       {value: 'latitude', label: 'Latitude'},
       {value: 'longitude', label: 'Longitude'},
-      {value: 'tag_location', label: 'Tag Location'},
+      {value: 'tag_location', label: 'Location Tag'},
       {value: 'geopos_private', label: 'GPS Points Private'},
       {value: 'tag_features', label: 'Tag Features'},
       {value: 'notes', label: 'Notes'},
@@ -110,7 +110,7 @@ app.constant('TAG_LABELS', {
       {value: 'gender', label: 'Gender'},
       {value: 'latitude', label: 'Latitude'},
       {value: 'longitude', label: 'Longitude'},
-      {value: 'tag_location', label: 'Tag Location'},
+      {value: 'tag_location', label: 'Location Tag'},
       {value: 'geopos_private', label: 'GPS Points Private'},
       {value: 'tag_features', label: 'Tag Features'},
       {value: 'notes', label: 'Notes'},

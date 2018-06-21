@@ -20,9 +20,9 @@
 
 angular.module('linc.location.history.controller', [])
 
-.controller('LocationHistoryCtrl', ['$scope', '$state', '$timeout', '$q', '$uibModal', '$uibModalInstance', 
+.controller('LocationHistoryCtrl', ['$scope', '$state', '$timeout', '$q', '$uibModal', '$uibModalInstance',
   'NgMap', 'LincServices', 'AuthService', 'options', 'history',
-  function ($scope, $state, $timeout, $q, $uibModal, $uibModalInstance, NgMap, LincServices, AuthService, 
+  function ($scope, $state, $timeout, $q, $uibModal, $uibModalInstance, NgMap, LincServices, AuthService,
   options, history) {
 
 	var user = AuthService.user;
@@ -41,8 +41,12 @@ angular.module('linc.location.history.controller', [])
 	$scope.tag_circles = [];
 
 	var Spherical = google.maps.geometry.spherical;
-	var icon = new google.maps.MarkerImage("/static/icons/lion-icon.ico", null,
-			null, null, new google.maps.Size(24, 24));
+	var icon = new google.maps.MarkerImage(
+		"/static/icons/lion-icon.ico",
+		new google.maps.Size(24, 24),
+		new google.maps.Point(0, 0),
+		new google.maps.Point(12, 12),
+		new google.maps.Size(24, 24));
 
 	var mapTypeControlOptions = {
 		style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
@@ -65,15 +69,15 @@ angular.module('linc.location.history.controller', [])
 		var title = element['date_stamp'] ? 'Date Stamp' : 'No stamp date.<br>Using the update date.';
 		var checked = element['date_stamp'] ? false : true;
 		elem['tooltip'] = {title: title, checked: checked};
-		element['tag_location'] = (element.tag_location == null) ? {} : 
+		element['tag_location'] = (element.tag_location == null) ? {} :
 			{
-				status: (element.tag_location ? true : false), 
+				status: (element.tag_location ? true : false),
 				value: element.tag_location.value,
 				title: element.tag_location.title
 			};
 		return _.extend({}, element, elem);
 	}), function(hist){
-		if(!hist.geopos_private) 
+		if(!hist.geopos_private)
 			return true;
 		else
 			return (user.admin || (user.organization_id == hist.organization_id));
@@ -99,9 +103,9 @@ angular.module('linc.location.history.controller', [])
 		var northeast = new google.maps.LatLng(north.lat(), east.lng());
 		var southwest = new google.maps.LatLng(sout.lat(), west.lng());
 		return (new google.maps.LatLngBounds(southwest, northeast));
-	};		
+	};
 
-	// Calc Radius distance 
+	// Calc Radius distance
 	var Calc_Max_Radius = function (center){
 		var dist = 0;
 		$scope.locations.forEach(function(location){
@@ -110,7 +114,7 @@ angular.module('linc.location.history.controller', [])
 		});
 		return (dist);
 	};
-	
+
 	// Show / Hide Marker Label
 	$scope.show_label = function(marker, status){
 		marker.labelClass = status ? "show_markerlabel" : "hide_markerlabel";
@@ -121,7 +125,7 @@ angular.module('linc.location.history.controller', [])
 		CreateLinkArrows();
 	};
 
-	// Show / Hide Tag Locations
+	// Show / Hide Location Tags
 	$scope.Show_TagLocations = function(){
 		_.forEach($scope.tag_circles, function(tag_circle){
 			var map = $scope.show.tag_location ? $scope.map : null;
@@ -222,30 +226,30 @@ angular.module('linc.location.history.controller', [])
 			$scope.lines = new google.maps.Polyline({
 				map: $scope.map, path: $scope.coord, editable: false, draggable: false,
 				icons: [ {icon: offseticon,offset:'95%'}, {icon: endicon,offset:'30px'}],
-				strokeColor: 'black', strokeOpacity: 0.8, strokeWeight: 3, 
+				strokeColor: 'black', strokeOpacity: 0.8, strokeWeight: 3,
 			});
 			$scope.lines.set('zIndex',100);
 		}
-	};  
+	};
 
 	// Circle around Marker
 	var Create_Circle = function(data){
-		var circle = new google.maps.Circle({ 
+		var circle = new google.maps.Circle({
 			strokeColor: (data.stroke && data.stroke.color) ? data.stroke.color : '#9f3d0e',
-			strokeOpacity: (data.stroke && data.stroke.opacity) ? data.stroke.opacity : 0.2, 
+			strokeOpacity: (data.stroke && data.stroke.opacity) ? data.stroke.opacity : 0.2,
 			fillColor: (data.fill && data.fill.color) ? data.fill.color : 'rgba(217, 82, 16, 0.24)',
 			fillOpacity: (data.fill && data.fill.opacity) ? data.fill.opacity : 0.2,
 			draggable: data.draggable ? data.draggable : false,
-			strokeWeight: 2, 
+			strokeWeight: 2,
 			map: $scope.map,
-			center: data.center, 
+			center: data.center,
 			radius: data.radius,
 			zIndex: data.zIndex
 		});
 		return circle;
 	};
 
-	// Create Tag Location Circle
+	// Create Location Tag Circle
 	var TagCircle = function (data){
 		var circle = Create_Circle(data)
 		var pos0 = data.center;
@@ -305,7 +309,7 @@ angular.module('linc.location.history.controller', [])
 	var SetLocationOnMap = function (location, i) {
 		var deferred = $q.defer();
 		location.selected = true;
-	
+
 		$timeout(function() {
 			var position = new google.maps.LatLng(location.latitude, location.longitude);
 	 		$scope.bounds.extend(position);
@@ -318,7 +322,7 @@ angular.module('linc.location.history.controller', [])
 				labelContent: MarkerlabelContent(location, position),
 				labelAnchor: new google.maps.Point(30, 50)
 			});
-		
+
 			var click = google.maps.event.addListener(marker, 'click', function(event) {
 				$scope.LocationDetail(location.id, event);
 			});
@@ -404,7 +408,7 @@ angular.module('linc.location.history.controller', [])
 			CreateLinkArrows();
 			$scope.map.fitBounds($scope.bounds);
 		});
-		
+
 		$scope.map.setCenter(position);
 		google.maps.event.trigger($scope.map,'resize');
 	});

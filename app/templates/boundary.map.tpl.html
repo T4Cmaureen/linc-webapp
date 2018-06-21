@@ -26,12 +26,12 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 			<div class="wrapper">
 				<div class="form-group">
 					<input class="form-control" type="text" name="name" ng-model="name" required
-					oninvalid="this.setCustomValidity('Please enter a label')" 
+					oninvalid="this.setCustomValidity('Please enter a label')"
             		oninput="setCustomValidity('')">
 				</div>
 			</div>
 			<div class="form-actions pull-right-btn-16">
-				<button type="submit" class="btn btn-primary">Set</button>			
+				<button type="submit" class="btn btn-primary">Set</button>
 			</div>
 		</div>
 	</form>
@@ -61,19 +61,19 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 			<div class="col-sm-3">
 				<label class="label-boundary">Search Areas:</label>
 				<div class="wrapper well">
-					
+
 					<div class="form-group" ng-show="GeoBounds.length">
 						<div class="checkbox" ng-repeat="boundary in GeoBounds">
 							<label class="checkbox-inline">
-								<input type="checkbox" class="form-input" 
-								ng-model="boundary.selected" ng-checked="boundary.selected" 
+								<input type="checkbox" class="form-input"
+								ng-model="boundary.selected" ng-checked="boundary.selected"
 								ng-change="SelectBoundary(boundary)">
 								<span class="cr"><i class="cr-icon fa fa-check"></i></span>
 									{{! boundary.label.text}}
 							</label>
 						</div>
 					</div>
-					
+
 					<div class="form-group user-actions">
 						<div class="file-upload">
 							<div class="form-group is-empty is-fileinput">
@@ -81,12 +81,12 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 									uib-tooltip="Load Search Areas Filters from File" tooltip-placement="top-left">
 									<i class="fa fa-file" aria-hidden="true"></i>
 								</label>
-								<input type="file" id="loadboundary" accept="application/json,text/*,.dat" 
+								<input type="file" id="loadboundary" accept="application/json,text/*,.dat"
 									load-boundarys-on-change="LoadBoundarys" ng-model="fileupload.name">
 							</div>
 						</div>
-					
-						<button type="btn" class="btn btn-default btn-raised save-in-file" 
+
+						<button type="btn" class="btn btn-default btn-raised save-in-file"
 							ng-click="SaveBoundarys()" ng-disabled="!GeoBounds.length"
 							uib-tooltip="Save Search Areas Filters to File" tooltip-placement="top-left">
 							<strong class="sr-only">Save</strong>
@@ -112,7 +112,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 									<a href="" ng-click="order('name')" ng-class="{'order_class': orderby.predicate === 'name'}">Name</a>
 									<span class="sortorder" ng-show="orderby.predicate === 'name'" ng-class="{reverse: orderby.reverse}"></span>
 								</th>
-								<th class="text-center p35">Tag Location</th>
+								<th class="text-center p35">Location Tag</th>
 							</tr>
 						</thead>
 						<tbody>

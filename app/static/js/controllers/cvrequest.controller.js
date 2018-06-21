@@ -202,7 +202,7 @@ angular.module('linc.cvrequest.controller', [])
 		}
 		return label;
 	};
-	$scope.selection = { allSel: false, allUnSel: false };
+	$scope.selection = { allSel: false, allUnSel: true };
 	$scope.Selecteds = [];
 	$scope.check_all = function (val){
 		if (val){
@@ -278,30 +278,4 @@ angular.module('linc.cvrequest.controller', [])
 				lion.disabled = false;
 		});
 	};
-
-	$scope.ResizeTable = function(){
-		var $table = $('table.table-cv-requests'),
-		$bodyCells = $table.find('tbody tr:first').children(),
-		$headerCells = $table.find('thead tr:first').children();
-
-		var col0Width = $bodyCells.map(function(i, v) {
-			return v.offsetWidth;
-		}).get();
-		var colWidth = $headerCells.map(function(i, v) {
-			return Math.max(v.offsetWidth, col0Width[i]);
-		}).get();
-
-		$bodyCells.each(function(i, v) {
-			var min = Math.max(colWidth[i],30);
-			$(v).css({'min-width': min + 'px'});
-		});
-		$headerCells.each(function(i, v) {
-			var min = Math.max(colWidth[i],30);
-			$(v).css({'min-width': min + 'px'});
-		});
-	};
-	$(window).resize(function() {
-		$scope.ResizeTable();
-	}).resize();
-
 }]);

@@ -440,12 +440,12 @@ angular.module('linc.view.imagesets.controller', [])
 
 		$scope.isCollapsed.NameOrId = $scope.pfilters.hasOwnProperty('NameOrId') ? false : ($scope.filters.NameOrId ? false : true);
 		$scope.isCollapsed.Organization = $scope.pfilters.hasOwnProperty('Organization') ? false : _.every($scope.filters.Organizations, {checked: true});
-		$scope.isCollapsed.Age = $scope.pfilters.hasOwnProperty('Ages') ? false : 
+		$scope.isCollapsed.Age = $scope.pfilters.hasOwnProperty('Ages') ? false :
 			(($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
 		$scope.isCollapsed.Gender = $scope.pfilters.hasOwnProperty('Genders') ? false : _.every($scope.filters.Genders, {checked: true});
 		$scope.isCollapsed.TagFeatures = $scope.pfilters.hasOwnProperty('TagFeatures') ? false : ($scope.filters.TagFeatures ? false : true);
 		$scope.isCollapsed.Primary = $scope.pfilters.hasOwnProperty('Primary') ? false : _.every($scope.filters.Primary, {checked: true});
-		$scope.isCollapsed.Location = $scope.pfilters.hasOwnProperty('Location') ? false : 
+		$scope.isCollapsed.Location = $scope.pfilters.hasOwnProperty('Location') ? false :
 			(($scope.filters.Location.latitude && $scope.filters.Location.longitude && $scope.filters.Location.radius) ? false : true);
 		$scope.isCollapsed.Boundarys = $scope.pfilters.hasOwnProperty('Boundarys') ? false : ($scope.filters.Boundarys.length ? false : true);
 	}
@@ -475,7 +475,7 @@ angular.module('linc.view.imagesets.controller', [])
 	// Batch Mode
 	$scope.canNotDelete = false; // Primary Imagesets can only be deleted in the lion's profile
 	$scope.is_modal_open = false;
-	$scope.selection = { allSel: false, allUnSel: false };
+	$scope.selection = { allSel: false, allUnSel: true };
 
 	$scope.$on('BatchModeUpdated', function(event, args) {
 		if(!$scope.isBatchMode){
@@ -590,7 +590,7 @@ angular.module('linc.view.imagesets.controller', [])
 			$scope.exporting = false;
 		});
 	};
-	// Label to Tag Location
+	// Label to Location Tag
 	$scope.tag_location_label = function(tag_location){
 		if (tag_location && tag_location.title && tag_location.value){
 			var dist = (tag_location.value > 1000) ? ((tag_location.value/1000).toFixed(3).toString() + ' km') : (tag_location.value.toFixed(2).toString() + ' m');
