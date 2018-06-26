@@ -130,7 +130,7 @@ class ImageSetsReqHandler(BaseHandler):
                 method='GET')
             self.set_json_output()
             self.set_status(response.code)
-            if response.code == 200:
+            if response.code in [200, 409]:
                 self.finish(response.body)
             else:
                 self.finish(
