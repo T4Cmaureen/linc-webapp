@@ -47,7 +47,7 @@ angular.module('linc.view.imagesets.controller', [])
 				var index = pendings.id;
 				var imageset = $scope.imagesets[index];
 				var cvrequest = _.find(cvrequests, {'imageset_id': id});
-				if(cvrequest){
+				if(cvrequest && cvrequest.status == 'finished'){
 					imageset.cvresults = cvrequest.cvres_obj_id;
 					imageset.req_status = cvrequest.status;
 					if(imageset.cvresults){
@@ -128,7 +128,7 @@ angular.module('linc.view.imagesets.controller', [])
 					elem["action"] = '';
 				}
 				else{
-					if(element.cvresults && (element.req_status == 'finished'))
+					if(element.cvrequest && element.req_status == 'finished')
 						elem["action"] = 'cvresults';
 					else if(element.cvrequest){
 						elem["action"] = 'cvpending';
