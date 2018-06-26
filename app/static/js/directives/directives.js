@@ -18,8 +18,8 @@
 // For more information or to contact visit linclion.org or email tech@linclion.org
 'use strict';
 
-angular.module('linc.directives', ['linc.cvrequest.directive', 'linc.cvresults.directive', 
-	'linc.image.gallery.directive', 'linc.location.history.directive', 'linc.metadata.directive', 
+angular.module('linc.directives', ['linc.cvrequest.directive', 'linc.cvresults.directive',
+	'linc.image.gallery.directive', 'linc.location.history.directive', 'linc.metadata.directive',
 	'linc.side.menu.directive', 'linc.thumbnail.directive', 'linc.upload.images.directive',
 	'linc.relatives.directive', 'linc.request.access.directive', 'linc.metadata.batch.directive',
 	'linc.location.on.map.directive'])
@@ -149,10 +149,10 @@ angular.module('linc.directives', ['linc.cvrequest.directive', 'linc.cvresults.d
 	}
 }])
 
-//Provides with pagination with infinite scroll to handle large list of choices. 
+//Provides with pagination with infinite scroll to handle large list of choices.
 //An upfront large list of choices makes the control unstable and unresponsive.
 //This feature avoid populaing the list upfront by pagination which is the primary cause of unstability.
-//Pagination works in 2 scenarios:- 
+//Pagination works in 2 scenarios:-
 // 1) Simple scrolling of the contents.
 // 2) Scrolling when the Autocomplete/search text is enteded and the results are still too large.
 // @example
@@ -164,7 +164,7 @@ angular.module('linc.directives', ['linc.cvrequest.directive', 'linc.cvresults.d
 //     age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
 //   </small>
 // </ui-select-choices>
- .directive('uiSelectChoices', ['$timeout', '$parse', '$compile', '$document', '$filter', 
+ .directive('uiSelectChoices', ['$timeout', '$parse', '$compile', '$document', '$filter',
 	function($timeout, $parse, $compile, $document, $filter) {
 	return function(scope, elm, attr) {
 		var raw = elm[0];
@@ -276,7 +276,7 @@ angular.module('linc.directives', ['linc.cvrequest.directive', 'linc.cvresults.d
 				var w = angular.element($window);
 				scope.$watch(function () {
 						return {
-								'h': w.height(), 
+								'h': w.height(),
 								'w': w.width()
 						};
 				}, function (newValue, oldValue) {
@@ -302,7 +302,7 @@ angular.module('linc.directives', ['linc.cvrequest.directive', 'linc.cvresults.d
 				var w = element;
 				scope.$watch(function () {
 						return {
-								'h': w.height(), 
+								'h': w.height(),
 								'w': w.width()
 						};
 				}, function (newValue, oldValue) {
@@ -365,24 +365,24 @@ angular.module('linc.directives', ['linc.cvrequest.directive', 'linc.cvresults.d
 		link: function(scope, element, attrs, modelCtrl) {
 			var childList = attrs.childList;
 			var property = attrs.property;
-			
+
 			// Bind the onChange event to update children
 			element.bind('change', function() {
 				scope.$apply(function () {
 					var isChecked = element.prop('checked');
-					
+
 					// Set each child's selected property to the checkbox's checked property
 					angular.forEach(scope.$eval(childList), function(child) {
 						child[property] = isChecked;
 					});
 				});
 			});
-			
+
 			// Watch the children for changes
 			scope.$watch(childList, function(newValue) {
 				var hasChecked = false;
 				var hasUnchecked = false;
-				
+
 				// Loop through the children
 				angular.forEach(newValue, function(child) {
 					if (child[property]) {
@@ -391,7 +391,7 @@ angular.module('linc.directives', ['linc.cvrequest.directive', 'linc.cvresults.d
 						hasUnchecked = true;
 					}
 				});
-				
+
 				// Determine which state to put the checkbox in
 				if (hasChecked && hasUnchecked) {
 					element.prop('checked', false);

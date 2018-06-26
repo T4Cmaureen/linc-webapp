@@ -47,7 +47,7 @@ angular.module('linc.view.imagesets.controller', [])
 				var index = pendings.id;
 				var imageset = $scope.imagesets[index];
 				var cvrequest = _.find(cvrequests, {'imageset_id': id});
-				if(cvrequest){
+				if(cvrequest && cvrequest.status == 'finished'){
 					imageset.cvresults = cvrequest.cvres_obj_id;
 					imageset.req_status = cvrequest.status;
 					if(imageset.cvresults){
@@ -128,7 +128,7 @@ angular.module('linc.view.imagesets.controller', [])
 					elem["action"] = '';
 				}
 				else{
-					if(element.cvresults && (element.req_status == 'finished'))
+					if(element.cvrequest && element.req_status == 'finished')
 						elem["action"] = 'cvresults';
 					else if(element.cvrequest){
 						elem["action"] = 'cvpending';
@@ -195,11 +195,6 @@ angular.module('linc.view.imagesets.controller', [])
 		return $scope.columns ? _.includes($scope.columns, col) : false;
 	};
 	$scope.ColumnsSelect = function(){
-		$timeout(function () {
-			$scope.$apply(function () {
-				$scope.ResizeTable();
-			});
-		}, 0);
 		imagesets_options.Columns = $scope.columns;
 		LincDataFactory.set_imagesets(imagesets_options);
 	};
@@ -445,12 +440,12 @@ angular.module('linc.view.imagesets.controller', [])
 
 		$scope.isCollapsed.NameOrId = $scope.pfilters.hasOwnProperty('NameOrId') ? false : ($scope.filters.NameOrId ? false : true);
 		$scope.isCollapsed.Organization = $scope.pfilters.hasOwnProperty('Organization') ? false : _.every($scope.filters.Organizations, {checked: true});
-		$scope.isCollapsed.Age = $scope.pfilters.hasOwnProperty('Ages') ? false : 
+		$scope.isCollapsed.Age = $scope.pfilters.hasOwnProperty('Ages') ? false :
 			(($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
 		$scope.isCollapsed.Gender = $scope.pfilters.hasOwnProperty('Genders') ? false : _.every($scope.filters.Genders, {checked: true});
 		$scope.isCollapsed.TagFeatures = $scope.pfilters.hasOwnProperty('TagFeatures') ? false : ($scope.filters.TagFeatures ? false : true);
 		$scope.isCollapsed.Primary = $scope.pfilters.hasOwnProperty('Primary') ? false : _.every($scope.filters.Primary, {checked: true});
-		$scope.isCollapsed.Location = $scope.pfilters.hasOwnProperty('Location') ? false : 
+		$scope.isCollapsed.Location = $scope.pfilters.hasOwnProperty('Location') ? false :
 			(($scope.filters.Location.latitude && $scope.filters.Location.longitude && $scope.filters.Location.radius) ? false : true);
 		$scope.isCollapsed.Boundarys = $scope.pfilters.hasOwnProperty('Boundarys') ? false : ($scope.filters.Boundarys.length ? false : true);
 	}
@@ -480,17 +475,12 @@ angular.module('linc.view.imagesets.controller', [])
 	// Batch Mode
 	$scope.canNotDelete = false; // Primary Imagesets can only be deleted in the lion's profile
 	$scope.is_modal_open = false;
-	$scope.selection = { allSel: false, allUnSel: false };
+	$scope.selection = { allSel: false, allUnSel: true };
 
 	$scope.$on('BatchModeUpdated', function(event, args) {
 		if(!$scope.isBatchMode){
 			$scope.check_all(false);
 		}
-		$timeout(function () {
-			$scope.$apply(function () {
-				$scope.ResizeTable();
-			});
-		}, 0);
 	});
 
 	$scope.Selecteds = [];
@@ -600,7 +590,7 @@ angular.module('linc.view.imagesets.controller', [])
 			$scope.exporting = false;
 		});
 	};
-	// Label to Tag Location
+	// Label to Location Tag
 	$scope.tag_location_label = function(tag_location){
 		if (tag_location && tag_location.title && tag_location.value){
 			var dist = (tag_location.value > 1000) ? ((tag_location.value/1000).toFixed(3).toString() + ' km') : (tag_location.value.toFixed(2).toString() + ' m');
@@ -696,31 +686,4 @@ angular.module('linc.view.imagesets.controller', [])
 			modalInstance.dismiss();
 		}
 	};
-
-	$scope.ResizeTable = function(){
-		var $table = $('table.table-view'),
-		$bodyCells = $table.find('tbody tr:first').children(),
-		$headerCells = $table.find('thead tr:first').children();
-
-		var col0Width = $bodyCells.map(function(i, v) {
-			return v.offsetWidth;
-		}).get();
-		var colWidth = $headerCells.map(function(i, v) {
-			return Math.max(v.offsetWidth, col0Width[i]);
-		}).get();
-
-		var maxcols = $table.find('thead tr').children().length;
-		$bodyCells.each(function(i, v) {
-			var min = Math.max(colWidth[i],30);
-			$(v).css({'min-width': min + 'px'});
-		});
-		$headerCells.each(function(i, v) {
-			var min = Math.max(colWidth[i],30);
-			$(v).css({'min-width': min + 'px'});
-		});
-	};
-	$(window).resize(function() {
-		$scope.ResizeTable();
-	}).resize();
-
 }]);

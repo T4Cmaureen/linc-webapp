@@ -244,18 +244,21 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         <div class="Container-Panel-2">
           <div class="Right-Top-Panel">
             <div class="col-sm-6">
-              <h3>{{! viewer_label()}}</h3>
+              <h3>{{! viewer_label()}}
+                <p class="clearfix">
+                  <a class="btn btn-default btn-xs" ng-disabled="selection.allSel" ng-click="check_all(true)">Select All</a>
+                  <a class="btn btn-default btn-xs" ng-disabled="selection.allUnSel" ng-click="check_all(false)">Select None</a>
+                </p>
+              </h3>
             </div>
           </div>
           <div class="Scroll-Panel">
-            <table class="table table-cv-requests">
+            <!-- <table class="table table-cv-requests"> -->
+            <table class="table table-hover">
               <thead>
                 <tr>
+                  <th class="text-center"></th>
 
-                  <th class="text-center">
-                  <i class="icon icon-check icon-border" ng-class="{active:selection.allSel}" ng-click="check_all(true)"></i>
-                  <i class="icon icon-cross icon-border" ng-class="{active:selection.allUnSel}" ng-click="check_all(false)"></i>
-                </th>
                   <th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': orderby.predicate === 'id'}">Id</a>
                     <span class="sortorder" ng-show="orderby.predicate === 'id'" ng-class="{reverse: orderby.reverse}"></span>
                   </th>
@@ -317,10 +320,9 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                   nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages |
                   organization_filter: filters.Organizations | features_filter: filters.TagFeatures |
                   gender_filter: filters.Genders | LatLngFilter: filters.Location : true) |
-                  orderBy: orderby.predicate : orderby.reverse"
-                  repeat-done="ResizeTable()">
+                  orderBy: orderby.predicate : orderby.reverse">
 
-                  <td class="text-center" uib-tooltip="You need to add more pictures to this lion primary imageset so that it become selectable in the future."
+                  <td class="text-center" uib-tooltip="You need to add more images to the image sets for this lion to be searchable."
                   tooltip-placement="right" tooltip-enable="lion.disabled" tooltip-append-to-body="true">
                     <input type="checkbox" ng-disabled="lion.disabled" ng-model="lion.selected" ng-click="Select_Lion($event, lion);$event.stopPropagation();">
                   </td>

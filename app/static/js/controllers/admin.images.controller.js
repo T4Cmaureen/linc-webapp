@@ -325,7 +325,7 @@ angular.module('linc.admin.images.controller', [])
       { disabled: false, id: 3, value: "whisker-left", label: "Whisker Left" },
       { disabled: false, id: 4, value: "whisker-right", label: "Whisker Right" },
       { disabled: false, id: 2, value: "marking", label: "Marking" },
-      { disabled: false, id: 7, value: "whisker", label: "Whisker (No use in Algorithm)" },
+      { disabled: false, id: 7, value: "whisker", label: "Whisker (Not used in algorithm)" },
       { disabled: false, id: 6, value: "full-body", label: "Full Body" }
   ];
 

@@ -20,7 +20,7 @@
 
 angular.module('linc.location.on.map.controller', [])
 
-.controller('LocationOnMapCtrl', ['$scope', '$q', '$timeout', 'metadata', 
+.controller('LocationOnMapCtrl', ['$scope', '$q', '$timeout', 'metadata',
   '$uibModalInstance', 'NgMap', 'AuthService',
   function ($scope, $q, $timeout, metadata, $uibModalInstance, NgMap, AuthService) {
 
@@ -33,9 +33,13 @@ angular.module('linc.location.on.map.controller', [])
 	var max_radius = 100000;
 	var default_tag_radius = 10000;
 	var Spherical = google.maps.geometry.spherical;
-	var icon = new google.maps.MarkerImage("/static/icons/lion-icon.ico", null,
-			null, null, new google.maps.Size(24, 24));
-	var icon2 = new google.maps.MarkerImage("/static/icons/pin-icon.png", 
+	var icon = new google.maps.MarkerImage(
+		"/static/icons/lion-icon.ico",
+		new google.maps.Size(24, 24),
+		new google.maps.Point(0, 0),
+		new google.maps.Point(12, 12),
+		new google.maps.Size(24, 24));
+	var icon2 = new google.maps.MarkerImage("/static/icons/pin-icon.png",
 			null, null, null, new google.maps.Size(36, 36));
 	// Quenia - Nairobi
 	var position_default = new google.maps.LatLng(-1.267508, 36.824724);
@@ -226,7 +230,7 @@ angular.module('linc.location.on.map.controller', [])
 				else{
 					marker.setPosition(last_position);
 					$scope.TagCircleEdits();
-				}				
+				}
 			});
 			// Update Slider On Dragend
 			$scope.tag_circle_settings.listeners.push(drag);
@@ -304,7 +308,7 @@ angular.module('linc.location.on.map.controller', [])
 	var TagLabels = function(data){
 		var lab_options = TagOptions(data);
 		var zoom = $scope.map.getZoom();
-		zoom =  _.isNaN(zoom) ? 6 : zoom; 
+		zoom =  _.isNaN(zoom) ? 6 : zoom;
 		var option = (zoom < 6 ? lab_options[6] : (zoom > 14 ? lab_options[14] : lab_options[zoom]));
 		var tag_data = {
 			text: $scope.location.tag_location.title,
@@ -317,19 +321,19 @@ angular.module('linc.location.on.map.controller', [])
 		$scope.tag_label = new MapLabel(tag_data);
 		$scope.listeners.taglabels.push(TagListener(lab_options));
 	};
-	// Create Tag Location Circle
+	// Create Location Tag Circle
 	var TagCircle = function (data){
 		var map = $scope.location.tag_location.status ? $scope.map : null;
-		var tag_circle = new google.maps.Circle({ 
+		var tag_circle = new google.maps.Circle({
 			strokeColor: (data.stroke && data.stroke.color) ? data.stroke.color : '#9f3d0e',
-			strokeOpacity: (data.stroke && data.stroke.opacity) ? data.stroke.opacity : 0.2, 
+			strokeOpacity: (data.stroke && data.stroke.opacity) ? data.stroke.opacity : 0.2,
 			fillColor: (data.fill && data.fill.color) ? data.fill.color : 'rgba(217, 82, 16, 0.24)',
 			fillOpacity: (data.fill && data.fill.opacity) ? data.fill.opacity : 0.2,
 			//draggable: data.draggable ? data.draggable : true,
 			draggable: false,
-			strokeWeight: 2, 
+			strokeWeight: 2,
 			map: map,
-			center: data.center, 
+			center: data.center,
 			radius: data.radius
 		});
 		var circleRClick= google.maps.event.addListener(tag_circle, 'rightclick', function(event){
@@ -360,14 +364,14 @@ angular.module('linc.location.on.map.controller', [])
 
 	// Set Lion/Imageset Marker on Map
 	var SetLionOnMap = function (position) {
-		if(_.isEmpty($scope.markers)){	
+		if(_.isEmpty($scope.markers)){
 			var marker = new MarkerLabel({
-				position: position, 
+				position: position,
 				map: $scope.map,
-				draggable: true, raiseOnDrag: true, 
-				icon: icon, labelStyle: {opacity: 1.0}, 
+				draggable: true, raiseOnDrag: true,
+				icon: icon, labelStyle: {opacity: 1.0},
 				labelClass: "hide_markerlabel",
-				labelContent: MarkerlabelContent(position), 
+				labelContent: MarkerlabelContent(position),
 				labelAnchor: new google.maps.Point(30, 50)
 			});
 
@@ -375,7 +379,7 @@ angular.module('linc.location.on.map.controller', [])
 				$scope.ShowMarkerLabel(marker,true);
 			});
 			$scope.listeners.location.push(mouseover);
-		
+
 			var mouseout = google.maps.event.addListener(marker, 'mouseout', function (event) {
 				$scope.ShowMarkerLabel(marker,false);
 			});
@@ -466,7 +470,7 @@ angular.module('linc.location.on.map.controller', [])
 		google.maps.event.trigger($scope.map,'resize');
 
 		$scope.timeout=$timeout(function() {
-			$scope.$apply(function () {		
+			$scope.$apply(function () {
 				$(".gmnoprint").each(function(){
 					var newObj = $(this).find("[title='Add a marker']");
 					newObj.attr('title', 'Add Lion Location');
@@ -492,7 +496,7 @@ angular.module('linc.location.on.map.controller', [])
 	};
 	// Slider
 	$scope.slider = {
-		options: { 
+		options: {
 			floor: 0, ceil: max_radius,
 			onChange: function(id) {
 				$scope.UpdateTagCircle($scope.location.tag_location.value);
@@ -509,7 +513,7 @@ angular.module('linc.location.on.map.controller', [])
 		});
 	};
 	$scope.RefreshSlider();
-	
+
 	// Clear All onExit
 	var CleanAll = function(){
 		if(drawingManager)
@@ -565,10 +569,10 @@ angular.module('linc.location.on.map.controller', [])
 
 		// Restore Data
 		$scope.location = {
-			latitude: angular.copy(metadata.latitude), 
-			longitude: angular.copy(metadata.longitude), 
+			latitude: angular.copy(metadata.latitude),
+			longitude: angular.copy(metadata.longitude),
 			name: angular.copy(metadata.name),
-			tag_location: angular.copy(metadata.tag_location) 
+			tag_location: angular.copy(metadata.tag_location)
 		};
 		$scope.location.tag_location.value = $scope.location.tag_location.value ? $scope.location.tag_location.value : default_tag_radius;
 
@@ -587,5 +591,5 @@ angular.module('linc.location.on.map.controller', [])
 		if($event.key == "Escape")
 			$scope.Cancel();
 	};
-	
+
 }]);

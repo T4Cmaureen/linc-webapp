@@ -38,7 +38,7 @@ angular.module('linc.imageset.controller', [])
     PollerService.cvrequests_list().then(function(response){
       var cvrequests = response.data;
       var cvrequest = _.find(cvrequests, {'imageset_id': $scope.imageset.id});
-      if(cvrequest){
+      if(cvrequest && cvrequest.status == 'finished'){
         $scope.imageset.cvresults = cvrequest.cvres_obj_id;
         $scope.imageset.req_status = cvrequest.status;
         if($scope.imageset.cvresults){
@@ -111,7 +111,7 @@ angular.module('linc.imageset.controller', [])
         $scope.imageset["action"] = '';
       }
       else{
-        if($scope.imageset.cvresults)
+        if($scope.imageset.cvrequest && $scope.imageset.req_status)
           $scope.imageset["action"] = 'cvresults';
         else if($scope.imageset.cvrequest){
           $scope.imageset["action"] = 'cvpending';

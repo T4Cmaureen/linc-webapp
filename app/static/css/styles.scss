@@ -1121,10 +1121,22 @@ hr.style-line {
 		}
 	}
 	.Right-Panel { overflow: auto; width: 85%; height: auto;}
-	.Right-Top-Panel { display: flex; justify-content: left;  position: fixed; width: 70%; z-index: 10; height: auto;}
-	.Scroll-Panel {
-		overflow: auto;
+	.Right-Top-Panel {
+		display: flex;
+		justify-content: left;
+		position: fixed;
+		width: 70%;
+		z-index: 10;
 		height: auto;
+		p{
+			display: inline-block; margin: 0px;
+		}
+	}
+	.Scroll-Panel {
+		// overflow: auto;
+		overflow-y: scroll;
+		max-height: 450px;
+		// height: auto;
 		padding: .1rem;
 		margin-top:4rem;
 		margin-left:1rem;
@@ -1173,18 +1185,24 @@ hr.style-line {
 				font-size: 18px;
 			}
 		}
+		.tag-location{
+			input[readonly], input[disabled]{
+				background-color: #fff;
+			}
+		}
 	}
 }
 .cv-results{
 	img.small-image{ width: 40px; height: 40px; }
-	img.large-image{ width: 400px; height: 400px; }
+	img.large-image{ width: 400px; height: 300px; }
 	.div-table {
-		overflow: auto;
+		overflow-y: scroll;
+		max-height: 450px;
 		padding: 0px 15px;
 		table.table-cv-results { border-spacing: 0; }
 		table.table-cv-results tbody, table.table-cv-results thead { display: block; }
 		thead tr th { height: 30px; padding-top: 0px;}
-		table.table-cv-results tbody { height: 430px; overflow-y: auto; }
+		table.table-cv-results tbody { height: 400px; overflow-y: auto; }
 		tbody tr td, thead tr th { min-width: 30px; }
 		tbody td:last-child, thead th:last-child { border-right: none; }
 		th.lion-image{ width: 400px; }
@@ -1325,9 +1343,9 @@ hr.style-line {
 }
 
 .cv-results-modal1>.modal-lg {min-width: 1200px !important;}
-.cv-results-modal1 .cv-results-modal .modal-dialog .modal-content{ max-height: 700px !important;}
+// .cv-results-modal1 .cv-results-modal .modal-dialog .modal-content{ max-height: unset;}
 
-.large-modal .modal-dialog .modal-content{ max-height: 700px !important;}
+// .large-modal .modal-dialog .modal-content{ max-height: 700px !important;}
 .modal-content {overflow-y: auto;}
 .modal-header-image{display: inline-block; padding: 6px;}
 .modal-title-image{display: inline-block; vertical-align: middle;}
@@ -2248,6 +2266,9 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 	h4.viewer-founds{
 		margin-top: 0px;
 		margin-bottom: 6px;
+		p{
+			display: inline-block; margin: 0px;
+		}
 	}
 	.columns-to-show{
 		position: absolute;
@@ -2355,7 +2376,9 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 			}
 		}
 	}
-	.div-table{overflow-x: auto;
+	.div-table{
+		overflow-y: scroll;
+		max-height: 450px;
 		table.table-view { border-spacing: 0; }
 		table.table-view tbody, table.table-view thead { display: block; }
 		thead tr th { height: 30px; padding-top: 0px;}
@@ -2387,13 +2410,31 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 	min-width: 120px;
 }
 .metadata-batch{
-	.div-table{overflow-x: auto;
-		table.batch { border-spacing: 0; }
-		table.batch tbody, table.batch thead { display: block; }
-		thead tr th { height: 30px; }
-		table.batch tbody { height: 510px; overflow-y: auto; }
+	.div-table{
+		// overflow-x: auto;
+		overflow-y: scroll;
+		max-height: 450px;
+		// table.batch { border-spacing: 0; }
+		// table.batch tbody, table.batch thead { display: block; }
+		// thead tr th { height: 30px; }
+		// table.batch tbody { height: 510px; overflow-y: auto; }
 		tbody tr td, thead tr th { min-width: 20px; }
+		// tbody td:last-child, thead th:last-child { border-right: none; }
+
+		thead tr th { height: 30px; padding-top: 0px;}
+		tbody tr td, thead tr th { min-width: 20px; max-width: 300px;}
 		tbody td:last-child, thead th:last-child { border-right: none; }
+		th.tag_features, td.tag_features {
+			min-width: 200px;
+		}
+		th.notes, td.notes{
+			min-width: 200px;
+		}
+		a:focus, a:hover {
+			color: #f9190a;
+			text-decoration: underline;
+		}
+
 	}
 
 	label{
@@ -2584,9 +2625,9 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 				}
 				.tag-inputs{
 					display: inline-flex;
-					// input{
-					// 	min-width: 100px;
-					// }
+					input{
+						width: 50% !important;
+					}
 				}
 			}
 			.custom-slider{

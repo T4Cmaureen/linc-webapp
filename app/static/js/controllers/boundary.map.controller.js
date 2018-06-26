@@ -21,7 +21,7 @@
 
 angular.module('linc.boundary.map.controller',[])
 
-.controller('BoundaryMapCtrl', ['$scope', '$compile', '$q', '$timeout', '$transitions', '$uibModalInstance', 
+.controller('BoundaryMapCtrl', ['$scope', '$compile', '$q', '$timeout', '$transitions', '$uibModalInstance',
 	'NgMap', 'FileSaver', 'inputdata', 'AuthService', '$uibModal', '$ModalPage', 'NotificationFactory',
 	function ($scope, $compile, $q, $timeout, $transitions, $uibModalInstance, NgMap, FileSaver, inputdata,
 	AuthService, $uibModal, $ModalPage, NotificationFactory){
@@ -38,8 +38,12 @@ angular.module('linc.boundary.map.controller',[])
 	// Quenia - Nairobi
 	var position_default = new google.maps.LatLng(-1.267508, 36.824724);
 	var zoom_default = 8;
-	var icon = new google.maps.MarkerImage("/static/icons/lion-icon.ico", null,
-			null, null, new google.maps.Size(24, 24));
+	var icon = new google.maps.MarkerImage(
+		"/static/icons/lion-icon.ico",
+		new google.maps.Size(24, 24),
+		new google.maps.Point(0, 0),
+		new google.maps.Point(12, 12),
+		new google.maps.Size(24, 24));
 	// MAP OPTIONS
 	var mapTypeControlOptions = {
 		style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
@@ -143,7 +147,7 @@ angular.module('linc.boundary.map.controller',[])
 	var DeletePolygon = function(data){
 		var index = data.index;
 		var label = data.label;
-		var title = label.text;		
+		var title = label.text;
 		var map = data.map;
 		$scope.DialogDelete(title)
 		.then(function (result) {
@@ -153,10 +157,10 @@ angular.module('linc.boundary.map.controller',[])
 			Update_Intersections();
 		}, function () {
 			$scope.Notification.info({
-				title: "Cancel", 
+				title: "Cancel",
 				message: 'Delete canceled',
 				position: 'right',
-				duration: 2000 
+				duration: 2000
 			});
 		});
 	};
@@ -243,7 +247,7 @@ angular.module('linc.boundary.map.controller',[])
 	var CreateCircle = function (data){
 		var circle = new google.maps.Circle({
 			map: data.map,
-			center: data.center, 
+			center: data.center,
 			radius: data.radius,
 			fillColor: '#ffffff', fillOpacity: 0.3, strokeColor: '#5e9ae1',
 			strokeWeight: 1, clickable: true, editable: false, zIndex: 1, draggable: false
@@ -256,7 +260,7 @@ angular.module('linc.boundary.map.controller',[])
 			map: data.map,
 			bounds: data.bounds,
 			fillColor: '#ffffff', fillOpacity: 0.3, strokeColor: '#5e9ae1',
-			strokeOpacity: 0.7, strokeWeight: 2, clickable: true, 
+			strokeOpacity: 0.7, strokeWeight: 2, clickable: true,
 			editable: false, draggable: false
 		});
 		return rectangle;
@@ -291,7 +295,7 @@ angular.module('linc.boundary.map.controller',[])
 		var coordinates = path.getArray().map(function name(coord) {
 			return new jsts.geom.Coordinate(coord.lat(), coord.lng());
 		});
-		if(coordinates[0].compareTo(coordinates[coordinates.length-1]) != 0) 
+		if(coordinates[0].compareTo(coordinates[coordinates.length-1]) != 0)
 			coordinates.push(coordinates[0]);
 		var shell = geometryFactory.createLinearRing(coordinates);
 		return geometryFactory.createPolygon(shell);
@@ -305,7 +309,7 @@ angular.module('linc.boundary.map.controller',[])
 		var coordinates = _.map(path, function name(coord) {
 			return new jsts.geom.Coordinate(coord[0], coord[1]);
 		});
-		if(coordinates[0].compareTo(coordinates[coordinates.length-1]) != 0) 
+		if(coordinates[0].compareTo(coordinates[coordinates.length-1]) != 0)
 			coordinates.push(coordinates[0]);
 		var shell = geometryFactory.createLinearRing(coordinates);
 		return geometryFactory.createPolygon(shell);
@@ -323,7 +327,7 @@ angular.module('linc.boundary.map.controller',[])
 			var coordinate = new jsts.geom.Coordinate(pos.lat(), pos.lng());
 			coordinates.push(coordinate);
 		};
-		if(coordinates[0].compareTo(coordinates[coordinates.length-1]) != 0) 
+		if(coordinates[0].compareTo(coordinates[coordinates.length-1]) != 0)
 			coordinates.push(coordinates[0]);
 		var shell = geometryFactory.createLinearRing(coordinates);
 		return geometryFactory.createPolygon(shell);
@@ -432,11 +436,11 @@ angular.module('linc.boundary.map.controller',[])
 				$scope.moved = true;
 				$scope.UpdateStatus(true);
 			});
-			$scope.listeners.push(bounds_changed); 
+			$scope.listeners.push(bounds_changed);
 		}
 		var label = PolygonLabel({ center: center, map: map, title: data.title });
 		var jsts_pol = CreateJstsPol(overlay, data.type);
-		var databound = { type: data.type , overlay: overlay, jsts_pol: jsts_pol, index: data.index, 
+		var databound = { type: data.type , overlay: overlay, jsts_pol: jsts_pol, index: data.index,
 			label: label, menu_label: menu_label, map: map, selected: data.selected };
 		return databound;
 	};
@@ -459,14 +463,14 @@ angular.module('linc.boundary.map.controller',[])
 	$scope.polygonDragEnd = function(polygon){
 		var path = [];
 		$scope.polygon_path.forEach(function(point){
-			path.push(point);			
+			path.push(point);
 		});
 		if($scope.polygon_path && path.length>0){
 			var data = {
 				title: 'Move the Search Area',
 				message: 'Are you sure you want to move the search area?'
 			};
-		
+
 			$scope.DialogUpdate(data).then(function (result) {
 				$scope.polygon_path = null;
 			}, function () {
@@ -535,7 +539,7 @@ angular.module('linc.boundary.map.controller',[])
 				}
 				var label = PolygonLabel({ center: center, map: $scope.map, title: title });
 				var jsts_pol = CreateJstsPol(event.overlay, event.type);
-				var databound = { type: event.type , overlay: event.overlay, jsts_pol: jsts_pol, index: $scope.guid(), 
+				var databound = { type: event.type , overlay: event.overlay, jsts_pol: jsts_pol, index: $scope.guid(),
 					label: label, menu_label: menu_label, map: map, selected: true };
 				$scope.GeoBounds.push(databound);
 				Create_Intesection(databound);
@@ -587,7 +591,7 @@ angular.module('linc.boundary.map.controller',[])
 		// 				case 'Draw a circle':
 		// 					return 'Add a new Circle Filter';
 		// 				break;
-		// 				default:return this.title;  
+		// 				default:return this.title;
 		// 			}
 		// 		});
 		// 	});
@@ -713,12 +717,12 @@ angular.module('linc.boundary.map.controller',[])
 	// MARKERS
 	//==============================================
 	var TagLabels = function(data){
-		var pos0 = data.center;
-		var pos1 = Spherical.computeOffset(data.center, data.radius/4 , 180);
-		var pos2 = Spherical.computeOffset(data.center, data.radius/8 , 180);
+		var pos1 = Spherical.computeOffset(data.center, data.radius/8 , 180);
+		var pos2 = Spherical.computeOffset(data.center, data.radius/4 , 180);
 		var pos3 = Spherical.computeOffset(data.center, data.radius/2 , 180);
+		var pos4 = Spherical.computeOffset(data.center, data.radius , 180);
 		var lab_options = {
-			6: { fontSize: 8, fontColor: '#fff', strokeColor: '#9f3d0e', position: pos0 },
+			6: { fontSize: 8, fontColor: '#fff', strokeColor: '#9f3d0e', position: pos4 },
 			7: { fontSize: 10, fontColor: '#fff', strokeColor: '#9f3d0e', position: pos3 },
 			8: { fontSize: 10, fontColor: '#fff', strokeColor: '#9f3d0e', position: pos3 },
 			9: { fontSize: 14, fontColor: '#fff', strokeColor: '#9f3d0e', position: pos2 },
@@ -747,21 +751,23 @@ angular.module('linc.boundary.map.controller',[])
 			tag_label.set('position',option.position);
 			tag_label.set('fontColor',option.fontColor);
 			tag_label.set('strokeColor',option.strokeColor);
+			console.log('zoom: ' , zoom);
+			console.log('lab_options: ', option.position);
 		});
 		$scope.listeners.push(hmap);
 		return tag_label;
 	};
-	// Create Tag Location Circle
+	// Create Location Tag Circle
 	var TagCircle = function (data){
-		var tag_circle = new google.maps.Circle({ 
+		var tag_circle = new google.maps.Circle({
 			strokeColor: (data.stroke && data.stroke.color) ? data.stroke.color : '#9f3d0e',
-			strokeOpacity: (data.stroke && data.stroke.opacity) ? data.stroke.opacity : 0.2, 
+			strokeOpacity: (data.stroke && data.stroke.opacity) ? data.stroke.opacity : 0.2,
 			fillColor: (data.fill && data.fill.color) ? data.fill.color : 'rgba(217, 82, 16, 0.24)',
 			fillOpacity: (data.fill && data.fill.opacity) ? data.fill.opacity : 0.2,
 			draggable: false,
-			strokeWeight: 2, 
+			strokeWeight: 2,
 			map: $scope.map,
-			center: data.center, 
+			center: data.center,
 			radius: data.radius
 		});
 		var tag_label = TagLabels({ center: data.center, radius: data.radius, title: data.title });
@@ -787,12 +793,12 @@ angular.module('linc.boundary.map.controller',[])
 			$scope.bounds.extend(position);
 			var name = entity.name;
 			var marker = new MarkerLabel({
-				position: position, 
+				position: position,
 				map: $scope.map,
-				draggable: false, raiseOnDrag: true, 
-				icon: icon, labelStyle: {opacity: 1.0}, 
+				draggable: false, raiseOnDrag: true,
+				icon: icon, labelStyle: {opacity: 1.0},
 				labelClass: "hide_markerlabel",
-				labelContent: MarkerlabelContent(position, name), 
+				labelContent: MarkerlabelContent(position, name),
 				labelAnchor: new google.maps.Point(30, 50)
 			});
 
@@ -800,7 +806,7 @@ angular.module('linc.boundary.map.controller',[])
 				$scope.show_label(marker,true);
 			});
 			$scope.listeners.push(mouseover);
-			
+
 			var mouseout = google.maps.event.addListener(marker, 'mouseout', function (event) {
 				$scope.show_label(marker,false);
 			});
@@ -808,7 +814,7 @@ angular.module('linc.boundary.map.controller',[])
 
 			// Create a TagCircle
 			var tag_circle = null;
-			var title = 'lat: ' + entity.latitude + ' lng: ' + entity.longitude; 
+			var title = 'lat: ' + entity.latitude + ' lng: ' + entity.longitude;
 			if (entity.tag_location && entity.tag_location.value){
 				// Create a TagCircle
 				tag_circle = TagCircle({
@@ -824,7 +830,7 @@ angular.module('linc.boundary.map.controller',[])
 			mspider.addMarker(marker);
 
 			var data_marker = {
-				marker: marker, 
+				marker: marker,
 				tag_circle: tag_circle,
 				location: entity.location,
 				tag_location: entity.tag_location,
@@ -851,7 +857,7 @@ angular.module('linc.boundary.map.controller',[])
 		}
 	};
 
-	// Calc Radius distance 
+	// Calc Radius distance
 	var Calc_Max_Radius = function (center, markers){
 		var dist = 0;
 		_.forEach(markers, function(data_marker){
@@ -879,7 +885,7 @@ angular.module('linc.boundary.map.controller',[])
 		return Math.floor((1+ Math.random()) * 0x10000).toString(16).substring(1);
 	};
 
-	// Set Lat/Lng 
+	// Set Lat/Lng
 	$scope.UpdateStatus = function(val){
 		$scope.timeout=$timeout(function() {
 			$scope.$apply(function () {
@@ -1112,7 +1118,7 @@ angular.module('linc.boundary.map.controller',[])
 
 // Select Boundarys from File
 .controller('SelectBoundarysCtrl', ['$scope', '$sce', '$uibModalInstance', function($scope, $sce, $uibModalInstance) {
-								
+
 	$scope.title = 'Inport Search Areas';
 	$scope.keep = {old: true};
 
@@ -1160,7 +1166,7 @@ angular.module('linc.boundary.map.controller',[])
 						if(contain)
 							return false;
 					}
-					if (databound.type == 'polygon'){ 
+					if (databound.type == 'polygon'){
 						var polygon = databound.overlay;
 						contain = Poly.containsLocation(marker.location, polygon);
 						if(contain)

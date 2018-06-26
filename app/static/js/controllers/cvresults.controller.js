@@ -25,7 +25,17 @@ angular.module('linc.cvresults.controller', [])
 	function ($scope, $state, $timeout, $interval, $uibModalInstance, $uibModal, $ModalPage, $filter, LincServices,
 	NotificationFactory, imageset, cvrequestId, cvresultsId, data_cvresults, TAG_LABELS) {
 
-	$scope.title = 'CV Results (CV Request Id: '+ data_cvresults.req_id + ' - Status: ' + data_cvresults.status + ')';
+	$scope.title = 'CV Results (CV Request Id: '+ data_cvresults.req_id + ' - Status: ' + data_cvresults.status;
+	if (data_cvresults.status == 'finished'){
+		if (data_cvresults.execution > 60){
+			var minutes = Math.floor(data_cvresults.execution / 60);
+			var seconds = data_cvresults.execution - minutes * 60;
+			$scope.title +=  ' - Execution time: ' + minutes.toFixed(0) + ' min ' + seconds.toFixed(0) + ' sec';
+		}
+		else
+			$scope.title +=  ' - Execution time: ' + data_cvresults.execution.toFixed(0) + ' sec';
+	}
+	$scope.title += ')';
 	$scope.content = 'Form';
 	$scope.imageset = imageset;
 	$scope.processing = false;
@@ -51,28 +61,45 @@ angular.module('linc.cvresults.controller', [])
 		};
 
 		if ($scope.classifier.has_cv && $scope.classifier.has_whisker){
-			if (data.cv.prediction < data.whisker.prediction){
+			if (data.cv.prediction && data.whisker.prediction){
+				if (data.cv.prediction < data.whisker.prediction){
+					prediction['minValue'] = data.cv.prediction *100;
+					prediction['maxValue'] = data.whisker.prediction *100;
+					prediction['prediction_type'] = false;
+				}
+				else{
+					prediction['minValue'] = data.whisker.prediction *100;
+					prediction['maxValue'] = data.cv.prediction *100;
+					prediction['prediction_type'] = true;
+				}
+				prediction.options.disabled = (isNaN(prediction['minValue']) || isNaN(prediction['maxValue']));
+			}
+			else if(data.cv.prediction){
 				prediction['minValue'] = data.cv.prediction *100;
-				prediction['maxValue'] = data.whisker.prediction *100;
 				prediction['prediction_type'] = false;
+				prediction.options.disabled = isNaN(prediction['minValue']);
 			}
-			else{
+			else if(data.whisker.prediction){
 				prediction['minValue'] = data.whisker.prediction *100;
-				prediction['maxValue'] = data.cv.prediction *100;
 				prediction['prediction_type'] = true;
+				prediction.options.disabled = isNaN(prediction['minValue']);
 			}
-			prediction.options.disabled = (isNaN(prediction['minValue']) || isNaN(prediction['maxValue']));
+			else
+				prediction.options.disabled = true;
 		}
-		else if ($scope.classifier.has_cv){
+		else if ($scope.classifier.has_cv && data.cv.prediction){
 				prediction['minValue'] = data.cv.prediction *100;
 				prediction['prediction_type'] = false;
 				prediction.options.disabled = isNaN(prediction['minValue']);
 		}
-		else{
+		else if ($scope.classifier.has_whisker && data.whisker.prediction){
 			prediction['minValue'] = data.whisker.prediction *100;
 			prediction['prediction_type'] = true;
 			prediction.options.disabled = isNaN(prediction['minValue']);
 		}
+		else
+			prediction.options.disabled = true;
+
 		return prediction;
 	};
 
@@ -89,11 +116,6 @@ angular.module('linc.cvresults.controller', [])
 
 	var count = 0;
 
-	// $scope.show_photo = function(image){
-	// 	var win = window.open(image, "_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=100, left=100, width=600, height=600");
-	// 	win.focus();
-	// };
-
 	$scope.CompareImages = function (lion){
 		var data = {
 			title: 'Compare Images',
@@ -105,7 +127,7 @@ angular.module('linc.cvresults.controller', [])
 		};
 		// $state.go("comparecvresults", {data: data});
 		var url = $state.href("comparecvresults", {data: data})
-		window.open(url,"_blank", "location=0, scrollbars=yes, resizable=yes, top=100, left=100, width=800");
+		window.open(url,"_blank", "location=no, scrollbars=yes, resizable=yes, top=100, left=100, height=600, width=1200");
 	};
 
 	var Poller = function () {
@@ -224,20 +246,14 @@ angular.module('linc.cvresults.controller', [])
 	};
 
 	$scope.reverse = true;
-	$scope.predicate = 'cv';
+	$scope.predicate = 'cv.prediction';
 
 	$scope.order = function(predicate) {
 		$scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
 		$scope.predicate = predicate;
-		$timeout(function () {
-			$scope.$apply(function () {
-				$scope.ResizeTable();
-			});
-		}, 0);
 	};
 
 	$scope.GoTo = function (data){
-		//ui-sref="lion({id: lion.id})"
 		var scopeGo = $scope.$new();
 		scopeGo.title = (data.type == 'lion') ? 'Lion Info' : 'Image Set Info';
 		scopeGo.message = 'Would you like to open the ' + ((data.type == 'lion') ? 'lion' : 'image set') + ' info page?';
@@ -279,9 +295,6 @@ angular.module('linc.cvresults.controller', [])
 			old_selected_id = lion.id;
 		}
 		$scope.show_lion_image = _.some($scope.orderd_lions, { show_image: true });
-		$timeout(function(){
-			$scope.ResizeTable();
-		},0, false);
 		$scope.refreshSlider();
 	};
 
@@ -371,42 +384,6 @@ angular.module('linc.cvresults.controller', [])
 		});
 	};
 
-	$scope.ResizeTable = function(){
-		var $table = $('table.table-cv-results'),
-		$bodyCells = $table.find('tbody tr:first').children(),
-		$headerCells = $table.find('thead tr').eq(1).children();
-
-		var colWidth = [];
-		$table.find('tbody tr').each(function(j,tr){
-			colWidth = $(tr).find('td').map(function(i, v) {
-				return Math.max(v.offsetWidth, isNaN(colWidth[i]) ? 0 : colWidth[i]);
-			}).get();
-		});
-
-		colWidth = $headerCells.map(function(i, v) {
-			return Math.max(v.offsetWidth, colWidth[i]);
-		}).get();
-
-		$headerCells.each(function(i, v) {
-			var min = Math.max(colWidth[i],30);
-			// if(min > 200)
-				// $(v).css({'width': '200px'});
-			// else
-			$(v).css({'min-width': min + 'px'});
-
-		});
-
-		$table.find('tbody tr').each(function(j,tr){
-			$(tr).find('td').each(function(i, v) {
-				var min = Math.max(colWidth[i], 30);
-				// if(min > 200)
-					// $(v).css({'width': '200px'});
-				// else
-				$(v).css({'min-width': min + 'px'});
-			});
-		});
-	};
-
 	$scope.refreshSlider = function () {
 		$timeout(function () {
 			$scope.$$postDigest(function () {
@@ -416,7 +393,6 @@ angular.module('linc.cvresults.controller', [])
 	};
 
 	$(window).resize(function() {
-		$scope.ResizeTable();
 		$scope.refreshSlider();
 	}).resize();
 
@@ -424,4 +400,31 @@ angular.module('linc.cvresults.controller', [])
 		$scope.refreshSlider();
 	});
 
-}]);
+}])
+
+.filter("emptyToEnd", function () {
+    return function (array, key) {
+		var keys = key.split(".");
+		if(keys.length>1){
+			console.log('keys', keys)
+			var key_a = keys[0];
+			var key_b = keys[1]
+			var present = array.filter(function (item) {
+				return item[key_a][key_b];
+			});
+			var empty = array.filter(function (item) {
+				return !item[key_a][key_b];
+			});
+			return present.concat(empty);
+
+		}else{
+			var present = array.filter(function (item) {
+				return item[key];
+			});
+			var empty = array.filter(function (item) {
+				return !item[key]
+			});
+			return present.concat(empty);
+		}
+    };
+});

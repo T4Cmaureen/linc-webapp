@@ -76,7 +76,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 							</div>
 							<pre ng-if="debug">{{!selected.date_stamp}}</pre>
 							<hr class="style-line">
-							<!-- LOCATION / TAG LOCATION -->
+							<!-- LOCATION / LOCATION TAG -->
 							<div class="form-group group-input location">
 								<!-- LATITUDE -->
 								<div class="form-inline">
@@ -142,11 +142,13 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 										</div>
 									</div>
 								</div>
-								<!-- TAG LOCATION -->
+								<!-- LOCATION TAG -->
 								<div class="form-group control div-width-100">
-									<label class="meta-label" for="isTagLocation">Tag Location: </label>
-									<div class="input-group width-100">
+									<label class="meta-label" for="isTagLocation">Location Tag: </label>
+									<div class="input-group width-100  tag-location">
 										<input data-lpignore="true" class="form-control meta_input" type="text"
+											placeholder="Select On Map"
+											uib-tooltip="Select Location on Map" tooltip-is-open="tooltip.open" tooltip-enable="!selected.tag_location.text"
 											ng-model="selected.tag_location.text" name="tag_location" ng-readonly="true">
 										<span class="input-group-addon" id="basic-addon2">
 											<location-on-map class="location" use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html" update-location="UpdateLocation(location)"
@@ -275,7 +277,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 							<!-- NOSE COLOR -->
 							<div class="form-group group-select">
 								<label for="id_nose_color">Nose Color: </label>
-								<button type="button" id="id_nose_color" placeholder="Unknown" 
+								<button type="button" id="id_nose_color" placeholder="Unknown"
 												class="btn btn-default btn-sm select_btn" ng-model="selected.nose_color"
 												data-html="1" data-multiple="0"
 												all-none-buttons="false" all-button="false"
@@ -355,7 +357,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 							</div>
 							<pre ng-show="debug">{{!selected.eye_damage}}</pre>
 						</div><!-- End Col 4 -->
-					</div><!-- End Row -->     
+					</div><!-- End Row -->
 				</div><!-- End Col Right -->
 			</div><!-- End Row -->
 			<hr class="style-line">
@@ -390,33 +392,33 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 			</div>
 		</div><!-- End Modal Body -->
 		<div class="modal-footer">
-			
+
 			<button ng-disabled="!vm.form.modified && !selected.new_lion" ng-show="!isNew" type="submit"
 				class="btn btn-primary btn-min-120" ng-click="submit(vm.form) && vm.form.$valid && SaveMetadata()">Save
 			</button>
 
 			<div ng-if="isLion">
-			
+
 				<button ng-disabled="!vm.form.modified" ng-show="isNew" type="submit"
 					class="btn btn-primary btn-min-120" ng-click="submit(vm.form) && vm.form.$valid && CreateClose()">Create
 				</button>
-			
+
 				<upload-images disable-upload="!vm.form.modified" btn-submit="submit(vm.form)" ng-show="isNew"
 					use-ctrl="UploadImagesCtrl" use-template-url="uploadimages.html" form-size="lg" type="new"
 					save-metadata-action="CreateUpload()" close-action="Close()" debug="debug">
 				</upload-images>
-			
+
 			</div>
-			
+
 			<div ng-if="!isLion">
-			
+
 				<button ng-disabled="!vm.form.modified" ng-show="isNew" type="submit" class="btn btn-primary btn-min-120"
 					ng-click="submit(vm.form) &&  vm.form.$valid && CreateClose()">Create
 				</button>
 
 				<upload-images disable-upload="!vm.form.modified" btn-submit="submit(vm.form)" ng-show="isNew"
 					use-ctrl="UploadImagesCtrl" use-template-url="uploadimages.html" form-size="lg" type="new"
-					save-metadata-action="CreateUpload()" close-action="Close()" debug="debug">	
+					save-metadata-action="CreateUpload()" close-action="Close()" debug="debug">
 				</upload-images>
 
 			</div>

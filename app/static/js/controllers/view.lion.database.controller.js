@@ -21,10 +21,10 @@
 angular.module('linc.view.lion.database.controller', [])
 
 .controller('ViewLionDatabaseCtrl', ['$scope', '$rootScope', '$state', '$timeout', '$q', '$filter', '$stateParams',
-  '$bsTooltip', 'AuthService', 'lions', 'lion_options', 'default_options', '$ModalPage', '$uibModal', 'NgMap', 
+  '$bsTooltip', 'AuthService', 'lions', 'lion_options', 'default_options', '$ModalPage', '$uibModal', 'NgMap',
   'LincServices', 'LincDataFactory', 'NotificationFactory', 'TAG_LABELS', 'TOOL_TITLE', 'CONST_VIEWCOLUMNS',
   function ($scope, $rootScope, $state, $timeout, $q, $filter, $stateParams, $bsTooltip, AuthService, lions, lion_options,
-  default_options, $ModalPage, $uibModal, NgMap, LincServices, LincDataFactory, NotificationFactory, 
+  default_options, $ModalPage, $uibModal, NgMap, LincServices, LincDataFactory, NotificationFactory,
   TAG_LABELS, TOOL_TITLE, CONST_VIEWCOLUMNS) {
 
 	$scope.user = AuthService.user;
@@ -110,11 +110,6 @@ angular.module('linc.view.lion.database.controller', [])
 		return $scope.columns ? _.includes($scope.columns, col) : false;
 	};
 	$scope.ColumnsSelect = function(){
-		$timeout(function () {
-			$scope.$apply(function () {
-				$scope.ResizeTable();
-			});
-		}, 0);
 		lion_options.Columns = $scope.columns;
 		LincDataFactory.set_lions(lion_options);
 	};
@@ -164,15 +159,15 @@ angular.module('linc.view.lion.database.controller', [])
 		$scope.filters.Location = $scope.pfilters.hasOwnProperty('Location') ? $scope.pfilters.Location : default_options.filters.Ages;
 		$scope.filters.Boundarys = $scope.pfilters.hasOwnProperty('Boundarys') ? $scope.pfilters.Boundarys : default_options.filters.Boundarys;
 
-	    $scope.isCollapsed.NameOrId = $scope.pfilters.hasOwnProperty('NameOrId') ? false : ($scope.filters.NameOrId ? false : true);
-    	$scope.isCollapsed.Organization = $scope.pfilters.hasOwnProperty('Organization') ? false : _.every($scope.filters.Organizations, {checked: true});
-    	$scope.isCollapsed.Age = $scope.pfilters.hasOwnProperty('Ages') ? false : 
-    		(($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
-    	$scope.isCollapsed.Gender = $scope.pfilters.hasOwnProperty('Genders') ? false : _.every($scope.filters.Genders, {checked: true});
-    	$scope.isCollapsed.TagFeatures = $scope.pfilters.hasOwnProperty('TagFeatures') ? false : ($scope.filters.TagFeatures ? false : true);
-    	$scope.isCollapsed.Location = $scope.pfilters.hasOwnProperty('Location') ? false : 
-    		(($scope.filters.Location.latitude && $scope.filters.Location.longitude && $scope.filters.Location.radius) ? false : true);
-    	$scope.isCollapsed.Boundarys = $scope.pfilters.hasOwnProperty('Boundarys') ? false : ($scope.filters.Boundarys.length ? false : true);
+		$scope.isCollapsed.NameOrId = $scope.pfilters.hasOwnProperty('NameOrId') ? false : ($scope.filters.NameOrId ? false : true);
+		$scope.isCollapsed.Organization = $scope.pfilters.hasOwnProperty('Organization') ? false : _.every($scope.filters.Organizations, {checked: true});
+		$scope.isCollapsed.Age = $scope.pfilters.hasOwnProperty('Ages') ? false :
+		(($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
+		$scope.isCollapsed.Gender = $scope.pfilters.hasOwnProperty('Genders') ? false : _.every($scope.filters.Genders, {checked: true});
+		$scope.isCollapsed.TagFeatures = $scope.pfilters.hasOwnProperty('TagFeatures') ? false : ($scope.filters.TagFeatures ? false : true);
+		$scope.isCollapsed.Location = $scope.pfilters.hasOwnProperty('Location') ? false :
+		(($scope.filters.Location.latitude && $scope.filters.Location.longitude && $scope.filters.Location.radius) ? false : true);
+		$scope.isCollapsed.Boundarys = $scope.pfilters.hasOwnProperty('Boundarys') ? false : ($scope.filters.Boundarys.length ? false : true);
 	}
 	else{
 		$scope.isCollapsed.NameOrId = $scope.filters.NameOrId ? false : true;
@@ -190,17 +185,12 @@ angular.module('linc.view.lion.database.controller', [])
 
 	// Batch Mode
 	$scope.is_modal_open = false;
-	$scope.selection = { allSel: false, allUnSel: false };
+	$scope.selection = { allSel: false, allUnSel: true };
 
 	$scope.$on('BatchModeUpdated', function(event, args) {
 		if(!$scope.isBatchMode){
 			$scope.check_all(false);
 		}
-		$timeout(function () {
-			$scope.$apply(function () {
-				$scope.ResizeTable();
-			});
-		}, 0);
 	});
 
 	$scope.Selecteds = [];
@@ -300,7 +290,7 @@ angular.module('linc.view.lion.database.controller', [])
 		},function(error){
 			if($scope.debug || (error.status != 401 && error.status != 403)){
 				NotificationFactory.error({
-					title: "Fail: Data Export", 
+					title: "Fail: Data Export",
 					message: "Unable to export lions data",
 					position: 'right',
 					duration: 5000
@@ -309,7 +299,7 @@ angular.module('linc.view.lion.database.controller', [])
 			$scope.exporting = false;
 		});
 	};
-	// Label to Tag Location
+	// Label to Location Tag
 	$scope.tag_location_label = function(tag_location){
 		if (tag_location && tag_location.title && tag_location.value){
 			var dist = (tag_location.value > 1000) ? ((tag_location.value/1000).toFixed(3).toString() + ' km') : (tag_location.value.toFixed(2).toString() + ' m');
@@ -350,8 +340,8 @@ angular.module('linc.view.lion.database.controller', [])
 					overlay = $scope.CreateRectangle({'bounds': data.bounds, 'map': map})
 				}
 				var databound = {
-					'type': data.type , 
-					'overlay': overlay, 
+					'type': data.type ,
+					'overlay': overlay,
 					'index': index,
 					'selected': data['selected']
 				};
@@ -404,30 +394,4 @@ angular.module('linc.view.lion.database.controller', [])
 			modalInstance.dismiss();
 		}
 	};
-
-	$scope.ResizeTable = function(){
-		var $table = $('table.table-view'),
-		$bodyCells = $table.find('tbody tr:first').children(),
-		$headerCells = $table.find('thead tr:first').children();
-
-		var col0Width = $bodyCells.map(function(i, v) {
-			return v.offsetWidth;
-		}).get();
-		var colWidth = $headerCells.map(function(i, v) {
-			return Math.max(v.offsetWidth, col0Width[i]);
-		}).get();
-
-		$bodyCells.each(function(i, v) {
-			var min = Math.max(colWidth[i],30);
-			$(v).css({'min-width': min + 'px'});
-		});
-		$headerCells.each(function(i, v) {
-			var min = Math.max(colWidth[i],30);
-			$(v).css({'min-width': min + 'px'});
-		});
-	};
-	$(window).resize(function() {
-		$scope.ResizeTable();
-	}).resize();
-
 }]);

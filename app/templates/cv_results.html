@@ -30,8 +30,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
   </div>
   <div class="modal-body" ng-show="content">
     <div class="div-table">
-      <table class="table table-cv-results">
-          <!-- <table class="table table-hover"> -->
+      <!-- <table class="table table-cv-results"> -->
+      <table class="table table-hover">
         <thead>
           <tr>
             <th colspan="6" class="text-center classifiers">
@@ -103,7 +103,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         </thead>
         <tbody>
           <tr class="link" ng-class="{active:lion.associated}" ng-right-click="!processing && CompareImages(lion)"
-            ng-repeat="lion in orderd_lions = cvresults | orderBy:predicate:reverse" repeat-done="ResizeTable()">
+            ng-repeat="lion in orderd_lions = cvresults | orderBy:predicate:reverse | emptyToEnd:predicate">
 
             <td class="text-center">
               <a target="_blank">{{!lion.id}}</a>
@@ -126,11 +126,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             </td>
 
             <td class="text-center" ng-show="classifier.type=='cv'" ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">
-              <span class="badge">{{!lion.cv.prediction | percentage:2}}</span>
+              <span class="badge" ng-if="lion.cv.prediction != undefined">{{!lion.cv.prediction | percentage:2}}</span>
             </td>
 
             <td class="text-center" ng-show="classifier.type=='whisker'" ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">
-                <span class="badge">{{!lion.whisker.prediction | percentage:2}}</span>
+                <span class="badge" ng-if="lion.whisker.prediction != undefined">{{!lion.whisker.prediction | percentage:2}}</span>
             </td>
 
             <td class="text-center confidence" ng-show="classifier.type=='cv'" ng-click="GoTo({type: 'lion', 'params': {id: lion.id}})">
@@ -180,8 +180,4 @@ For more information or to contact visit linclion.org or email tech@linclion.org
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" ng-click="ClearResults()">Clear Results</button>
   </div>
-
-  <div class="modal-footer">
-      <button type="button" class="btn btn-primary" ng-click="refreshSlider()">Render</button>
-    </div>
 </div>

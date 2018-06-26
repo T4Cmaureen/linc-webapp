@@ -40,24 +40,24 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 		<div class="container-fluid">
 			<div class="row">
 				<div class="row-gallery-images col-sm-9">
-					<a class="thumbnail" ng-repeat="(index, photo) in paginated_gallery = 
-						( filtered_gallery = ( gallery | orderBy: Order.by.predicate : Order.by.reverse | 
-						PrivateFilter: showPrivated | TagsFilter: TagFilterList | 
-						CoverFilter: Cover | JoinedFilter: Joined | 
-						PropertiesFilter: Properties ) | limitTo: itemsPerPage ) track by $index" 
-						ng-class="{active:photo.select}" 
-						ng-click="ShowCarousel(photo, index);" 
+					<a class="thumbnail" ng-repeat="(index, photo) in paginated_gallery =
+						( filtered_gallery = ( gallery | orderBy: Order.by.predicate : Order.by.reverse |
+						PrivateFilter: showPrivated | TagsFilter: TagFilterList |
+						CoverFilter: Cover | JoinedFilter: Joined |
+						PropertiesFilter: Properties ) | limitTo: itemsPerPage ) track by $index"
+						ng-class="{active:photo.select}"
+						ng-click="ShowCarousel(photo, index);"
 						ng-right-click="ShowBigPhoto(photo.medium)"
 						repeat-done="ShowGallery()">
-						 <i class="icon icon-check_circle select" ng-click="photo.select=!photo.select; 
-							Select_Image($event, photo, index); $event.stopPropagation();">	
+						 <i class="icon icon-check_circle select" ng-click="photo.select=!photo.select;
+							Select_Image($event, photo, index); $event.stopPropagation();">
 						</i>
 						<img ng-src="{{!photo.thumbnail}}" width="157" height="157" data-animation="am-flip-x" data-html="true"
 							data-template-url='tooltip.image.tpl.html' placement="bottom" bs-tooltip="photo.tooltip.image">
 						<div class="caption">
 							<i class="icon icon-binoculars pull-right" ng-show="photo.joined && IsPrimary"
 								uib-tooltip-html="photo.tooltip['joined-html'].from" tooltip-placement="auto top"
-								ng-click="OpenImageSet(photo.joined_from); $event.stopPropagation();">	
+								ng-click="OpenImageSet(photo.joined_from); $event.stopPropagation();">
 							</i>
 							<i class="icon icon-eye-plus pull-right" ng-show="photo.joined && !IsPrimary"
 							uib-tooltip-html="photo.tooltip['joined-html'].to" tooltip-placement="auto top">
@@ -68,11 +68,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 								uib-tooltip="Is Cover" tooltip-placement="auto"></i>
 							<i class="icon icon-{{!tag}} pull-left" uib-tooltip="{{!dynamicTooltip[tag]}}"
 								ng-repeat="tag in photo.tags"></i>
-						</div> 
+						</div>
 					</a>
 				</div>
 				<div class="row-gallery-order col-sm-3">
-					<div class="form-group gallery-order"> 
+					<div class="form-group gallery-order">
 						<label class="control-label">Order by:</label>
 						<ui-select ng-model="Order.by" theme="bootstrap">
 							<ui-select-match placeholder="Select ...">
@@ -96,7 +96,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 						<h4>Image Tags</h4>
 						<div class="checkbox" ng-repeat="(key, tag) in TagFilterList">
 							<label>
-								<input type="checkbox" checked ng-model="tag.checked" 
+								<input type="checkbox" checked ng-model="tag.checked"
 									ng-click="UnSelect_All(); CalcItemsPage()">
 								<span class="cr"><i class="cr-icon fa fa-check"></i></span>
 								{{! tag.label}}
@@ -105,7 +105,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 						<h4>Properties</h4>
 						<div class="checkbox" ng-repeat="(key, property) in Properties">
 							<label>
-								<input type="checkbox" checked ng-model="property.checked" 
+								<input type="checkbox" checked ng-model="property.checked"
 									ng-click="UnSelect_All(); CalcItemsPage()">
 								<span class="cr"><i class="cr-icon fa fa-check"></i></span>
 								{{! property.label}}
@@ -113,49 +113,49 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 						</div>
 						<div class="checkbox" ng-repeat="(key, join) in Joined">
 							<label>
-								<input type="checkbox" checked ng-model="join.checked" 
+								<input type="checkbox" checked ng-model="join.checked"
 									ng-click="UnSelect_All(); CalcItemsPage()">
 								<span class="cr"><i class="cr-icon fa fa-check"></i></span>
 								{{! join.label }}
-							</label> 
+							</label>
 						</div>
 						<div class="checkbox" ng-repeat="(key, cover) in Cover">
 							<label>
-								<input type="checkbox" checked ng-model="cover.checked" 
+								<input type="checkbox" checked ng-model="cover.checked"
 									ng-click="UnSelect_All(); CalcItemsPage()">
 								<span class="cr"><i class="cr-icon fa fa-check"></i></span>
 								{{! cover.label }}
-							</label> 
+							</label>
 						</div>
 					</div>
 					<!-- ====================== TAB Edit ==================================================-->
 					<div ng-hide="isViewFilter || !showPrivated" class="gallery-edit">
 						<h4>Image Tags</h4>
 						<div class="form-group" ng-repeat="(key, tag) in TagsList">
-							<select class="form-control custom-select" ng-change="Change_Tags();" 
-								ng-options="t.type as t.label for t in (tag | filter: $select.search)" 
+							<select class="form-control custom-select" ng-change="Change_Tags();"
+								ng-options="t.type as t.label for t in (tag | filter: $select.search)"
 								ng-model="Selected.Tags[key]" required ng-disabled="!Selecteds.length">
 								<option ng-if="Selected.Tags[key]==undefined" value=''>{{!MessageTags[key]}}</option>
 							</select>
 						</div>
 						<h4>Properties</h4>
 						<div class="form-group">
-							<select class="form-control custom-select" ng-change="Change_isPublic();" 
-								ng-options="property.value as property.label for property in Properties" 
+							<select class="form-control custom-select" ng-change="Change_isPublic();"
+								ng-options="property.value as property.label for property in Properties"
 								ng-model="Selected.isPublic" required ng-disabled="!Selecteds.length">
 								<option ng-if="Selected.isPublic==undefined" value=''>Select to update Image Privacy</option>
 							</select>
 						</div>
 						<div class="form-group">
-							<select class="form-control custom-select" ng-change="Change_isJoined();" 
-								ng-options="join.value as join.title for join in Joined" 
+							<select class="form-control custom-select" ng-change="Change_isJoined();"
+								ng-options="join.value as join.title for join in Joined"
 								ng-model="Selected.isJoined" required ng-disabled="!JoinEnabled || !Selecteds.length">
 								<option ng-if="Selected.isJoined==undefined" value=''>Select to update Join</option>
 							</select>
 						</div>
 						<div class="form-group">
-							<select class="form-control custom-select" ng-change="Change_Cover();" 
-								ng-options="cover.value as cover.label for cover in Cover" 
+							<select class="form-control custom-select" ng-change="Change_Cover();"
+								ng-options="cover.value as cover.label for cover in Cover"
 								ng-model="Selected.isCover" required ng-disabled="!Selected.isPublic || Selecteds.length!=1">
 								<option ng-if="Selected.isCover==undefined" value=''>Select to update Cover Image</option>
 							</select>
@@ -167,23 +167,23 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 				<p class="clearfix">
 					<a class="btn btn-link" ng-click="Select_All()">Select All</a>
 					<a ng-hide="isViewFilter" class="btn btn-link un-select" ng-click="UnSelect_All()">Select None</a>
-					
-					<a ng-hide="isViewFilter" class="btn btn-link">{{!Selecteds.length}} selected.</a> 
-					
+
+					<a ng-hide="isViewFilter" class="btn btn-link">{{!Selecteds.length}} selected.</a>
+
 					<a ng-show="isViewFilter && itemsPerPage!=filtered_gallery.length"  ng-click="IncreasePages();" class="btn btn-link">
 						{{!itemsPerPage}} of {{!filtered_gallery.length}} results returned. Load more?
 						<b class="caret"></b>
 					</a>
-					<a ng-show="isViewFilter && itemsPerPage==filtered_gallery.length" disabled class="btn btn-link">{{!itemsPerPage}} of {{!filtered_gallery.length}} results.</a> 
-				</p>				
+					<a ng-show="isViewFilter && itemsPerPage==filtered_gallery.length" disabled class="btn btn-link">{{!itemsPerPage}} of {{!filtered_gallery.length}} results.</a>
+				</p>
 			</div>
 			<div class="col-sm-3">
 				<p>
-					<button ng-if="canDelete" ng-disabled="!Selecteds.length" 
+					<button ng-if="canDelete" ng-disabled="!Selecteds.length"
 						class="btn btn-default btn-block btn-img-gallery" ng-click="Delete()">Delete</button>
-					<button ng-disabled="!Selecteds.length" class="btn btn-default btn-block btn-img-gallery" 
+					<button ng-disabled="!Selecteds.length" class="btn btn-default btn-block btn-img-gallery"
 						ng-click="Download()">Download original</button>
-					<upload-images use-ctrl="UploadImagesCtrl" use-template-url="uploadimages.html" form-size="lg" 
+					<upload-images use-ctrl="UploadImagesCtrl" use-template-url="uploadimages.html" form-size="lg"
 						type="edit" imageset-id="imagesetId" image-updated="UpdateImages()" debug="debug"></upload-images>
 				</p>
 			</div>
