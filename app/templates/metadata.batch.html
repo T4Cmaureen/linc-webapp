@@ -240,7 +240,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 												oninput="setCustomValidity('')" limlatlng="90" ng-required="changed.location">
 											<span class="input-group-addon" id="basic-addon2">
 												<location-on-map use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html" update-location="UpdateLocation(location)"
-													ng-disabled="!changed.location" form-size="lg" modal-is-open="is_modal_open" meta-data="selected.location">
+													ng-disabled="!changed.location" form-size="lg" modal-status="modal_status" meta-data="selected.location">
 												</location-on-map>
 											</span>
 										</div>
@@ -271,7 +271,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 												oninput="setCustomValidity('')" limlatlng="180" ng-required="changed.location">
 											<span class="input-group-addon" id="basic-addon2">
 												<location-on-map use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html" update-location="UpdateLocation(location)"
-													ng-disabled="!changed.location" form-size="lg" modal-is-open="is_modal_open" meta-data="selected.location">
+													ng-disabled="!changed.location" form-size="lg" modal-status="modal_status" meta-data="selected.location">
 												</location-on-map>
 											</span>
 										</div>
@@ -298,7 +298,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 										ng-model="selected.location.tag_location.text" name="tag_location" ng-readonly="true">
 										<span class="input-group-addon" id="basic-addon2">
 											<location-on-map use-ctrl="LocationOnMapCtrl" use-template-url="location.on.map.html" update-location="UpdateLocation(location)"
-												form-size="lg" modal-is-open="is_modal_open" meta-data="selected.location">
+												form-size="lg" modal-status="modal_status" meta-data="selected.location">
 											</location-on-map>
 										</span>
 									</div>

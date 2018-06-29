@@ -32,7 +32,6 @@ angular.module('linc.request.access.directive', [])
 			useCtrl: '@',
 			formSize: '@'
 		},
-		
 		link: function(scope, element, attrs) {
 			scope.requestAcess = function(){
 				var modalScope = scope.$new();

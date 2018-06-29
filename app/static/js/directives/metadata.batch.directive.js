@@ -34,13 +34,13 @@ angular.module('linc.metadata.batch.directive', [])
       debug: '=',
       disableBtn: '=',
       metaData: '=',
-      modalIsOpen: '=',
+      modalStatus: '=',
       updateAction: '&'
     },
     link: function(scope, element, attrs) {
       scope.show = function(){
-        if(scope.modalIsOpen) return;
-        scope.modalIsOpen = true;
+        if(scope.modalStatus.is_open) return;
+        scope.modalStatus.is_open = true;
         var modalScope = scope.$new();
         modalScope.debug = scope.debug;
         scope.dataloading = true;
@@ -68,12 +68,12 @@ angular.module('linc.metadata.batch.directive', [])
           }
         });
         modalInstance.result.then(function (result) {
-          scope.modalIsOpen = false;
+          scope.modalStatus.is_open = false;
           scope.dataloading = false;
           scope.updateAction({data: result.data});
           console.log('Modal ok');
         }, function () {
-          scope.modalIsOpen = false;
+          scope.modalStatus.is_open = false;
           scope.dataloading = false;
           console.log('Modal dismissed at: ' + new Date());
         });

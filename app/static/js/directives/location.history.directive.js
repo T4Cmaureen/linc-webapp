@@ -39,13 +39,13 @@ angular.module('linc.location.history.directive', [])
           options: '=',
           locationGoto:'&',
           debug: '=',
-          modalIsOpen: '='
+          modalStatus: '='
         },
         link: function(scope, element, attrs) {
           // Lions
           scope.Lion_show = function(){
-            if(scope.modalIsOpen) return;
-            scope.modalIsOpen = true;
+            if(scope.modalStatus.is_open) return;
+            scope.modalStatus.is_open = true;
             var modalScope = scope.$new();
             modalScope.debug = scope.debug;
             var modalInstance = $uibModal.open({
@@ -66,18 +66,18 @@ angular.module('linc.location.history.directive', [])
               }
             });
             modalInstance.result.then(function (imagesetId) {
-              scope.modalIsOpen = false;
+              scope.modalStatus.is_open = false;
               scope.locationGoto({imageset_Id: imagesetId});
               console.log('Goto Imageset ' + imagesetId);
             }, function (response) {
-              scope.modalIsOpen = false;
+              scope.modalStatus.is_open = false;
               console.log('Modal dismissed at: ' + new Date());
             });
           },
           // Imagesets
           scope.Imageset_show = function(){
-            if(scope.modalIsOpen) return;
-            scope.modalIsOpen = true;
+            if(scope.modalStatus.is_open) return;
+            scope.modalStatus.is_open = true;
             var modalScope = scope.$new();
             modalScope.debug = scope.debug;
             var modalInstance = $uibModal.open({
@@ -103,11 +103,11 @@ angular.module('linc.location.history.directive', [])
               }
             });
             modalInstance.result.then(function (imagesetId) {
-              scope.modalIsOpen = false;
+              scope.modalStatus.is_open = false;
               scope.locationGoto({imageset_Id: imagesetId});
               console.log('Goto Imageset ' + imagesetId);
             }, function (response) {
-              scope.modalIsOpen = false;
+              scope.modalStatus.is_open = false;
               console.log('Modal dismissed at: ' + new Date());
             });
           };

@@ -34,12 +34,13 @@ angular.module('linc.location.on.map.directive', [])
           useCtrl: '@',
           formSize: '@',
           metaData: '=',
-          updateLocation:'&'
+          updateLocation:'&',
+          modalStatus: '='
         },
         link: function(scope, element, attrs) {
           scope.show = function(){
-            if(scope.modalIsOpen) return;
-            scope.modalIsOpen = true;
+            if(scope.modalStatus.is_open) return;
+            scope.modalStatus.is_open = true;
             var modalScope = scope.$new();
             modalScope.debug = scope.debug;
             var modalInstance = $uibModal.open({
@@ -58,11 +59,11 @@ angular.module('linc.location.on.map.directive', [])
               }
             });
             modalInstance.result.then(function (response) {
-              scope.modalIsOpen = false;
+              scope.modalStatus.is_open = false;
               scope.updateLocation(response);
               console.log('Modal ok' + response);
             }, function (response) {
-              scope.modalIsOpen = false;
+              scope.modalStatus.is_open = false;
               console.log('Modal dismissed at: ' + new Date());
             });
           };

@@ -48,12 +48,12 @@ angular.module('linc.metadata.directive', [])
       gotoImagesetAction:'&',
       updateAction: '&',
       debug: '=',
-      modalIsOpen: '='
+      modalStatus: '='
     },
     link: function(scope, element, attrs) {
       scope.showNew = function(){
-        if(scope.modalIsOpen) return;
-        scope.modalIsOpen = true;
+        if(scope.modalStatus.is_open) return;
+        scope.modalStatus.is_open = true;
         var modalScope = scope.$new();
         modalScope.created = false;
         modalScope.id = 0;
@@ -87,11 +87,11 @@ angular.module('linc.metadata.directive', [])
           modalScope.id = obj.id;
         };
         modalInstance.result.then(function (result) {
-          scope.modalIsOpen = false;
+          scope.modalStatus.is_open = false;
           scope.gotoImagesetAction({Id: result.id});
           console.log('Modal ok' + result);
         }, function () {
-          scope.modalIsOpen = false;
+          scope.modalStatus.is_open = false;
           if(modalScope.created)
             scope.gotoImagesetAction({'Id': modalScope.id});
           else {
@@ -101,8 +101,8 @@ angular.module('linc.metadata.directive', [])
         });
       },
       scope.showEdit = function(){
-        if(scope.modalIsOpen) return;
-        scope.modalIsOpen = true;
+        if(scope.modalStatus.is_open) return;
+        scope.modalStatus.is_open = true;
         var modalScope = scope.$new();
         modalScope.debug = scope.debug;
         var modalInstance = $uibModal.open({
@@ -130,11 +130,11 @@ angular.module('linc.metadata.directive', [])
           }
         });
         modalInstance.result.then(function (result) {
-          scope.modalIsOpen = false;
+          scope.modalStatus.is_open = false;
           scope.updateAction({data: result.data});
           console.log('Modal ok' + result);
         }, function () {
-          scope.modalIsOpen = false;
+          scope.modalStatus.is_open = false;
           scope.cancelAction();
           console.log('Modal dismissed at: ' + new Date());
         });

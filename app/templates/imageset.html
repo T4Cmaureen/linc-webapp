@@ -154,26 +154,26 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     </div>
     <div class="col-sm-3 line-left padding-top-12">
       <image-gallery ng-show="imageset" use-ctrl="ImageGalleryCtrl" use-template-url="image.gallery.html"
-        form-size="lg" options-set="gallery_options" debug="debug" modal-is-open="is_modal_open"
+        form-size="lg" options-set="gallery_options" debug="debug" modal-status="modal_status"
         gallery-updated="Reload_Page()" show-privated="permissions.canShow">
       </image-gallery>
       <location-history ng-if="imageset && permissions.showGeoPos" use-ctrl="LocationHistoryCtrl"
         use-template-url="location.history.html" form-size="lg" type="imageset" options="location_options"
-        location-goto="location_goto(imageset_Id)" debug="debug" modal-is-open="is_modal_open">
+        location-goto="location_goto(imageset_Id)" debug="debug" modal-status="modal_status">
       </location-history>
       <metadata ng-if="imageset && permissions.canShow" use-ctrl="MetadataCtrl" use-template-url="metadata.html"
         form-size="lg" type="edit" options-set="metadata_options" update-action="update_imageset(data)"
-        debug="debug" modal-is-open="is_modal_open">
+        debug="debug" modal-status="modal_status">
       </metadata>
       <div ng-if="imageset && permissions.canShow">
         <cvresults class="cvresults" use-ctrl="CVResultsCtrl" use-template-url="cvresults.html" form-size="lg" imageset="imageset"
           cvresults-id="imageset.cvresults" cvrequest-id="imageset.cvrequest" ng-if="imageset.action == 'cvresults'"
           cv-result-erased="CVResultsErased(imagesetId)" imageset-updated="UpdateImageset(data, imagesetId)"
-          debug="debug" modal-is-open="is_modal_open">
+          debug="debug" modal-status="modal_status">
         </cvresults>
         <cvrequest class="cvrequest" use-ctrl="CVRequesCtrl" use-template-url="cvrequest.html" form-size="lg" imageset="imageset"
           ng-if="imageset.action == 'cvrequest'" cv-request-success="CVReqSuccess(imageset_Id, request_Obj)"
-          debug="debug" modal-is-open="is_modal_open">
+          update-cv-status="updateCVStatus(response)" debug="debug" modal-status="modal_status">
         </cvrequest>
         <p ng-if="imageset.action == 'cvpending'">
           <a class="btn btn-lg btn-default btn-block btn-minwidth-180" data-animation="am-fade-and-slide-top">

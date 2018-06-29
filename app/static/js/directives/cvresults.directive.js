@@ -48,13 +48,13 @@ angular.module('linc.cvresults.directive', [])
 			cvrequestId: '=',
 			cvResultErased: '&',
 			debug: '=',
-			modalIsOpen: '=',
+			modalStatus: '=',
 			imagesetUpdated:'&',
 		},
 		link: function(scope, element, attrs) {
 			scope.show = function(){
-				if(scope.modalIsOpen) return;
-				scope.modalIsOpen = true;
+				if(scope.modalStatus.is_open) return;
+				scope.modalStatus.is_open = true;
 				var modalScope = scope.$new();
 				modalScope.debug = scope.debug;
 				modalScope.ResultsErased = false;
@@ -105,16 +105,16 @@ angular.module('linc.cvresults.directive', [])
 				};
 				modalInstance.result.then(function () {
 					modalScope.cancel_Poller();
-					scope.modalIsOpen = false;
+					scope.modalStatus.is_open = false;
 					if(modalScope.ResultsErased)
 						scope.cvResultErased({'imagesetId': scope.imageset.id});
 					if(modalScope.Associated_Data != null)
 						scope.imagesetUpdated({'data': modalScope.Associated_Data, 'imagesetId': scope.imageset.id});
 					console.log('Modal ok');
 					scope.loading = false;
-				}, function () {
+				}, function (error) {
 					modalScope.cancel_Poller();
-					scope.modalIsOpen = false;
+					scope.modalStatus.is_open = false;
 					scope.loading = false;
 					console.log('Modal dismissed at: ' + new Date());
 				});

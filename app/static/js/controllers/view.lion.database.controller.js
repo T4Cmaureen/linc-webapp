@@ -184,7 +184,7 @@ angular.module('linc.view.lion.database.controller', [])
 	};
 
 	// Batch Mode
-	$scope.is_modal_open = false;
+	$scope.modal_status = { is_open:  false };
 	$scope.selection = { allSel: false, allUnSel: true };
 
 	$scope.$on('BatchModeUpdated', function(event, args) {

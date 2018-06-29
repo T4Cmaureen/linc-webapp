@@ -32,13 +32,13 @@ angular.module('linc.image.gallery.directive', [])
       optionsSet: '=',
       galleryUpdated:'&',
       debug: '=',
-      modalIsOpen: '=',
+      modalStatus: '=',
       showPrivated: '='
     },
     link: function(scope, element, attrs) {
       scope.show = function(){
-        if(scope.modalIsOpen) return;
-        scope.modalIsOpen = true;
+        if(scope.modalStatus.is_open) return;
+        scope.modalStatus.is_open = true;
         var modalScope = scope.$new();
         modalScope.imagesChanged = false;
         modalScope.showPrivated = scope.showPrivated;
@@ -63,12 +63,12 @@ angular.module('linc.image.gallery.directive', [])
           modalScope.imagesChanged = true;
         };
         modalInstance.result.then(function (result) {
-          scope.modalIsOpen = false;
+          scope.modalStatus.is_open = false;
           if(modalScope.imagesChanged)
             scope.galleryUpdated();
           console.log('Modal close : ' + result);
         }, function (result) {
-          scope.modalIsOpen = false;
+          scope.modalStatus.is_open = false;
           if(modalScope.imagesChanged)
             scope.galleryUpdated();
           console.log('Modal dismissed : ' + result);

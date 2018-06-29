@@ -39,13 +39,13 @@ angular.module('linc.relatives.directive', [])
       lionsRelatives: '=',
       lion: '=',
       debug: '=',
-      modalIsOpen: '=',
+      modalStatus: '=',
       updateAction: '&'
     },
     link: function(scope, element, attrs) {
       scope.show = function(){
-        if(scope.modalIsOpen) return;
-        scope.modalIsOpen = true;
+        if(scope.modalStatus.is_open) return;
+        scope.modalStatus.is_open = true;
         var modalScope = scope.$new();
         modalScope.debug = scope.debug;
         scope.loading = true;
@@ -73,11 +73,11 @@ angular.module('linc.relatives.directive', [])
           }
         });
         modalInstance.result.then(function (results) {
-          scope.modalIsOpen = false;
+          scope.modalStatus.is_open = false;
           scope.loading = false;
           scope.updateAction({data: results.relatives});
         }, function () {
-          scope.modalIsOpen = false;
+          scope.modalStatus.is_open = false;
           scope.loading = false;
           console.log('Modal dismissed at: ' + new Date());
         });

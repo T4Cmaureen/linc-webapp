@@ -290,6 +290,14 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                     <span class="sortorder" ng-show="orderby.predicate === 'gender'" ng-class="{reverse: orderby.reverse}"></span>
                   </th>
 
+                  <th class="text-center"><a ng-click="order('whisker')" ng-class="{'order_class': orderby.predicate === 'whisker'}">Whisker<br>Images</a>
+                    <span class="sortorder" ng-show="orderby.predicate === 'whisker'" ng-class="{reverse: orderby.reverse}"></span>
+                  </th>
+
+                  <th class="text-center"><a ng-click="order('cv')" ng-class="{'order_class': orderby.predicate === 'cv'}">CV<br>Images</a>
+                    <span class="sortorder" ng-show="orderby.predicate === 'cv'" ng-class="{reverse: orderby.reverse}"></span>
+                  </th>
+
                   <th class="text-center"><a ng-click="order('latitude')" ng-class="{'order_class': orderby.predicate === 'latitude'}">Latitude</a>
                     <span class="sortorder" ng-show="orderby.predicate === 'latitude'" ng-class="{reverse: orderby.reverse}"></span>
                   </th>
@@ -354,6 +362,16 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 
                   <td class="text-center">
                     <a ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})">{{!lion.gender}}</a>
+                  </td>
+
+                  <td class="text-center" ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})">
+                    <i ng-if="lion.whisker" class="icon icon-check"></i>
+                    <i ng-if="!lion.whisker" class="icon icon-cross"></i>
+                  </td>
+
+                  <td class="text-center" ng-click="!lion.disabled && GoTo({type: 'lion', 'params': {id: lion.id}})">
+                    <i ng-if="lion.cv" class="icon icon-check"></i>
+                    <i ng-if="!lion.cv" class="icon icon-cross"></i>
                   </td>
 
                   <td ng-if="lion.permissions.canLocate" class="text-center">

@@ -44,14 +44,15 @@ angular.module('linc.cvrequest.directive', [])
 			useCtrl: '@',
 			formSize: '@',
 			imageset: '=',
-			cvRequestSuccess:'&',
+			cvRequestSuccess: '&',
+			updateCvStatus: '&',
 			debug: '=',
-			modalIsOpen: '='
+			modalStatus: '='
 		},
 		link: function(scope, element, attrs) {
 			scope.show = function(){
-				if(scope.modalIsOpen) return;
-
+				if(scope.modalStatus.is_open) return;
+				scope.modalStatus.is_open = true;
 				LincServices.CVRequirements({ id: scope.imageset.id }).then(function(response){
 
 					if(!response.cv && !response.whisker){
@@ -61,11 +62,11 @@ angular.module('linc.cvrequest.directive', [])
 							position: 'right',
 							duration: 8000
 						});
+						scope.modalStatus.is_open = false;
 						return;
 					}
 
 					scope.cv_requirements = { cv: response.cv, whisker: response.whisker };
-					scope.modalIsOpen = true;
 					var modalScope = scope.$new();
 					modalScope.debug = scope.debug;
 					scope.loading = true;
@@ -99,15 +100,20 @@ angular.module('linc.cvrequest.directive', [])
 						}
 					});
 					modalInstance.result.then(function (cvrequest) {
-						scope.modalIsOpen = false;
+						scope.modalStatus.is_open = false;
 						scope.cvRequestSuccess({imageset_Id: scope.imageset.id, request_Obj: cvrequest});
 						scope.loading = false;
 						console.log('Modal ok ' + cvrequest);
 					}, function () {
-						scope.modalIsOpen = false;
+						scope.modalStatus.is_open = false;
 						scope.loading = false;
 						console.log('Modal dismissed at: ' + new Date());
 					});
+				},function(error){
+					scope.modalStatus.is_open = false;
+					if(error.status == 409){
+						scope.updateCvStatus({response: {imageset: error.imageset, status: error.data.data.status}});
+					}
 				});
 			};
 		}

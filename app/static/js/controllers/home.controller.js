@@ -22,7 +22,7 @@ angular.module('linc.home.controller', [])
 // Home
 .controller('HomeCtrl', ['$scope', '$state', function ($scope, $state) {
 
-  $scope.is_modal_open = false;
+  $scope.modal_status = { is_open:  false };
   $scope.loading = {lion: false, imageset: false};
   $scope.options = {
     "imageset": {"type": "imageset", "edit": "new"},

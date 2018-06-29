@@ -29,17 +29,17 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           <li role="presentation" class="active"><a ui-sref="conservationists" ng-click="$hide()">Directory of conservationists</a></li>
           <li role="separator" class="divider"><hr></li>
           <li role="presentation">
-            <metadata use-ctrl="MetadataCtrl" use-template-url="metadata.html" form-size="lg" type="side_lion" goto-imageset-action="goto_lion(Id); $hide()" cancel_action="$hide()" options-set="options.lions" debug="debug" modal-is-open="is_modal_open"></metadata>
+            <metadata use-ctrl="MetadataCtrl" use-template-url="metadata.html" form-size="lg" type="side_lion" goto-imageset-action="goto_lion(Id); $hide()" cancel_action="$hide()" options-set="options.lions" debug="debug"  modal-status="modal_status"></metadata>
           </li>
           <li role="presentation"><a ui-sref="viewliondatabase" ng-click="$hide()">View Lion Database</a></li>
           <li role="presentation">
-            <metadata use-ctrl="MetadataCtrl" use-template-url="metadata.html" form-size="lg" type="side_image_set"  goto-imageset-action="goto_imageset(Id); $hide()" cancel-action="$hide()" options-set="options.imageset" debug="debug" modal-is-open="is_modal_open"></metadata>
+            <metadata use-ctrl="MetadataCtrl" use-template-url="metadata.html" form-size="lg" type="side_image_set"  goto-imageset-action="goto_imageset(Id); $hide()" cancel-action="$hide()" options-set="options.imageset" debug="debug"  modal-status="modal_status"></metadata>
           </li>
           <li role="presentation"><a ui-sref="viewimagesets" ng-click="$hide()">View Image Sets</a></li>
           <li role="separator" class="divider"><hr></li>
           <li role="presentation" ng-show="user.admin"><a ui-sref="admin" ng-click="$hide()">Administration</a></li>
           <li role="presentation"><a ng-click="user_manual()">User Manual</a></li>
-          
+
           <li role="presentation"><a ng-click="changePWD($hide)">Change Password</a></li>
           <li role="presentation"><a ng-click="logout($hide)">Logout</a></li>
         </ul>

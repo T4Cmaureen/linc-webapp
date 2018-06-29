@@ -32,7 +32,7 @@ angular.module('linc.lion.controller', [])
   };
 
   $scope.ChangeStatus = $rootScope.ChangeStatus;
-  $scope.is_modal_open = false;
+  $scope.modal_status = { is_open:  false };
   $scope.lion = lion;
   $scope.relatives = relatives;
 

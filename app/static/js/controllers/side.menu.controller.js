@@ -23,7 +23,7 @@ angular.module('linc.side.menu.controller', [])
 .controller('SideMenuCtrl', ['$scope', '$state', 'AuthService', 'NotificationFactory', 'MANUAL_URL', 
   function ($scope, $state, AuthService, NotificationFactory, MANUAL_URL) {
 
-  $scope.is_modal_open = false;
+  $scope.modal_status = { is_open:  false };
   $scope.title = 'Menu';
   $scope.content = 'Menu';
 

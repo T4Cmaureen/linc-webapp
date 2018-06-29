@@ -150,20 +150,20 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     </div>
     <div class="col-sm-3 line-left padding-top-12" >
       <image-gallery ng-show="lion" use-ctrl="ImageGalleryCtrl" use-template-url="image.gallery.html"
-        form-size="lg" options-set="gallery_options" debug="debug" modal-is-open="is_modal_open"
+        form-size="lg" options-set="gallery_options" debug="debug" modal-status="modal_status"
         gallery-updated="Reload_Page()" show-privated="permissions.canShow">
       </image-gallery>
       <location-history ng-if="lion && permissions.showGeoPos" use-ctrl="LocationHistoryCtrl"
         use-template-url="location.history.html" form-size="lg" type="lion" options="location_options"
-        location-goto="location_goto(imageset_Id)" debug="debug" modal-is-open="is_modal_open">
+        location-goto="location_goto(imageset_Id)" debug="debug" modal-status="modal_status">
       </location-history>
       <metadata ng-if="lion && permissions.canShow" use-ctrl="MetadataCtrl" use-template-url="metadata.html"
         form-size="lg" type="edit" options-set="metadata_options" update-action="update_lion(data)" debug="debug"
-        modal-is-open="is_modal_open">
+        modal-status="modal_status">
       </metadata>
 
       <relatives class="relatives" use-ctrl="RelativesCtrl" use-template-url="relatives.tpl.html" form-size="lg"
-        lion="lion" lions-relatives="relatives" debug="debug" modal-is-open="is_modal_open"
+        lion="lion" lions-relatives="relatives" debug="debug" modal-status="modal_status"
         update-action="update_relatives(data)">
       </relatives>
 

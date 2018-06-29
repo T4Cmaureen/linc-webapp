@@ -185,7 +185,7 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 				deferred.resolve(results.data);
 		},
 		function (error) {
-			if(debug || (error.status != 401 && error.status != 403)){
+			if(debug || (error.status != 401 && error.status != 403 && error.status != 409)){
 				NotificationFactory.error({
 					title: "Error", message: 'Unable to load CV Requirements',
 					position: 'right', // right, left, center
@@ -195,6 +195,21 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 			if(error.status == 401 || error.status == 403){
 				console.log("cv requirements resolve error");
 				deferred.resolve({});
+			}
+			else if(error.status == 409){
+				NotificationFactory.error({
+					title: "Error",
+					message: error.data.message,
+					position: 'right', // right, left, center
+					duration: 5000   // milisecond
+				});
+				url = databases['imagesets'].url + '/' + data.id + '/profile';
+				$http.get(url, {ignoreLoadingBar: true}).then( function(response){
+					error.imageset = response.data.data;
+					deferred.reject(error);
+				}, function(response){
+					deferred.reject(response);
+				});
 			}
 			else{
 				console.log("cv requirements reject error");

@@ -281,7 +281,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         <div ng-show="isBatchMode" class="form-group batch-item-btn">
           <metadata-batch class="metadata-batch" use-ctrl="MetadataBatchCtrl" use-template-url="metadata.batch.html"
             form-size="lg" meta-data="{selected: Selecteds, type: 'imagesets'}" update-action="BatchUpdateImageset(data)"
-            disable-btn="!Selecteds.length" debug="debug" modal-is-open="is_modal_open">
+            disable-btn="!Selecteds.length" debug="debug" modal-status="modal_status">
           </metadata-batch>
           <button type="button" class="btn btn-primary btn-export" ng-disabled="!Selecteds.length"
             ng-click="BatchExport()">
@@ -528,12 +528,12 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                   use-ctrl="CVResultsCtrl" use-template-url="cvresults.html" form-size="lg" imageset="imageset"
                   cvresults-id="imageset.cvresults" cvrequest-id="imageset.cvrequest" type="search"
                   cv-result-erased="CVResultsErased(imagesetId)" imageset-updated="UpdateImageset(data, imagesetId)"
-                  debug="debug" modal-is-open="is_modal_open">
+                  debug="debug" modal-status="modal_status">
                 </cvresults>
                 <cvrequest class="cvrequest" ng-if="imageset.action == 'cvrequest'"
                   use-ctrl="CVRequesCtrl" use-template-url="cvrequest.html" form-size="lg" imageset="imageset"
                   type="search" cv-request-success="CVReqSuccess(imageset_Id, request_Obj)"
-                  debug="debug" modal-is-open="is_modal_open">
+                  update-cv-status="updateCVStatus(response)" debug="debug" modal-status="modal_status">
                 </cvrequest>
                 <span ng-if="imageset.action == 'cvpending'">
                   <i class="icon icon-clock icon-clock-pending"></i><br>

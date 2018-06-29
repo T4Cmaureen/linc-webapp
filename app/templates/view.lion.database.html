@@ -265,7 +265,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         <div ng-show="isBatchMode" class="form-group batch-item-btn">
           <metadata-batch class="metadata-batch" use-ctrl="MetadataBatchCtrl" use-template-url="metadata.batch.html"
             form-size="lg" meta-data="{selected: Selecteds, type: 'lions'}" update-action="BatchUpdateLions(data)"
-            disable-btn="!Selecteds.length" debug="debug" modal-is-open="is_modal_open">
+            disable-btn="!Selecteds.length" debug="debug"  modal-status="modal_status">
           </metadata-batch>
           <button type="button" class="btn btn-primary btn-export" ng-disabled="!Selecteds.length"
             ng-click="BatchExport()">

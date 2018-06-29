@@ -31,8 +31,6 @@ angular.module('linc.view.imagesets.controller', [])
 	$scope.$parent.isBatchMode = false;
 
 	$scope.ChangeStatus = $rootScope.ChangeStatus;
-
-	$scope.is_modal_open = false;
 	$scope.tooltip = { features: { title: 'tips: ' + TOOL_TITLE, checked: true} };
 
 	var count = 0;
@@ -239,6 +237,14 @@ angular.module('linc.view.imagesets.controller', [])
 		console.log('Success CV Request');
 		cvrequest_pendings.push({'imageset': $scope.imagesets[index], 'id': index});
 		start_Poller(1);
+	};
+
+	$scope.updateCVStatus = function(response){
+		var index = _.indexOf($scope.imagesets, _.find($scope.imagesets, {id: response.imageset.id}));
+		$scope.imagesets[index] = angular.copy(response.imageset);
+		set_all_imagesets($scope.imagesets);
+		if(cvrequest_pendings.length)
+			start_Poller(1);
 	};
 
 	$scope.CVResultsErased = function (ImagesetId) {
@@ -474,7 +480,7 @@ angular.module('linc.view.imagesets.controller', [])
 
 	// Batch Mode
 	$scope.canNotDelete = false; // Primary Imagesets can only be deleted in the lion's profile
-	$scope.is_modal_open = false;
+	$scope.modal_status = { is_open:  false };
 	$scope.selection = { allSel: false, allUnSel: true };
 
 	$scope.$on('BatchModeUpdated', function(event, args) {
