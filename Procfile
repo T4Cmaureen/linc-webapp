@@ -1,1 +1,1 @@
-web: python app/linc-webapp.py --port=5000
+web: python app/linc-webapp.py --port=$PORT
