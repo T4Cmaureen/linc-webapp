@@ -47,7 +47,7 @@ class DataExportHandler(BaseHandler):
             raise HTTPError(
                 status_code=500, log_message='Fail to create the working directory for data export.')
         fn = workdir + '/' + str(uuid4()) + '.csv'
-        info(fn)
+        # info(fn)
         callback(fn)
 
     @engine
@@ -56,12 +56,12 @@ class DataExportHandler(BaseHandler):
         fieldnames = data['fnames']
         lines = data['lines']
         try:
-            with open(fn, 'w', newline='\n') as csvfile:
-                writer = csv.DictWriter(
-                    csvfile, fieldnames=fieldnames, delimiter=';')
-                writer.writeheader()
+            with open(fn, 'w+') as f:
+                f.write(';'.join(fieldnames) + '\n')
                 for v in lines:
-                    writer.writerow(v)
+                    # info(v)
+                    f.write(';'.join([str(x) if x else '' for x in v]) + '\n')
+                f.close()
         except Exception as e:
             info(e)
             resp = False
@@ -82,12 +82,12 @@ class DataExportHandler(BaseHandler):
             data = loads(response.body.decode('utf-8'))['data']
             resp = yield Task(self.write_csv, fn=fn, data=data)
             if resp:
-                dtexec = datetime.now() + timedelta(hours=1)
+                dtexec = datetime.now() + timedelta(minutes=1)
                 jobid = str(uuid4())
                 self.settings['scheduler'].add_job(
                     remove_file,
                     trigger='date',
-                    name='Remove file ' + fn + '.zip at ' + str(dtexec),
+                    name='Remove file ' + fn + ' at ' + str(dtexec),
                     run_date=dtexec,
                     args=[self.settings['scheduler'], fn, jobid], coalesce=True, id=jobid)
                 self.set_header('FileUrl', self.settings['url'] + '/static/export/' + fn.split('/')[-1])
