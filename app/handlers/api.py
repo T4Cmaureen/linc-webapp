@@ -729,8 +729,11 @@ class ImagesUploadHandler(BaseHandler, ProcessMixin):
                 tagsl = self.get_argument("image_tags", [])
                 if ',' in tagsl and not isinstance(tagsl, list):
                     tagsl = [x for x in tagsl.split(',') if x.strip() != '']
+                elif tagsl:
+                    tagsl = [tagsl]
                 else:
                     tagsl = []
+                info(tagsl)
                 image_tags = tagsl
                 is_public = self.get_argument("is_public", '')
                 is_public = (is_public.lower() == 'true')
