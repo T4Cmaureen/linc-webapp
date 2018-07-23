@@ -480,7 +480,7 @@ angular.module('linc.metadata.controller', [])
 					duration: 5000   // milisecond
 				});
 			}
-			deferred.reject({message: result.message});
+			deferred.reject({message: error.data.message});
 		});
 		return deferred.promise;
 	};
