@@ -30,6 +30,8 @@ angular.module('linc.metadata.controller', [])
 	$scope.optionsSet = optionsSet;
 	$scope.user = AuthService.user;
 
+	$scope.modal_status = { is_open:  false };
+
 	// Gender List
 	$scope.genders = CONST_LIST['GENDERS'];
 	
