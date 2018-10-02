@@ -31,6 +31,7 @@ from os.path import isdir
 from uuid import uuid4
 from json import loads
 from datetime import datetime, timedelta
+import csv
 
 
 class DataExportHandler(BaseHandler):
@@ -56,12 +57,18 @@ class DataExportHandler(BaseHandler):
         fieldnames = data['fnames']
         lines = data['lines']
         try:
-            with open(fn, 'w+') as f:
-                f.write(';'.join(fieldnames) + '\n')
+            # with open(fn, 'w+') as f:
+            #     f.write(';'.join(fieldnames) + '\n')
+            #     for v in lines:
+            #         # info(v)
+            #         f.write(';'.join(['{}'.format(x) if x else '' for x in v]) + '\n')
+            #     f.close()
+            with open(fn, 'wb') as csvfile:
+                filewriter = csv.writer(csvfile, delimiter=',',
+                                        quotechar='|', quoting=csv.QUOTE_MINIMAL)
+                filewriter.writerow(fieldnames)
                 for v in lines:
-                    # info(v)
-                    f.write(';'.join([str(x) if x else '' for x in v]) + '\n')
-                f.close()
+                    filewriter.writerow(['{}'.format(x) if x else '' for x in v])
         except Exception as e:
             info(e)
             resp = False
