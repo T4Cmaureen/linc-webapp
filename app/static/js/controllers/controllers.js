@@ -426,7 +426,7 @@ angular.module('linc.controllers', ['linc.admin.controllers', 'linc.compare.imag
 .filter('organization_filter', function(){
 	return function(input, organizations) {
 		var filtered = _.filter(input, function(value){
-				return (_.result(_.find(organizations, {'name': value.organization}), 'checked'));
+				return (_.result(_.find(organizations, {'id': value.organization_id}), 'checked'));
 		});
 		return filtered;
 	};
