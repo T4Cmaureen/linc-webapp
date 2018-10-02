@@ -56,7 +56,8 @@ class DataExportHandler(BaseHandler):
         resp = True
         fieldnames = data['fnames']
         lines = data['lines']
-        try:
+        # try:
+        if True:
             # with open(fn, 'w+') as f:
             #     f.write(';'.join(fieldnames) + '\n')
             #     for v in lines:
@@ -69,9 +70,9 @@ class DataExportHandler(BaseHandler):
                 filewriter.writerow(fieldnames)
                 for v in lines:
                     filewriter.writerow(['{}'.format(x) if x else '' for x in v])
-        except Exception as e:
-            info(e)
-            resp = False
+        # except Exception as e:
+        #     info(e)
+        #     resp = False
         callback(resp)
 
     @asynchronous
