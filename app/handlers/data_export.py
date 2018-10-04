@@ -54,25 +54,17 @@ class DataExportHandler(BaseHandler):
     @engine
     def write_csv(self, fn=None, data=None, callback=None):
         resp = True
-        fieldnames = data['fnames']
         lines = data['lines']
-        # try:
-        if True:
-            # with open(fn, 'w+') as f:
-            #     f.write(';'.join(fieldnames) + '\n')
-            #     for v in lines:
-            #         # info(v)
-            #         f.write(';'.join(['{}'.format(x) if x else '' for x in v]) + '\n')
-            #     f.close()
-            with open(fn, 'wb') as csvfile:
-                filewriter = csv.writer(csvfile, delimiter=',',
-                                        quotechar='|', quoting=csv.QUOTE_MINIMAL)
-                filewriter.writerow(fieldnames)
+        fieldnames = ['"{}"'.format(x) for x in data['fnames']]
+        try:
+            with open(fn, 'w+') as f:
+                f.write(';'.join(fieldnames) + '\n')
                 for v in lines:
-                    filewriter.writerow(['{}'.format(x) if x else '' for x in v])
-        # except Exception as e:
-        #     info(e)
-        #     resp = False
+                    f.write(';'.join(['"{}"'.format(x) if x else '' for x in v]) + '\n')
+                f.close()
+        except Exception as e:
+            info(e)
+            resp = False
         callback(resp)
 
     @asynchronous
