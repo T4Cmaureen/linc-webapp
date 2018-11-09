@@ -60,7 +60,7 @@ class DataExportHandler(BaseHandler):
             with open(fn, 'w+') as f:
                 f.write(';'.join(fieldnames) + '\n')
                 for v in lines:
-                    f.write(';'.join(['"{}"'.format(str(x).replace('"',"'")) if x else '' for x in v]) + '\n')
+                    f.write(';'.join(['"{}"'.format(str(x).replace('"',"'").replace('\n', ' ')) if x else '' for x in v]) + '\n')
                 f.close()
         except Exception as e:
             info(e)
