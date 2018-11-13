@@ -530,10 +530,10 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                   cv-result-erased="CVResultsErased(imagesetId)" imageset-updated="UpdateImageset(data, imagesetId)"
                   debug="debug" modal-status="modal_status">
                 </cvresults>
-                <cvrequest class="cvrequest" ng-if="imageset.action == 'cvrequest'"
-                  use-ctrl="CVRequesCtrl" use-template-url="cvrequest.html" form-size="lg" imageset="imageset"
-                  type="search" cv-request-success="CVReqSuccess(imageset_Id, request_Obj)"
-                  update-cv-status="updateCVStatus(response)" debug="debug" modal-status="modal_status">
+                <cvrequest class="cvrequest" ng-if="imageset.action == 'cvrequest' || imageset.action == 'error'"
+                  use-ctrl="CVRequesCtrl" use-template-url="cvrequest.html" form-size="lg" imageset="imageset" debug="debug"
+                  type="search" cv-request-success="CVReqSuccess(imageset_Id, request_Obj)" modal-status="modal_status"
+                  cv-req-error="imageset.action=='error'" update-cv-status="updateCVStatus(response)" >
                 </cvrequest>
                 <span ng-if="imageset.action == 'cvpending'">
                   <i class="icon icon-clock icon-clock-pending"></i><br>

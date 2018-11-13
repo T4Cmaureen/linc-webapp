@@ -172,7 +172,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           debug="debug" modal-status="modal_status">
         </cvresults>
         <cvrequest class="cvrequest" use-ctrl="CVRequesCtrl" use-template-url="cvrequest.html" form-size="lg" imageset="imageset"
-          ng-if="imageset.action == 'cvrequest'" cv-request-success="CVReqSuccess(imageset_Id, request_Obj)"
+          ng-if="imageset.action == 'cvrequest' || imageset.action == 'error'" cv-request-success="CVReqSuccess(imageset_Id, request_Obj)"
+          cv-req-error="imageset.action=='error'"
           update-cv-status="updateCVStatus(response)" debug="debug" modal-status="modal_status">
         </cvrequest>
         <p ng-if="imageset.action == 'cvpending'">

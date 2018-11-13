@@ -128,6 +128,8 @@ angular.module('linc.view.imagesets.controller', [])
 				else{
 					if(element.cvrequest && element.req_status == 'finished')
 						elem["action"] = 'cvresults';
+					else if (element.cvrequest && element.req_status == 'error')
+						elem["action"] = 'error';
 					else if(element.cvrequest){
 						elem["action"] = 'cvpending';
 						if(element['permissions'].canShow)

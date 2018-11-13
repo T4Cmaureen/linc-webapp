@@ -2397,6 +2397,7 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 		}
 	}
 	button.cvrequest, button.cvresults{
+		padding: 5px 6px;
 		width: 110px; white-space: nowrap;overflow: hidden; text-overflow: ellipsis;
 		span.loading{
 			margin-right: 6px;
@@ -2404,6 +2405,15 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 				height: 12px;
 			}
 		}
+		&.error{
+			color: red;
+			background-color: #d952100a;
+		}
+	}
+	button.cvrequest > i.icon-info{
+		padding-right: 3px;
+		margin-left: -3px;
+	    color: red;
 	}
 }
 .btn-min-120{
@@ -2662,6 +2672,14 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 		span{
 			margin-right: 6px;
 		}
+		a.error{
+			color: red;
+			background-color: #d952100a;
+		}
+	}
+	.cvrequest > a.btn > i.icon-info{
+	    padding-right: 6px;
+	    color: red;
 	}
 }
 
