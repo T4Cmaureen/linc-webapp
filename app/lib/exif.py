@@ -36,7 +36,11 @@ def get_exif_data(filename):
         info('The file ' + filename + ' can\'t be open as image')
         return {}
     exif_data = {}
-    einfo = image._getexif()
+    try:
+        einfo = image._getexif()
+    except Exception as e:
+        info(e)
+        einfo = {}
     if einfo:
         for tag, value in einfo.items():
             decoded = TAGS.get(tag, tag)
