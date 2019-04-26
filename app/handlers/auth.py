@@ -106,7 +106,7 @@ class LogoutHandler(BaseHandler):
             url=self.settings['API_URL'] + '/auth/logout',
             method='POST',
             body='{}')
-        if response and response.code == 200:
+        if response and response.code in [200, 201]:
             self.clear_cookie("userlogin")
             self.response(200, 'Logout ok.')
         else:
