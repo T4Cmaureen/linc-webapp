@@ -166,7 +166,7 @@ class ImageSetsListHandler(BaseHandler):
             body=self.json_encode(self.input_data))
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish(self.json_encode({'status': 'error', 'messagem': 'Bad request.'}))
