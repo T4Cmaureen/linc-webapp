@@ -59,7 +59,16 @@ def get_exif_data(filename):
             else:
                 dvalue = value
                 if isinstance(value, bytes):
-                    dvalue = value.decode('utf-8')
+                    # dvalue = value.decode('utf-8')
+                    dvalue = "{}"
+                    formats = ['utf-8', 'ISO-8859-1', 'utf-16']
+                    for theFormat in formats:
+                        try:
+                            dvalue = value.decode(theFormat)
+                            break
+                        except Exception as e:
+                            info(e)
+                            info('Exception: Invalid Encoding Detected for Exif Data.')
                 exif_data[decoded] = dvalue
             if decoded in ['DateTimeOriginal', 'DateTime', 'DateTimeDigitized']:
                 date_portion = exif_data[decoded][0:10]
