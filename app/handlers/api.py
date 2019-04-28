@@ -150,7 +150,7 @@ class ImageSetsListHandler(BaseHandler):
             method='GET')
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to get image sets list.'})
@@ -183,7 +183,7 @@ class ImagesListHandler(BaseHandler):
             method='GET')
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to get the images list.'})
@@ -204,7 +204,7 @@ class LionsListHandler(BaseHandler):
             method='GET')
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to get lions data.'})
@@ -221,7 +221,7 @@ class OrganizationsListHandler(BaseHandler):
             method='GET')
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to get organizations data.'})
@@ -241,7 +241,7 @@ class CVResultsHandler(BaseHandler):
             method='GET')
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to get cv results data.'})
@@ -256,7 +256,7 @@ class CVResultsHandler(BaseHandler):
             method='POST',
             body=self.json_encode(self.input_data))
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to submit cv results data.'})
@@ -271,7 +271,7 @@ class CVResultsHandler(BaseHandler):
             method='PUT',
             body=self.json_encode({"message": "updating resources"}))
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to submit data to cvresults.'})
@@ -288,7 +288,7 @@ class CVRequestHandler(BaseHandler):
             method='GET')
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to get cv requests data.'})
@@ -302,7 +302,7 @@ class CVRequestHandler(BaseHandler):
             url=self.settings['API_URL'] + '/cvrequests/{}'.format(req_id),
             method='DELETE')
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to delete cv results.'})
@@ -328,7 +328,7 @@ class LionsHandler(BaseHandler):
             method='GET')
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to get lions data.'})
@@ -363,7 +363,7 @@ class LionsHandler(BaseHandler):
                 method='PUT',
                 body=self.json_encode(data))
             self.set_status(response.code)
-            if response.code == 200:
+            if response.code in [200, 201]:
                 self.finish(response.body)
             else:
                 self.finish({'status': 'error', 'message': 'Fail to update lion data.'})
@@ -381,7 +381,7 @@ class LionsHandler(BaseHandler):
             method='DELETE')
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to delete lion.'})
@@ -398,7 +398,7 @@ class ImageSetsHandler(BaseHandler):
             method='GET')
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to get image set data.'})
@@ -414,7 +414,7 @@ class ImageSetsHandler(BaseHandler):
             body=self.json_encode(self.input_data))
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to submit image set data.'})
@@ -436,7 +436,7 @@ class ImageSetsHandler(BaseHandler):
                 method='PUT',
                 body=self.json_encode(data))
             self.set_status(response.code)
-            if response.code == 200:
+            if response.code in [200, 201]:
                 self.finish(response.body)
             else:
                 self.finish({'status': 'error', 'message': 'Fail to submit image set data.'})
@@ -454,7 +454,7 @@ class ImageSetsHandler(BaseHandler):
             method='DELETE')
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to delete image set.'})
@@ -471,7 +471,7 @@ class OrganizationsHandler(BaseHandler):
             method='GET')
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to get organization data.'})
@@ -488,7 +488,7 @@ class OrganizationsHandler(BaseHandler):
             body=self.json_encode(self.input_data))
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to create a new organization.'})
@@ -509,7 +509,7 @@ class OrganizationsHandler(BaseHandler):
                 method='PUT',
                 body=self.json_encode(data))
             self.set_status(response.code)
-            if response.code == 200:
+            if response.code in [200, 201]:
                 self.finish(response.body)
             else:
                 self.finish({'status': 'error', 'message': 'Fail to update organization data.'})
@@ -527,7 +527,7 @@ class OrganizationsHandler(BaseHandler):
             method='DELETE')
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to delete organization.'})
@@ -544,7 +544,7 @@ class UsersHandler(BaseHandler):
             method='GET')
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to get users data.'})
@@ -561,7 +561,7 @@ class UsersHandler(BaseHandler):
             body=self.json_encode(self.input_data))
         self.set_json_output()
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to create the new user.'})
@@ -582,7 +582,7 @@ class UsersHandler(BaseHandler):
                 method='PUT',
                 body=self.json_encode(data))
             self.set_status(response.code)
-            if response.code == 200:
+            if response.code in [200, 201]:
                 self.finish(response.body)
             else:
                 self.finish({'status': 'error', 'message': 'Fail to update user data.'})
@@ -601,7 +601,7 @@ class UsersHandler(BaseHandler):
             method='DELETE')
         self.set_status(response.code)
         self.set_json_output()
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to delete user.'})
@@ -619,7 +619,7 @@ class ImagesHandler(BaseHandler):
                 self.api_call,
                 url=self.settings['API_URL'] + '/images?download={}'.format(download),
                 method='GET')
-            if response and response.code == 200:
+            if response and response.code in [200, 201]:
                 respdata = loads(response.body.decode('utf-8'))
                 links = respdata['data']
                 folder = self.settings['static_path'] + '/' + str(uid())
@@ -663,7 +663,7 @@ class ImagesHandler(BaseHandler):
                 url=self.settings['API_URL'] + '/images/{}'.format(image_id),
                 method='GET')
             self.set_status(response.code)
-            if response.code == 200:
+            if response.code in [200, 201]:
                 self.finish(response.body)
             else:
                 self.finish({'status': 'error', 'message': 'Fail to get images data.'})
@@ -684,7 +684,7 @@ class ImagesHandler(BaseHandler):
                 method='PUT',
                 body=self.json_encode(data))
             self.set_status(response.code)
-            if response.code == 200:
+            if response.code in [200, 201]:
                 self.finish(response.body)
             else:
                 self.finish({'status': 'error', 'message': 'Fail to update image data.'})
@@ -701,7 +701,7 @@ class ImagesHandler(BaseHandler):
             url=self.settings['API_URL'] + '/images/{}'.format(image_id),
             method='DELETE')
         self.set_status(response.code)
-        if response.code == 200:
+        if response.code in [200, 201]:
             self.finish(response.body)
         else:
             self.finish({'status': 'error', 'message': 'Fail to delete image.'})
