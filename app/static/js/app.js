@@ -19,7 +19,7 @@
 var app = angular.module('linc', ['ngStorage', 'ngAnimate', 'ui.bootstrap', 'ngSanitize', 'rzModule', 'ui.router',
   'ngMap', 'mgcrea.ngStrap', 'angularFileUpload', 'cgNotify', 'ngCookies', 'angular-loading-bar', 'ngInputModified',
   'ngMessages', 'ui.select', 'panzoom', 'panzoomwidget', 'ui.router.state.events', 'ngFileSaver',
-  'linc.controllers', 'linc.directives', 'linc.services', 'mgcrea.bootstrap.affix']);
+  'linc.controllers', 'linc.directives', 'linc.services']);
 
 'use strict';
 

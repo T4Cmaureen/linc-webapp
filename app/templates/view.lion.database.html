@@ -27,7 +27,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     tooltip-enable="isBatchMode" >
       <i class="icon icon-arrow-left"></i>
       <span ng-if="ChangeStatus.loading" class="loading text-center">
-        <img src="/static/images/loading.gif" width="40px;"/>
+        <img src="/static/images/loading.gif" class="loading-gif"/>
       </span>
     </a> View Lion Database
   </h1>
@@ -41,7 +41,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
   </div>
   <div class="row main-row">
     <div class="col-sm-2 line-right">
-
+      <div class="filters line-right" bs-affix data-offset-top="80" data-offset-bottom="30">
       <h3 class="text-muted">Refine by</h3>
       <div class="tablist" data-allow-multiple="true" role="tablist" aria-multiselectable="true" bs-collapse>
 
@@ -270,7 +270,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           <button type="button" class="btn btn-primary btn-export" ng-disabled="!Selecteds.length"
             ng-click="BatchExport()">
             <span ng-if="exporting" class="text-center exporting">
-              <img src="/static/images/loading.gif"/>
+              <img src="/static/images/loading.gif" class="loading-gif"/>
             </span>
             Export
           </button>
@@ -282,6 +282,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
       <h4 class="viewer-selecteds">
         {{! viewer_selected()}}
       </h4>
+    </div>
     </div>
     <div class="col-sm-10">
       <h4 class="viewer-founds">
