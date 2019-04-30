@@ -69,3 +69,9 @@ tmp/*
 
 #map debug files
 app/static/lib/**/*.map
+
+#bower components
+app/bower_components/*
+
+#others
+ssh
