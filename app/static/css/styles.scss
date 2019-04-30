@@ -24,7 +24,7 @@
 }
 
 @import url(icomoon/style.css);
-@import url(https://fonts.googleapis.com/css?family=Homenaje);
+//@import url(https://fonts.googleapis.com/css?family=Homenaje);
 
 $orange: #d95210;
 $off-white: #fff;
@@ -173,6 +173,21 @@ textarea{font-family: 'Homenaje', sans-serif;}
 	}
 }
 
+.filters{
+	width: 180px;
+	//background-color: #F9F9F9;
+	padding-right: 10px;
+	height: 100%;
+	overflow: auto;
+	&.affix {
+		top:0;
+    padding-top: 70px; // css to define
+	}
+	&.affix-bottom {
+		position: absolute;
+			bottom: 10px; // css to define
+	}
+}
 .aside{
 	.aside-dialog{
 		.aside-header{background: #ddd;color:#444;}
@@ -1107,7 +1122,7 @@ hr.style-line {
 			a{
 				padding: 0px 12px;
 				.fa-expand, .fa-compress{
-					font-size: 16px; padding-top: 3px; margin-right: 15px;
+					font-size: 16px; padding-top: 3px; 
 				}
 			}
 		}
@@ -1196,8 +1211,8 @@ hr.style-line {
 	img.small-image{ width: 40px; height: 40px; }
 	img.large-image{ width: 400px; height: 300px; }
 	.div-table {
-		overflow-y: scroll;
-		max-height: 450px;
+		//overflow-y: scroll;
+		//max-height: 450px;
 		padding: 0px 15px;
 		table.table-cv-results { border-spacing: 0; }
 		table.table-cv-results tbody, table.table-cv-results thead { display: block; }
@@ -2297,7 +2312,7 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 			.fa-expand, .fa-compress{
 				font-size: 16px;
 				padding-top: 3px;
-				margin-right: 15px;
+				
 			}
 		}
 	}
@@ -2377,8 +2392,8 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 		}
 	}
 	.div-table{
-		overflow-y: scroll;
-		max-height: 450px;
+		//overflow-y: scroll;
+		//max-height: 450px;
 		table.table-view { border-spacing: 0; }
 		table.table-view tbody, table.table-view thead { display: block; }
 		thead tr th { height: 30px; padding-top: 0px;}

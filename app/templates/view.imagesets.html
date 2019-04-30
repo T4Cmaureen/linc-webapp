@@ -40,10 +40,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
     </button>
   </div>
   <div class="row main-row">
-    <div class="col-sm-2 line-right">
+    <div class="col-sm-2" >
+    <div class="filters line-right" bs-affix data-offset-top="80" data-offset-bottom="30">
 
       <h3 class="text-muted">Refine by</h3>
-      <div class="tablist" data-allow-multiple="true" role="tablist" aria-multiselectable="true" bs-collapse>
+      <div class="tablist" data-allow-multiple="true" role="tablist" aria-multiselectable="true" bs-collapse >
 
         <div role="tab">
           <h4>
@@ -303,6 +304,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
         {{! viewer_selected()}}
       </h4>
     </div>
+    </div>
     <div class="col-sm-10">
       <h4 class="viewer-founds">
         {{! filtered_image_sets.length }} image sets found.
@@ -407,8 +409,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 <a href="" ng-click="order('action')" ng-class="{'order_class': predicate === 'action'}">Actions</a>
                 <span class="sortorder" ng-show="predicate === 'action'" ng-class="{reverse:reverse}"></span>
               </th>
-              <th class="text-center"></th>
-              <th class="text-center"></th>
+
             </tr>
           </thead>
           <tbody>
@@ -497,50 +498,50 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 <i ng-if="imageset.is_primary" class="icon icon-check"></i>
                 <i ng-if="!imageset.is_primary" class="icon icon-cross"></i>
               </td>
+              <td class="text-center" ng-hide="isBatchMode">
+                <span ng-if="imageset.permissions.canDisassociate && !isBatchMode">
+                  <button class="btn btn-primary btn-sm"
+                    data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Disassociate(imageset)">
+                    <i class="icon icon-flash"></i>Disassociate
+                  </button>
+                </span>
 
-              <td ng-if="imageset.permissions.canDisassociate && !isBatchMode">
-                <button class="btn btn-primary btn-sm"
-                  data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Disassociate(imageset)">
-                  <i class="icon icon-flash"></i>Disassociate
-                </button>
-              </td>
+                <span ng-if="imageset.permissions.NeedVerify && !isBatchMode">
+                  <button ng-if="!imageset.is_verified" class="btn btn-primary btn-sm btn-verify"
+                    data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Verify(imageset)">
+                    <i class="icon icon-flash"></i>Verify
+                  </button>
 
-              <td ng-if="imageset.permissions.NeedVerify && !isBatchMode">
-                <button ng-if="!imageset.is_verified" class="btn btn-primary btn-sm btn-verify"
-                  data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Verify(imageset)">
-                  <i class="icon icon-flash"></i>Verify
-                </button>
+                  <button ng-if="imageset.is_verified && !isBatchMode" class="btn btn-primary btn-sm"
+                    data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Disassociate(imageset)">
+                    <i class="icon icon-flash"></i>Disassociate
+                  </button>
+                </span>
 
-                <button ng-if="imageset.is_verified && !isBatchMode" class="btn btn-primary btn-sm"
-                  data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Disassociate(imageset)">
-                  <i class="icon icon-flash"></i>Disassociate
-                </button>
-              </td>
+                <span ng-if="imageset.permissions.CanSetPrimary && !isBatchMode" >
+                  <button class="btn btn-default btn-sm" ng-click="!isBatchMode && SetPrimary(imageset)"
+                    data-animation="am-fade-and-slide-top">Set Primary
+                  </button>
+                </span>
 
-              <td ng-if="imageset.permissions.CanSetPrimary && !isBatchMode" >
-                <button class="btn btn-default btn-sm" ng-click="!isBatchMode && SetPrimary(imageset)"
-                  data-animation="am-fade-and-slide-top">Set Primary
-                </button>
-              </td>
-
-              <td ng-if="imageset.permissions.canShow && !isBatchMode">
-                <cvresults class="cvresults" ng-if="imageset.action == 'cvresults'"
-                  use-ctrl="CVResultsCtrl" use-template-url="cvresults.html" form-size="lg" imageset="imageset"
-                  cvresults-id="imageset.cvresults" cvrequest-id="imageset.cvrequest" type="search"
-                  cv-result-erased="CVResultsErased(imagesetId)" imageset-updated="UpdateImageset(data, imagesetId)"
-                  debug="debug" modal-status="modal_status">
-                </cvresults>
-                <cvrequest class="cvrequest" ng-if="imageset.action == 'cvrequest' || imageset.action == 'error'"
-                  use-ctrl="CVRequesCtrl" use-template-url="cvrequest.html" form-size="lg" imageset="imageset" debug="debug"
-                  type="search" cv-request-success="CVReqSuccess(imageset_Id, request_Obj)" modal-status="modal_status"
-                  cv-req-error="imageset.action=='error'" update-cv-status="updateCVStatus(response)" >
-                </cvrequest>
-                <span ng-if="imageset.action == 'cvpending'">
-                  <i class="icon icon-clock icon-clock-pending"></i><br>
-                  <span>CV Request pending</span>
+                <span ng-if="imageset.permissions.canShow && !isBatchMode">
+                  <cvresults class="cvresults" ng-if="imageset.action == 'cvresults'"
+                    use-ctrl="CVResultsCtrl" use-template-url="cvresults.html" form-size="lg" imageset="imageset"
+                    cvresults-id="imageset.cvresults" cvrequest-id="imageset.cvrequest" type="search"
+                    cv-result-erased="CVResultsErased(imagesetId)" imageset-updated="UpdateImageset(data, imagesetId)"
+                    debug="debug" modal-status="modal_status">
+                  </cvresults>
+                  <cvrequest class="cvrequest" ng-if="imageset.action == 'cvrequest' || imageset.action == 'error'"
+                    use-ctrl="CVRequesCtrl" use-template-url="cvrequest.html" form-size="lg" imageset="imageset" debug="debug"
+                    type="search" cv-request-success="CVReqSuccess(imageset_Id, request_Obj)" modal-status="modal_status"
+                    cv-req-error="imageset.action=='error'" update-cv-status="updateCVStatus(response)" >
+                  </cvrequest>
+                  <span ng-if="imageset.action == 'cvpending'">
+                    <i class="icon icon-clock icon-clock-pending"></i><br>
+                    <span>CV Request pending</span>
+                  </span>
                 </span>
               </td>
-
             </tr>
           </tbody>
         </table>
