@@ -20,10 +20,10 @@
 
 angular.module('linc.view.lion.database.controller', [])
 
-.controller('ViewLionDatabaseCtrl', ['$scope', '$rootScope', '$state', '$timeout', '$q', '$filter', '$stateParams',
-  '$bsTooltip', 'AuthService', 'lions', 'lion_options', 'default_options', '$ModalPage', '$uibModal', 'NgMap',
+.controller('ViewLionDatabaseCtrl', ['$scope', '$rootScope', '$state', '$timeout', '$stateParams',
+  'AuthService', 'lions', 'lion_options', 'default_options', '$ModalPage', '$uibModal', 'NgMap',
   'LincServices', 'LincDataFactory', 'NotificationFactory', 'TAG_LABELS', 'TOOL_TITLE', 'CONST_VIEWCOLUMNS',
-  function ($scope, $rootScope, $state, $timeout, $q, $filter, $stateParams, $bsTooltip, AuthService, lions, lion_options,
+  function ($scope, $rootScope, $state, $timeout, $stateParams, AuthService, lions, lion_options,
   default_options, $ModalPage, $uibModal, NgMap, LincServices, LincDataFactory, NotificationFactory,
   TAG_LABELS, TOOL_TITLE, CONST_VIEWCOLUMNS) {
 
@@ -59,6 +59,8 @@ angular.module('linc.view.lion.database.controller', [])
 			element['permissions'] = get_permissions($scope.user, element);
 			element['age'] = isNaN(parseInt(element['age'])) ? null : element['age'];
 
+			element['dead'] = (element['dead'] == undefined || element['dead'] == null) ? element['dead'] = false : element['dead'];
+
 			var elem = {};
 			var TAGS = [];
 			if(!element.gender) element.gender = 'unknown';
@@ -85,8 +87,6 @@ angular.module('linc.view.lion.database.controller', [])
 			return _.extend({}, element, elem);
 		});
 	};
-
-	set_all_lions(lions);
 
 	$scope.refreshSlider = function () {
 		$timeout(function () {
@@ -147,6 +147,16 @@ angular.module('linc.view.lion.database.controller', [])
 		}
 		return label;
 	};
+
+	$scope.ViewTotal = 30;
+	$scope.Paging = function(){
+		$scope.ViewTotal += 10;
+	};
+
+	set_all_lions(lions);
+
+	$scope.slider_options = { ceil: 32, floor: 0, onChange: function(){ $scope.ChangeFilter('Ages');}};
+
 	$scope.pfilters = $stateParams.filter ? $stateParams.filter : {};
 
 	if(Object.keys($scope.pfilters).length){
@@ -162,7 +172,7 @@ angular.module('linc.view.lion.database.controller', [])
 		$scope.isCollapsed.NameOrId = $scope.pfilters.hasOwnProperty('NameOrId') ? false : ($scope.filters.NameOrId ? false : true);
 		$scope.isCollapsed.Organization = $scope.pfilters.hasOwnProperty('Organization') ? false : _.every($scope.filters.Organizations, {checked: true});
 		$scope.isCollapsed.Age = $scope.pfilters.hasOwnProperty('Ages') ? false :
-		(($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
+		(($scope.slider_options.floor == $scope.filters.Ages.min &&  $scope.slider_options.ceil == $scope.filters.Ages.max) ? true : false);
 		$scope.isCollapsed.Gender = $scope.pfilters.hasOwnProperty('Genders') ? false : _.every($scope.filters.Genders, {checked: true});
 		$scope.isCollapsed.TagFeatures = $scope.pfilters.hasOwnProperty('TagFeatures') ? false : ($scope.filters.TagFeatures ? false : true);
 		$scope.isCollapsed.Location = $scope.pfilters.hasOwnProperty('Location') ? false :
@@ -172,7 +182,7 @@ angular.module('linc.view.lion.database.controller', [])
 	else{
 		$scope.isCollapsed.NameOrId = $scope.filters.NameOrId ? false : true;
 		$scope.isCollapsed.Organization = _.every($scope.filters.Organizations, {checked: true});
-		$scope.isCollapsed.Age = (($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
+		$scope.isCollapsed.Age = (($scope.slider_options.floor == $scope.filters.Ages.min &&  $scope.slider_options.ceil == $scope.filters.Ages.max) ? true : false);
 		$scope.isCollapsed.Gender = _.every($scope.filters.Genders, {checked: true});
 		$scope.isCollapsed.TagFeatures = $scope.filters.TagFeatures ? false : true;
 		$scope.isCollapsed.Location = ($scope.filters.Location.latitude && $scope.filters.Location.longitude && $scope.filters.Location.radius) ? false : true;

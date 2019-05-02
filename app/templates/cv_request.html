@@ -77,9 +77,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               <rzslider class="age-slider"
                 rz-slider-model="filters.Ages.min"
                 rz-slider-high="filters.Ages.max"
-                rz-slider-options="filters.Ages.options"
+                rz-slider-options="slider_options"
                 rz-slider-step="1"
-                rz-slider-on-change="change('Ages')"
                 rz-slider-tpl-url="rzSliderTpl.html">
               </rzslider>
             </div>
@@ -253,7 +252,6 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             </div>
           </div>
           <div class="Scroll-Panel">
-            <!-- <table class="table table-cv-requests"> -->
             <table class="table table-hover">
               <thead>
                 <tr>
@@ -266,27 +264,27 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                   <th class="text-center">Photo</th>
 
                   <th class="text-center">
-                    <a href="" ng-click="order('name')" ng-class="{'order_class': orderby.predicate === 'name'}">Name</a>
+                    <a ng-click="order('name')" ng-class="{'order_class': orderby.predicate === 'name'}">Name</a>
                     <span class="sortorder" ng-show="orderby.predicate === 'name'" ng-class="{reverse: orderby.reverse}"></span>
                   </th>
 
                   <th class="text-center">
-                    <a href="" ng-click="order('age')" ng-class="{'order_class': orderby.predicate === 'age'}">Age</a>
+                    <a ng-click="order('age')" ng-class="{'order_class': orderby.predicate === 'age'}">Age</a>
                     <span class="sortorder" ng-show="orderby.predicate === 'age'" ng-class="{reverse: orderby.reverse}"></span>
                   </th>
 
                   <th class="text-center">
-                    <a href="" ng-click="order('primary_image_set_id')" ng-class="{'order_class': orderby.predicate === 'primary_image_set_id'}">Imageset Id</a>
+                    <a ng-click="order('primary_image_set_id')" ng-class="{'order_class': orderby.predicate === 'primary_image_set_id'}">Imageset Id</a>
                     <span class="sortorder" ng-show="orderby.predicate === 'primary_image_set_id'" ng-class="{reverse: orderby.reverse}"></span>
                   </th>
 
                   <th class="text-center">
-                    <a href="" ng-click="order('organization')" ng-class="{'order_class': orderby.predicate === 'organization'}">Organization</a>
+                    <a ng-click="order('organization')" ng-class="{'order_class': orderby.predicate === 'organization'}">Organization</a>
                     <span class="sortorder" ng-show="orderby.predicate === 'organization'" ng-class="{reverse: orderby.reverse}"></span>
                   </th>
 
                   <th class="text-center">
-                    <a href="" ng-click="order('gender')" ng-class="{'order_class': orderby.predicate === 'gender'}">Gender</a>
+                    <a ng-click="order('gender')" ng-class="{'order_class': orderby.predicate === 'gender'}">Gender</a>
                     <span class="sortorder" ng-show="orderby.predicate === 'gender'" ng-class="{reverse: orderby.reverse}"></span>
                   </th>
 
@@ -311,24 +309,23 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                   </th>
 
                   <th class="text-center">
-                    <a href="" ng-click="order('tag_features')" ng-class="{'order_class': orderby.predicate === 'tag_features'}">Features</a>
+                    <a ng-click="order('tag_features')" ng-class="{'order_class': orderby.predicate === 'tag_features'}">Features</a>
                     <span class="sortorder" ng-show="orderby.predicate === 'tag_features'" ng-class="{reverse: orderby.reverse}"></span>
                   </th>
 
                   <th class="text-center">
-                    <a href="" ng-click="order('is_verified')" ng-class="{'order_class': orderby.predicate === 'is_verified'}">Verified</a>
+                    <a ng-click="order('is_verified')" ng-class="{'order_class': orderby.predicate === 'is_verified'}">Verified</a>
                     <span class="sortorder" ng-show="orderby.predicate === 'is_verified'" ng-class="{reverse: orderby.reverse}"></span>
                   </th>
 
                 </tr>
               </thead>
-              <tbody>
+              <tbody infinite-scroll="Paging()" infinite-scroll-distance="1">
                 <tr class="link" ng-class="{'disabled': lion.disabled}"
-                  ng-repeat="lion in filtered_lions = (lions | filter: {dead: false} |
-                  nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages |
-                  organization_filter: filters.Organizations | features_filter: filters.TagFeatures |
-                  gender_filter: filters.Genders | LatLngFilter: filters.Location : true) |
-                  orderBy: orderby.predicate : orderby.reverse">
+                  ng-repeat="lion in limited_imagesets = ( ordered_lions = ( filtered_lions = ( lions | filter: {dead: false} |
+                    nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages | organization_filter: filters.Organizations |
+                    features_filter: filters.TagFeatures | gender_filter: filters.Genders | LatLngFilter: filters.Location : true ) ) |
+                    orderBy: orderby.predicate : orderby.reverse ) | limitTo: ViewTotal">
 
                   <td class="text-center" uib-tooltip="You need to add more images to the image sets for this lion to be searchable."
                   tooltip-placement="right" tooltip-enable="lion.disabled" tooltip-append-to-body="true">

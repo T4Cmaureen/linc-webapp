@@ -354,21 +354,21 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 							<pre ng-show="debug">{{!selected.gender}}</pre>
 							<hr class="style-line">
 							<div class="form-group group-select2" ng-if="metadata.type =='lions'">
-								<label class="meta_label" for="is_dead">
-									<input type="checkbox" ng-model="changed.is_dead" ng-change="clear_selection('is_dead');"
+								<label class="meta_label" for="dead">
+									<input type="checkbox" ng-model="changed.dead" ng-change="clear_selection('dead');"
 										class="batch-checkbox">Dead:
 								</label>
-								<label ng-hide="changed.is_dead" class="h-label">
+								<label ng-hide="changed.dead" class="h-label">
 									Do not change</label>
-								<button type="button" id="is_dead"
+								<button type="button" id="dead"
 									class="btn btn-default btn-sm select_btn"
-									ng-model="selected.is_dead"
+									ng-model="selected.dead"
 									data-html="1" bs-options="is.value as is.label for is in [{value: true, label:'Dead'},{value: false, label:'Alive'}]"
-									placement="bottom-right" bs-select ng-disabled="!changed.is_dead">
+									placement="bottom-right" bs-select ng-disabled="!changed.dead">
 								Action <span class="caret"></span>
 								</button>
 							</div>
-							<pre ng-show="debug">{{!selected.is_dead}}</pre>
+							<pre ng-show="debug">{{!selected.dead}}</pre>
 							<hr class="style-line" ng-if="metadata.type == 'lions'">
 						</div>
 						<div class="col-sm-6">

@@ -90,9 +90,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
             <rzslider class="age-slider"
               rz-slider-model="filters.Ages.min"
               rz-slider-high="filters.Ages.max"
-              rz-slider-options="filters.Ages.options"
+              rz-slider-options="slider_options"
               rz-slider-step="1"
-              rz-slider-on-change="change('Ages')"
               rz-slider-tpl-url="rzSliderTpl.html">
             </rzslider>
           </div>
@@ -292,8 +291,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           <a class="btn btn-default btn-xs" ng-disabled="selection.allUnSel" ng-click="check_all(false)">Select None</a>
         </p>
       </h4>
-      <div class="div-table">
-        <!-- <table class="table table-view"> -->
+      <div class="div-table" infinite-scroll="Paging()" infinite-scroll-distance="1">
         <table class="table table-hover">
           <thead>
             <tr>
@@ -306,37 +304,37 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               <th class="text-center">Photo</th>
 
               <th class="text-center">
-                <a href="" ng-click="order('name')" ng-class="{'order_class': orderby.predicate === 'name'}">Name</a>
+                <a ng-click="order('name')" ng-class="{'order_class': orderby.predicate === 'name'}">Name</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'name'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
               <th class="text-center">
-                <a href="" ng-click="order('primary_image_set_id')" ng-class="{'order_class': orderby.predicate === 'primary_image_set_id'}">Imageset Id</a>
+                <a ng-click="order('primary_image_set_id')" ng-class="{'order_class': orderby.predicate === 'primary_image_set_id'}">Imageset Id</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'primary_image_set_id'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
               <th class="text-center" ng-show="ShowColumn('age')">
-                <a href="" ng-click="order('age')" ng-class="{'order_class': orderby.predicate === 'age'}">Age</a>
+                <a ng-click="order('age')" ng-class="{'order_class': orderby.predicate === 'age'}">Age</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'age'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
               <th class="text-center" ng-show="ShowColumn('date_of_birth')">
-                <a href="" ng-click="order('date_of_birth')" ng-class="{'order_class': predicate === 'date_of_birth'}">Date of Birth</a>
+                <a ng-click="order('date_of_birth')" ng-class="{'order_class': predicate === 'date_of_birth'}">Date of Birth</a>
                 <span class="sortorder" ng-show="predicate === 'date_of_birth'" ng-class="{reverse:reverse}"></span>
               </th>
 
               <th class="text-center" ng-show="ShowColumn('dead')">
-                <a href="" ng-click="order('dead')" ng-class="{'order_class': orderby.predicate === 'dead'}">Dead</a>
+                <a ng-click="order('dead')" ng-class="{'order_class': orderby.predicate === 'dead'}">Dead</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'dead'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
               <th class="text-center" ng-show="ShowColumn('organization')">
-                <a href="" ng-click="order('organization')" ng-class="{'order_class': orderby.predicate === 'organization'}">Organization</a>
+                <a ng-click="order('organization')" ng-class="{'order_class': orderby.predicate === 'organization'}">Organization</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'organization'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
               <th class="text-center" ng-show="ShowColumn('gender')">
-                <a href="" ng-click="order('gender')" ng-class="{'order_class': orderby.predicate === 'gender'}">Gender</a>
+                <a ng-click="order('gender')" ng-class="{'order_class': orderby.predicate === 'gender'}">Gender</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'gender'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
@@ -361,12 +359,12 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               </th>
 
               <th class="text-center tag_features" ng-show="ShowColumn('tag_features')">
-                <a href="" ng-click="order('tag_features')" ng-class="{'order_class': orderby.predicate === 'tag_features'}">Tag Features</a>
+                <a ng-click="order('tag_features')" ng-class="{'order_class': orderby.predicate === 'tag_features'}">Tag Features</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'tag_features'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
               <th class="text-center notes" ng-show="ShowColumn('notes')">
-                <a href="" ng-click="order('notes')" ng-class="{'order_class': predicate === 'notes'}">Notes</a>
+                <a ng-click="order('notes')" ng-class="{'order_class': predicate === 'notes'}">Notes</a>
                 <span class="sortorder" ng-show="predicate === 'notes'" ng-class="{reverse:reverse}"></span>
               </th>
 
@@ -376,7 +374,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
               </th>
 
               <th class="text-center" ng-show="ShowColumn('is_verified')">
-                <a href="" ng-click="order('is_verified')" ng-class="{'order_class': orderby.predicate === 'is_verified'}">Verified</a>
+                <a ng-click="order('is_verified')" ng-class="{'order_class': orderby.predicate === 'is_verified'}">Verified</a>
                 <span class="sortorder" ng-show="orderby.predicate === 'is_verified'" ng-class="{reverse: orderby.reverse}"></span>
               </th>
 
@@ -384,12 +382,11 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           </thead>
           <tbody>
 
-              <tr class="link" ng-click="!isBatchMode && goto_lion(lion);"
-                ng-repeat="lion in ordered_lions = (filtered_lions = ((mine_lions = (lions | filter: BatchFilter)) |
-                  nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages |
-                  organization_filter: filters.Organizations | features_filter: filters.TagFeatures |
-                  gender_filter: filters.Genders | LatLngFilter: filters.Location : true | geographical: GeoBounds) |
-                  orderBy : orderby.predicate : orderby.reverse )">
+            <tr class="link" ng-click="!isBatchMode && goto_lion(lion);"
+              ng-repeat="lion in limited_imagesets = ( ordered_lions = ( filtered_lions = ( mine_lions = ( lions | filter: BatchFilter ) ) |
+                nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages | organization_filter: filters.Organizations |
+                features_filter: filters.TagFeatures | gender_filter: filters.Genders | LatLngFilter: filters.Location : true |
+                geographical: GeoBounds ) | orderBy : orderby.predicate : orderby.reverse ) | limitTo: ViewTotal">
 
               <td class="text-center" ng-if="isBatchMode">
                 <input type="checkbox" ng-model="lion.selected" ng-click="Select_Lion($event, lion);$event.stopPropagation();">

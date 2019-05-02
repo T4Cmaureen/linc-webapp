@@ -21,10 +21,10 @@
 angular.module('linc.view.imagesets.controller', [])
 
 .controller('ViewImageSetsCtrl', ['$scope', '$rootScope', '$state', '$timeout', '$q', '$interval', '$uibModal',
-  '$stateParams', '$bsTooltip', 'NotificationFactory', 'LincServices', 'AuthService', 'PollerService',
+  '$stateParams', 'NotificationFactory', 'LincServices', 'AuthService', 'PollerService',
   'imagesets_options', 'default_options', 'imagesets', '$ModalPage', 'NgMap', 'LincDataFactory', 'TAG_LABELS',
   'TOOL_TITLE', 'CONST_VIEWCOLUMNS', function ($scope, $rootScope, $state, $timeout, $q, $interval, $uibModal,
-  $stateParams, $bsTooltip, NotificationFactory, LincServices, AuthService, PollerService, imagesets_options,
+  $stateParams, NotificationFactory, LincServices, AuthService, PollerService, imagesets_options,
   default_options, imagesets, $ModalPage, NgMap, LincDataFactory, TAG_LABELS, TOOL_TITLE, CONST_VIEWCOLUMNS) {
 
 	$scope.user = AuthService.user;
@@ -120,6 +120,8 @@ angular.module('linc.view.imagesets.controller', [])
 			element['permissions'] = get_permissions($scope.user, element);
 			element['age'] = isNaN(parseInt(element['age'])) ? null : element['age'];
 
+			element['dead'] = (element['dead'] == undefined || element['dead'] == null) ? element['dead'] = false : element['dead'];
+
 			var elem = {};
 			if(!element.is_primary){
 				if(element.lion_id){
@@ -168,11 +170,6 @@ angular.module('linc.view.imagesets.controller', [])
 		});
 	};
 
-	set_all_imagesets(imagesets);
-
-	if(cvrequest_pendings.length)
-		start_Poller(0);
-
 	$scope.refreshSlider = function () {
 		$timeout(function () {
 			$scope.$broadcast('rzSliderForceRender');
@@ -208,6 +205,7 @@ angular.module('linc.view.imagesets.controller', [])
 		imagesets_options.filters[type] = $scope.filters[type];
 		LincDataFactory.set_imagesets(imagesets_options);
 	}
+
 	// Click collapse
 	$scope.collapse = function(type){
 		imagesets_options.isCollapsed[type] = $scope.isCollapsed[type] = !$scope.isCollapsed[type];
@@ -224,7 +222,7 @@ angular.module('linc.view.imagesets.controller', [])
 	$scope.viewer_selected = function(){
 		var label = "";
 		if($scope.Selecteds.length == $scope.imagesets.length)
-			label = "All " + $scope.Selecteds.length + " lions are selected";
+			label = "All " + $scope.Selecteds.length + " imagesets are selected";
 		else if($scope.Selecteds.length){
 			label = ($scope.Selecteds.length).toString();
 			label += ($scope.Selecteds.length == 1 ) ? ' is selected' : ' are selected';
@@ -433,6 +431,18 @@ angular.module('linc.view.imagesets.controller', [])
 		}
 	};
 
+	$scope.ViewTotal = 10;
+	$scope.Paging = function(){
+		$scope.ViewTotal += 20;
+	};
+
+	set_all_imagesets(imagesets);
+
+	if(cvrequest_pendings.length)
+		start_Poller(0);
+
+	$scope.slider_options = { ceil: 32, floor: 0, onChange: function(){ $scope.ChangeFilter('Ages');}};
+
 	$scope.pfilters = $stateParams.filter ? $stateParams.filter : {};
 
 	if(Object.keys($scope.pfilters).length){
@@ -449,7 +459,7 @@ angular.module('linc.view.imagesets.controller', [])
 		$scope.isCollapsed.NameOrId = $scope.pfilters.hasOwnProperty('NameOrId') ? false : ($scope.filters.NameOrId ? false : true);
 		$scope.isCollapsed.Organization = $scope.pfilters.hasOwnProperty('Organization') ? false : _.every($scope.filters.Organizations, {checked: true});
 		$scope.isCollapsed.Age = $scope.pfilters.hasOwnProperty('Ages') ? false :
-			(($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
+			(($scope.slider_options.floor == $scope.filters.Ages.min &&  $scope.slider_options.ceil == $scope.filters.Ages.max) ? true : false);
 		$scope.isCollapsed.Gender = $scope.pfilters.hasOwnProperty('Genders') ? false : _.every($scope.filters.Genders, {checked: true});
 		$scope.isCollapsed.TagFeatures = $scope.pfilters.hasOwnProperty('TagFeatures') ? false : ($scope.filters.TagFeatures ? false : true);
 		$scope.isCollapsed.Primary = $scope.pfilters.hasOwnProperty('Primary') ? false : _.every($scope.filters.Primary, {checked: true});
@@ -460,7 +470,7 @@ angular.module('linc.view.imagesets.controller', [])
 	else{
 		$scope.isCollapsed.NameOrId = $scope.filters.NameOrId ? false : true;
 		$scope.isCollapsed.Organization = _.every($scope.filters.Organizations, {checked: true});
-		$scope.isCollapsed.Age = (($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
+		$scope.isCollapsed.Age = (($scope.slider_options.floor == $scope.filters.Ages.min &&  $scope.slider_options.ceil == $scope.filters.Ages.max) ? true : false);
 		$scope.isCollapsed.Gender = _.every($scope.filters.Genders, {checked: true});
 		$scope.isCollapsed.TagFeatures = $scope.filters.TagFeatures ? false : true;
 		$scope.isCollapsed.Primary = _.every($scope.filters.Primary, {checked: true});
@@ -694,4 +704,5 @@ angular.module('linc.view.imagesets.controller', [])
 			modalInstance.dismiss();
 		}
 	};
+
 }]);

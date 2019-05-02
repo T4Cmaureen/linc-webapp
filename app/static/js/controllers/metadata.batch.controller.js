@@ -75,14 +75,14 @@ angular.module('linc.metadata.batch.controller', [])
 	};
 
 	// $scope.can_change_org = (metadata.type == 'lions') ? true : !_.some(metadata.selected, {is_primary: true});
-	// var tooltxt = ((metadata.selected.length==1) ? "Can not change organization, selected is a primary image set" : 
+	// var tooltxt = ((metadata.selected.length==1) ? "Can not change organization, selected is a primary image set" :
 	// 		"Can not change organization, there are selected primary imagesets") +
 	// 		".<br>Do it in the Lion Metadata or View Lion Database (batch mode)";
 
-	
+
 	// $scope.tooltip = {
 	// 	title: $sce.trustAsHtml(tooltxt),
-	// 	checked: !$scope.can_change_org 
+	// 	checked: !$scope.can_change_org
 	// };
 
 	$scope.title = (($scope.metadata.type == 'lions') ? 'Lion' : 'ImageSet') + ' - Batch Update';
@@ -95,8 +95,8 @@ angular.module('linc.metadata.batch.controller', [])
 	$scope.genders = CONST_LIST['GENDERS'];
 	// Tags
 	$scope.all_tags = {
-		ear_marking : CONST_LIST['EAR_MARKING'], mouth_marking : CONST_LIST['MOUTH_MARKING'], 
-		tail_marking : CONST_LIST['TAIL_MARKING'], eye_damage : CONST_LIST['EYE_DAMAGE'], 
+		ear_marking : CONST_LIST['EAR_MARKING'], mouth_marking : CONST_LIST['MOUTH_MARKING'],
+		tail_marking : CONST_LIST['TAIL_MARKING'], eye_damage : CONST_LIST['EYE_DAMAGE'],
 		nose_color : CONST_LIST['NOSE_COLOUR'], broken_teeth : CONST_LIST['TEETH_BROKEN'], scars : CONST_LIST['SCARS']
 	};
 	// Cancel
@@ -105,14 +105,14 @@ angular.module('linc.metadata.batch.controller', [])
 	};
 
 	$scope.changed = {
-		organization_id: false, owner_organization_id: false, date_stamp: false, 
-		date_of_birth: false, gender: false, is_dead: false, location: false, geopos_private: false,
+		organization_id: false, owner_organization_id: false, date_stamp: false,
+		date_of_birth: false, gender: false, dead: false, location: false, geopos_private: false,
 		tags: false
 	};
 
 	$scope.selected = {
-		organization_id: undefined, owner_organization_id: undefined, date_stamp: undefined, 
-		date_of_birth: undefined, gender: undefined, is_dead: true, geopos_private: true, 
+		organization_id: undefined, owner_organization_id: undefined, date_stamp: undefined,
+		date_of_birth: undefined, gender: undefined, dead: true, geopos_private: true,
 		location: {
 			latitude: undefined, longitude: undefined, name: 'location',
 			tag_location: {title: '', value: null, status: undefined, text: ''}
@@ -181,25 +181,25 @@ angular.module('linc.metadata.batch.controller', [])
 		var concat = [];
 		if($scope.changed['tags']){
 			//"EYE_DAMAGE_NONE", "EYE_DAMAGE_YES",
-			var eye_dam = _.includes($scope.selected.tags.eye_damage,'NONE') ? ['EYE_DAMAGE_NONE'] : 
+			var eye_dam = _.includes($scope.selected.tags.eye_damage,'NONE') ? ['EYE_DAMAGE_NONE'] :
 				_.intersection($scope.selected.tags.eye_damage,['EYE_DAMAGE_YES']);
 			//"TEETH_BROKEN_CANINE_LEFT","TEETH_BROKEN_CANINE_RIGHT", "TEETH_BROKEN_INCISOR_LEFT", "TEETH_BROKEN_INCISOR_RIGHT","TEETH_BROKEN_NONE"
-			var broken_teeth = _.includes($scope.selected.tags.broken_teeth,'NONE') ? ['TEETH_BROKEN_NONE'] : 
+			var broken_teeth = _.includes($scope.selected.tags.broken_teeth,'NONE') ? ['TEETH_BROKEN_NONE'] :
 				_.intersection($scope.selected.tags.broken_teeth, TAGS_CONST['TEETH_BROKEN']);
 			// "EAR_MARKING_BOTH","EAR_MARKING_LEFT","EAR_MARKING_NONE","EAR_MARKING_RIGHT",
-			var ear_marking = _.includes($scope.selected.tags.ear_marking,'NONE') ? ['EAR_MARKING_NONE'] : 
-				(_.isEmpty(_.difference(['EAR_MARKING_LEFT','EAR_MARKING_RIGHT'], $scope.selected.tags.ear_marking)) ? 
+			var ear_marking = _.includes($scope.selected.tags.ear_marking,'NONE') ? ['EAR_MARKING_NONE'] :
+				(_.isEmpty(_.difference(['EAR_MARKING_LEFT','EAR_MARKING_RIGHT'], $scope.selected.tags.ear_marking)) ?
 				["EAR_MARKING_BOTH"] : _.intersection($scope.selected.tags.ear_marking,['EAR_MARKING_LEFT','EAR_MARKING_RIGHT']));
 			// "TAIL_MARKING_MISSING_TUFT_NONE","TAIL_MARKING_MISSING_TUFT_YES",
-			var tail_marking = _.includes($scope.selected.tags.tail_marking,'NONE') ? ['TAIL_MARKING_MISSING_TUFT_NONE'] : 
+			var tail_marking = _.includes($scope.selected.tags.tail_marking,'NONE') ? ['TAIL_MARKING_MISSING_TUFT_NONE'] :
 				_.intersection($scope.selected.tags.tail_marking,['TAIL_MARKING_MISSING_TUFT_YES']);
 			// "MOUTH_MARKING_NONE","MOUTH_MARKING_YES",
-			var mouth_marking = _.includes($scope.selected.tags.mouth_marking,'NONE') ? ['MOUTH_MARKING_NONE'] : 
+			var mouth_marking = _.includes($scope.selected.tags.mouth_marking,'NONE') ? ['MOUTH_MARKING_NONE'] :
 				_.intersection($scope.selected.tags.mouth_marking,['MOUTH_MARKING_YES']);
 			// "NOSE_COLOUR_BLACK","NOSE_COLOUR_PATCHY","NOSE_COLOUR_PINK","NOSE_COLOUR_SPOTTED",
 			var nose_color = [$scope.selected.tags.nose_color];
 			// "SCARS_BODY_RIGHT","SCARS_FACE","SCARS_NONE",
-			var scars = _.includes($scope.selected.tags.scars,'NONE') ? ['SCARS_NONE'] : 
+			var scars = _.includes($scope.selected.tags.scars,'NONE') ? ['SCARS_NONE'] :
 				_.intersection($scope.selected.tags.scars,TAGS_CONST['SCARS']);
 			var concat = _.concat(eye_dam, broken_teeth, ear_marking, tail_marking, mouth_marking, scars);
 			if($scope.selected.tags.nose_color != undefined)
@@ -214,12 +214,12 @@ angular.module('linc.metadata.batch.controller', [])
 		var updates = {};
 		if($scope.changed['organization_id'])
 			updates['organization_id'] = $scope.selected['organization_id'];
-		if($scope.changed['is_dead'])
-			updates['dead'] = $scope.selected['is_dead'];
+		if($scope.changed['dead'])
+			updates['dead'] = $scope.selected['dead'];
 
 		return updates;
 	};
-	
+
 	$scope.Submit = function(form) {
 		$scope.submitted = true;
 		$scope.dataloading = true;
@@ -248,7 +248,7 @@ angular.module('linc.metadata.batch.controller', [])
 			}
 			LincServices.BatchUpdate(data, function(result){
 				NotificationFactory.success({
-					title: 'Batch Update', 
+					title: 'Batch Update',
 					message: 'Data was successfully updated.',
 					position: "right",
 					duration: 3000
@@ -257,7 +257,7 @@ angular.module('linc.metadata.batch.controller', [])
 			},function(error){
 				if($scope.debug || (error.status != 401 && error.status != 403)){
 					NotificationFactory.error({
-						title: "Fail: Batch Update", 
+						title: "Fail: Batch Update",
 						message: "Unable to update data",
 						position: 'right',
 						duration: 5000

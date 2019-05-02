@@ -36,12 +36,12 @@ angular.module('linc.data.factory', [])
 			Boundarys: true
 		},
 		filters:{
-			Ages: { min: 0, max: 32, options: {ceil: 32, floor: 0 }},
+			Ages: { min: 0, max: 32},
 			NameOrId: '',
 			TagFeatures: '',
 			Organizations: [],
 			Genders: [{name: 'male', label: 'Male', checked: true}, {name: 'female', label: 'Female', checked: true}, {name: 'unknown', label: 'Unknown', checked: true}],
-			Primary: [{name: true, label: 'Primary', checked: true}, {name: false, label: 'Not Primary', checked: true}],  
+			Primary: [{name: true, label: 'Primary', checked: true}, {name: false, label: 'Not Primary', checked: true}],
 			Location: { latitude:'', longitude: '', radius: '' },
 			Boundarys: ''
 		},
@@ -67,7 +67,7 @@ angular.module('linc.data.factory', [])
 				Gender: true
 			},
 			filters:{
-				Ages: { min: 0, max: 32, options: {ceil: 32, floor: 0 }},
+				Ages: { min: 0, max: 32 },
 				NameOrId: '',
 				Organizations: [],
 				Genders: [{name: 'male', label: 'Male', checked: true}, {name: 'female', label: 'Female', checked: true}, {name: 'unknown', label: 'Unknown', checked: true}]
@@ -184,7 +184,7 @@ angular.module('linc.data.factory', [])
 			options.relatives = opt;
 			$localStorage.relatives = opt;
 		}
-		
+
 	};
 }])
 

@@ -79,6 +79,7 @@ angular.module('linc.cvrequest.controller', [])
 
 		element['permissions'] = get_permissions($scope.user, element);
 		element['age'] = isNaN(parseInt(element['age'])) ? null : element['age'];
+		element['dead'] = (element['dead'] == undefined || element['dead'] == null) ? element['dead'] = false : element['dead'];
 
 		var elem = {};
 		var TAGS = [];
@@ -153,10 +154,16 @@ angular.module('linc.cvrequest.controller', [])
 			modalGoTo.dismiss();
 		}
 	};
+	$scope.ViewTotal = 30;
+	$scope.Paging = function(){
+		$scope.ViewTotal += 10;
+	};
+
+	$scope.slider_options = { ceil: 32, floor: 0, onChange: function(){ $scope.ChangeFilter('Ages');}};
 
 	$scope.isCollapsed.NameOrId = $scope.filters.NameOrId ? false : true;
 	$scope.isCollapsed.Organization = _.every($scope.filters.Organizations, {checked: true});
-	$scope.isCollapsed.Age = (($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
+	$scope.isCollapsed.Age = (($scope.slider_options.floor == $scope.filters.Ages.min &&  $scope.slider_options.ceil == $scope.filters.Ages.max) ? true : false);
 	$scope.isCollapsed.Gender = _.every($scope.filters.Genders, {checked: true});
 	$scope.isCollapsed.TagFeatures = $scope.filters.TagFeatures ? false : true;
 	$scope.isCollapsed.Location = ($scope.filters.Location.latitude && $scope.filters.Location.longitude && $scope.filters.Location.radius) ? false : true;
