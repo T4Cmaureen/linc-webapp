@@ -31,6 +31,7 @@ $off-white: #fff;
 $orange-black: #9f3d0e;
 $orange-soft-black: #c94a0d;
 $orange-soft: #ab410e;
+$green: #128334;
 
 body{
 	padding-top: 70px;
@@ -51,8 +52,8 @@ h1{
 		margin-right: 10px
 	}
 }
-h3{color:$orange; margin: 5px 0 15px}
-h4{color:$orange; }
+h3{ color:$green;margin: 5px 0 15px}
+h4{color:$green; }
 h4{font-size: 20px;}
 a, .link>td{
 	cursor:pointer;
@@ -778,6 +779,13 @@ textarea{font-family: 'Homenaje', sans-serif;}
 		background-color: #aaa !important;
 		color:#fff;
 	}
+	.actions-col{
+		white-space: nowrap;
+		.btn{
+			width:auto;
+			min-width: 80px;
+		}
+	}
 }
 .upload-images {
 	.table{
@@ -1174,7 +1182,7 @@ hr.style-line {
 			background-color: #b1afaf6c;
 		}
 	}
-	.Left-Panel::-webkit-scrollbar, .Right-Panel::-webkit-scrollbar, .Scroll-Panel::-webkit-scrollbar { display: none; }
+//	.Left-Panel::-webkit-scrollbar, .Right-Panel::-webkit-scrollbar, .Scroll-Panel::-webkit-scrollbar { display: none; }
 	span.loading{
 		margin-right: 6px;
 		img{

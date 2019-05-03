@@ -497,7 +497,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
                 <i ng-if="imageset.is_primary" class="icon icon-check"></i>
                 <i ng-if="!imageset.is_primary" class="icon icon-cross"></i>
               </td>
-              <td class="text-center" ng-hide="isBatchMode">
+              <td class="text-center actions-col" ng-hide="isBatchMode">
                 <span ng-if="imageset.permissions.canDisassociate && !isBatchMode">
                   <button class="btn btn-primary btn-sm"
                     data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Disassociate(imageset)">

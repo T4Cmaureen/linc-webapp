@@ -47,7 +47,7 @@ angular.module('linc.side.menu.controller', [])
     AuthService.Logout(function(result){
       $state.go("login");
       NotificationFactory.success({
-        title: "Logout", message:'Good bye.',
+        title: "Logout", message:'Goodbye.',
         position: "right", // right, left, center
         duration: 3000     // milisecond
       });
