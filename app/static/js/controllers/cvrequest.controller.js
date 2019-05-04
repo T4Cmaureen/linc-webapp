@@ -154,7 +154,7 @@ angular.module('linc.cvrequest.controller', [])
 			modalGoTo.dismiss();
 		}
 	};
-	$scope.ViewTotal = 30;
+	$scope.ViewTotal = 20;
 	$scope.Paging = function(){
 		$scope.ViewTotal += 10;
 	};

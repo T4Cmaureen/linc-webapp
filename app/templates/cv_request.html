@@ -320,9 +320,9 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 
                 </tr>
               </thead>
-              <tbody infinite-scroll="Paging()" infinite-scroll-distance="1">
+              <tbody infinite-scroll="Paging()" infinite-scroll-distance="1" infinite-scroll-container="'.Scroll-Panel'">
                 <tr class="link" ng-class="{'disabled': lion.disabled}"
-                  ng-repeat="lion in limited_imagesets = ( ordered_lions = ( filtered_lions = ( lions | filter: {dead: false} |
+                  ng-repeat="lion in limited_lions = ( ordered_lions = ( filtered_lions = ( lions | filter: {dead: false} |
                     nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages | organization_filter: filters.Organizations |
                     features_filter: filters.TagFeatures | gender_filter: filters.Genders | LatLngFilter: filters.Location : true ) ) |
                     orderBy: orderby.predicate : orderby.reverse ) | limitTo: ViewTotal">

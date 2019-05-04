@@ -431,9 +431,9 @@ angular.module('linc.view.imagesets.controller', [])
 		}
 	};
 
-	$scope.ViewTotal = 10;
+	$scope.ViewTotal = 20;
 	$scope.Paging = function(){
-		$scope.ViewTotal += 20;
+		$scope.ViewTotal += 10;
 	};
 
 	set_all_imagesets(imagesets);

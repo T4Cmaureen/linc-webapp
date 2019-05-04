@@ -291,7 +291,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
           <a class="btn btn-default btn-xs" ng-disabled="selection.allUnSel" ng-click="check_all(false)">Select None</a>
         </p>
       </h4>
-      <div class="div-table" infinite-scroll="Paging()" infinite-scroll-distance="1">
+      <div class="div-table">
         <table class="table table-hover">
           <thead>
             <tr>
@@ -380,10 +380,10 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 
             </tr>
           </thead>
-          <tbody>
+          <tbody infinite-scroll="Paging()" infinite-scroll-distance="1">
 
             <tr class="link" ng-click="!isBatchMode && goto_lion(lion);"
-              ng-repeat="lion in limited_imagesets = ( ordered_lions = ( filtered_lions = ( mine_lions = ( lions | filter: BatchFilter ) ) |
+              ng-repeat="lion in limited_lions = ( ordered_lions = ( filtered_lions = ( mine_lions = ( lions | filter: BatchFilter ) ) |
                 nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages | organization_filter: filters.Organizations |
                 features_filter: filters.TagFeatures | gender_filter: filters.Genders | LatLngFilter: filters.Location : true |
                 geographical: GeoBounds ) | orderBy : orderby.predicate : orderby.reverse ) | limitTo: ViewTotal">

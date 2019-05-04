@@ -148,7 +148,7 @@ angular.module('linc.view.lion.database.controller', [])
 		return label;
 	};
 
-	$scope.ViewTotal = 30;
+	$scope.ViewTotal = 20;
 	$scope.Paging = function(){
 		$scope.ViewTotal += 10;
 	};
