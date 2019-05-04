@@ -17,537 +17,538 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 For more information or to contact visit linclion.org or email tech@linclion.org -->
 <div name="ViewImageSets" class="view-imagesets font-homenaje">
-  <button type="button" class="btn-help pull-right btn btn-icon" data-placement="left" title="" data-content="View Image Sets to search and view summaries of name, age, organization, and CV status. Select a result row to view an image set's primary image, to create a lion from an image set, disassociate a lion from an image set, or run or view a CV." data-trigger="focus" bs-popover><i class="icon icon-help-with-circle"></i></button>
+	<button type="button" class="btn-help pull-right btn btn-icon" data-placement="left" title="" data-content="View Image Sets to search and view summaries of name, age, organization, and CV status. Select a result row to view an image set's primary image, to create a lion from an image set, disassociate a lion from an image set, or run or view a CV." data-trigger="focus" bs-popover><i class="icon icon-help-with-circle"></i></button>
 
-  <h1>
-    <a class="btn btn-default" ng-disabled="isBatchMode" ng-click="!isBatchMode && go_back()"
-      uib-tooltip="Disable Batch Mode"
-      tooltip-placement="top"
-      tooltip-trigger="'mouseenter'"
-      tooltip-enable="isBatchMode" >
-      <span ng-if="ChangeStatus.loading" class="loading text-center">
-        <img src="/static/images/loading.gif" class="loading-gif"/>
-      </span>
-      <i class="icon icon-arrow-left"></i>
-    </a> View Image Sets
-  </h1>
-  <div class="columns-to-show pull-right form-group group-select">
-    <button type="button" id="columns_imagesets" class="btn btn-default btn-sm btn-select" ng-model="columns" data-html="1"
-      data-multiple="1" bs-on-select="ColumnsSelect" max-length=-1 max-length-html="Columns to Show" all-none-buttons="true"
-      all-Text="Selec All" all-button="true" none-button="false" none-Text="Select None" unknown-button="false"
-      placement="bottom-right" bs-options="column.value as column.label for column in columns_to_view" bs-select>
-      Action <span class="caret"></span>
-    </button>
-  </div>
-  <div class="row main-row">
-    <div class="col-sm-2" >
-    <div class="filters line-right" bs-affix data-offset-top="80" data-offset-bottom="30">
+	<h1>
+		<a class="btn btn-default" ng-disabled="isBatchMode" ng-click="!isBatchMode && go_back()"
+			uib-tooltip="Disable Batch Mode"
+			tooltip-placement="top"
+			tooltip-trigger="'mouseenter'"
+			tooltip-enable="isBatchMode" >
+			<span ng-if="ChangeStatus.loading" class="loading text-center">
+				<img src="/static/images/loading.gif" class="loading-gif"/>
+			</span>
+			<i class="icon icon-arrow-left"></i>
+		</a> View Image Sets
+	</h1>
+	<div class="columns-to-show pull-right form-group group-select">
+		<button type="button" id="columns_imagesets" class="btn btn-default btn-sm btn-select" ng-model="columns" data-html="1"
+			data-multiple="1" bs-on-select="ColumnsSelect" max-length=-1 max-length-html="Columns to Show" all-none-buttons="true"
+			all-Text="Selec All" all-button="true" none-button="false" none-Text="Select None" unknown-button="false"
+			placement="bottom-right" bs-options="column.value as column.label for column in columns_to_view" bs-select>
+			Action <span class="caret"></span>
+		</button>
+	</div>
+	<div class="Container-Panel">
+	    <div class="line-right Left-Panel">
+			<h3 class="text-muted">Refine by</h3>
+			<div class="tablist" data-allow-multiple="true" role="tablist" aria-multiselectable="true" bs-collapse >
 
-      <h3 class="text-muted">Refine by</h3>
-      <div class="tablist" data-allow-multiple="true" role="tablist" aria-multiselectable="true" bs-collapse >
+				<div role="tab">
+					<h4>
+						<a bs-collapse-toggle ng-click="collapse('NameOrId')">Name or ID
+							<i ng-if="isCollapsed.NameOrId" class="pull-right fa fa-expand" aria-hidden="true"></i>
+							<i ng-if="!isCollapsed.NameOrId" class="pull-right fa fa-compress" aria-hidden="true"></i>
+						</a>
+					</h4>
+				</div>
+				<div uib-collapse="isCollapsed.NameOrId">
+					<div class="panel-body">
+						<input ng-change="change('NameOrId')" type="text" class="form-control input-sm" ng-model="filters.NameOrId">
+					</div>
+				</div>
 
-        <div role="tab">
-          <h4>
-            <a bs-collapse-toggle ng-click="collapse('NameOrId')">Name or ID
-              <i ng-if="isCollapsed.NameOrId" class="pull-right fa fa-expand" aria-hidden="true"></i>
-              <i ng-if="!isCollapsed.NameOrId" class="pull-right fa fa-compress" aria-hidden="true"></i>
-            </a>
-          </h4>
-        </div>
-        <div uib-collapse="isCollapsed.NameOrId">
-          <div class="panel-body">
-            <input ng-change="change('NameOrId')" type="text" class="form-control input-sm" ng-model="filters.NameOrId">
-          </div>
-        </div>
+				<div role="tab">
+					<h4 >
+						<a bs-collapse-toggle ng-click="collapse('Organization')">Organization
+							<i ng-if="isCollapsed.Organization" class="pull-right fa fa-expand" aria-hidden="true"></i>
+							<i ng-if="!isCollapsed.Organization" class="pull-right fa fa-compress" aria-hidden="true"></i>
+						</a>
+					</h4>
+				</div>
+				<div uib-collapse="isCollapsed.Organization">
+					<div class="panel-body checkbox">
+						<label ng-repeat="organization in filters.Organizations">
+							<input ng-click="change('Organizations')" type="checkbox"  ng-model="organization.checked" ng-checked="organization.checked">
+							<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+							{{! organization.name}}
+						</label>
+					</div>
+				</div>
 
-        <div role="tab">
-          <h4 >
-            <a bs-collapse-toggle ng-click="collapse('Organization')">Organization
-              <i ng-if="isCollapsed.Organization" class="pull-right fa fa-expand" aria-hidden="true"></i>
-              <i ng-if="!isCollapsed.Organization" class="pull-right fa fa-compress" aria-hidden="true"></i>
-            </a>
-          </h4>
-        </div>
-        <div uib-collapse="isCollapsed.Organization">
-          <div class="panel-body checkbox">
-            <label ng-repeat="organization in filters.Organizations">
-              <input ng-click="change('Organizations')" type="checkbox"  ng-model="organization.checked" ng-checked="organization.checked">
-              <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-              {{! organization.name}}
-            </label>
-          </div>
-        </div>
+				<div role="tab">
+					<h4 >
+						<a bs-collapse-toggle ng-click="refreshSlider(); collapse('Age')">Age
+							<i ng-if="isCollapsed.Age" class="pull-right fa fa-expand" aria-hidden="true"></i>
+							<i ng-if="!isCollapsed.Age" class="pull-right fa fa-compress" aria-hidden="true"></i>
+						</a>
+					</h4>
+				</div>
+				<div uib-collapse="isCollapsed.Age">
+					<div class="panel-body">
+						<rzslider class="age-slider"
+							rz-slider-model="filters.Ages.min"
+							rz-slider-high="filters.Ages.max"
+							rz-slider-options="slider_options"
+							rz-slider-step="1"
+							rz-slider-tpl-url="rzSliderTpl.html">
+						</rzslider>
+					</div>
+				</div>
 
-        <div role="tab">
-          <h4 >
-            <a bs-collapse-toggle ng-click="refreshSlider(); collapse('Age')">Age
-              <i ng-if="isCollapsed.Age" class="pull-right fa fa-expand" aria-hidden="true"></i>
-              <i ng-if="!isCollapsed.Age" class="pull-right fa fa-compress" aria-hidden="true"></i>
-            </a>
-          </h4>
-        </div>
-        <div uib-collapse="isCollapsed.Age">
-          <div class="panel-body">
-            <rzslider class="age-slider"
-              rz-slider-model="filters.Ages.min"
-              rz-slider-high="filters.Ages.max"
-              rz-slider-options="slider_options"
-              rz-slider-step="1"
-              rz-slider-tpl-url="rzSliderTpl.html">
-            </rzslider>
-          </div>
-        </div>
+				<div role="tab">
+					<h4 >
+						<a bs-collapse-toggle ng-click="collapse('Gender')">Gender
+							<i ng-if="isCollapsed.Gender" class="pull-right fa fa-expand" aria-hidden="true"></i>
+							<i ng-if="!isCollapsed.Gender" class="pull-right fa fa-compress" aria-hidden="true"></i>
+						</a>
+					</h4>
+				</div>
+				<div uib-collapse="isCollapsed.Gender">
+					<div class="panel-body checkbox">
+						<label ng-repeat="gender in filters.Genders">
+							<input ng-click="change('Genders')" type="checkbox"  ng-model="gender.checked" ng-checked="gender.checked">
+							<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+							{{! gender.label}}
+						</label>
+					</div>
+				</div>
 
-        <div role="tab">
-          <h4 >
-            <a bs-collapse-toggle ng-click="collapse('Gender')">Gender
-              <i ng-if="isCollapsed.Gender" class="pull-right fa fa-expand" aria-hidden="true"></i>
-              <i ng-if="!isCollapsed.Gender" class="pull-right fa fa-compress" aria-hidden="true"></i>
-            </a>
-          </h4>
-        </div>
-        <div uib-collapse="isCollapsed.Gender">
-          <div class="panel-body checkbox">
-            <label ng-repeat="gender in filters.Genders">
-              <input ng-click="change('Genders')" type="checkbox"  ng-model="gender.checked" ng-checked="gender.checked">
-              <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-              {{! gender.label}}
-            </label>
-          </div>
-        </div>
+				<div role="tab">
+					<h4>
+						<a bs-collapse-toggle ng-click="collapse('TagFeatures')">Features
+							<i ng-if="isCollapsed.TagFeatures" class="pull-right fa fa-expand" aria-hidden="true"></i>
+							<i ng-if="!isCollapsed.TagFeatures" class="pull-right fa fa-compress" aria-hidden="true"></i>
+						</a>
+					</h4>
+				</div>
+				<div uib-collapse="isCollapsed.TagFeatures">
+					<div class="panel-body" data-placement="auto top" data-trigger="hover"
+						data-animation="am-fade-and-scale" bs-tooltip="tooltip.features">
+						<input ng-change="change('TagFeatures')" type="text" class="form-control input-sm" ng-model="filters.TagFeatures">
+					</div>
+				</div>
 
-        <div role="tab">
-          <h4>
-            <a bs-collapse-toggle ng-click="collapse('TagFeatures')">Features
-              <i ng-if="isCollapsed.TagFeatures" class="pull-right fa fa-expand" aria-hidden="true"></i>
-              <i ng-if="!isCollapsed.TagFeatures" class="pull-right fa fa-compress" aria-hidden="true"></i>
-            </a>
-          </h4>
-        </div>
-        <div uib-collapse="isCollapsed.TagFeatures">
-          <div class="panel-body" data-placement="auto top" data-trigger="hover"
-            data-animation="am-fade-and-scale" bs-tooltip="tooltip.features">
-            <input ng-change="change('TagFeatures')" type="text" class="form-control input-sm" ng-model="filters.TagFeatures">
-          </div>
-        </div>
+				<div role="tab">
+					<h4 >
+						<a bs-collapse-toggle ng-click="collapse('Primary')">Primary
+							<i ng-if="isCollapsed.Primary" class="pull-right fa fa-expand" aria-hidden="true"></i>
+							<i ng-if="!isCollapsed.Primary" class="pull-right fa fa-compress" aria-hidden="true"></i>
+						</a>
+					</h4>
+				</div>
+				<div uib-collapse="isCollapsed.Primary">
+					<div class="panel-body checkbox">
+						<label ng-repeat="isprimary in filters.Primary">
+							<input ng-click="change('Primary')" type="checkbox"  ng-model="isprimary.checked" ng-checked="isprimary.checked">
+							<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+							{{! isprimary.label}}
+						</label>
+					</div>
+				</div>
 
-        <div role="tab">
-          <h4 >
-            <a bs-collapse-toggle ng-click="collapse('Primary')">Primary
-              <i ng-if="isCollapsed.Primary" class="pull-right fa fa-expand" aria-hidden="true"></i>
-              <i ng-if="!isCollapsed.Primary" class="pull-right fa fa-compress" aria-hidden="true"></i>
-            </a>
-          </h4>
-        </div>
-        <div uib-collapse="isCollapsed.Primary">
-          <div class="panel-body checkbox">
-            <label ng-repeat="isprimary in filters.Primary">
-              <input ng-click="change('Primary')" type="checkbox"  ng-model="isprimary.checked" ng-checked="isprimary.checked">
-              <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-              {{! isprimary.label}}
-            </label>
-          </div>
-        </div>
+				<div role="tab">
+					<h4>
+						<a bs-collapse-toggle ng-click="collapse('Location')">Location
+							<i ng-if="isCollapsed.Location" class="pull-right fa fa-expand" aria-hidden="true"></i>
+							<i ng-if="!isCollapsed.Location" class="pull-right fa fa-compress" aria-hidden="true"></i>
+						</a>
+					</h4>
+				</div>
+				<div uib-collapse="isCollapsed.Location">
+					<div class="panel-body">
+						<form name="form">
+							<div class="form-group control" ng-class="{'has-error': form.latitude.$dirty && form.latitude.$error.pattern}">
+								<label class="location_label" for="latitude">Latitude: </label>
+								<input ng-change="change('Location')" class="form-control input-sm" type="text" name="latitude"
+									pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-model="filters.Location.latitude" limlatlng="90">
+								<div class="error-messages search" ng-messages="form.latitude.$error" ng-if="form.latitude.$error.limlatlng || form.latitude.$error.pattern">
+									<div ng-message="limlatlng">
+										<div class="row">
+											<div class="col-sm-2">
+												<i class="icon icon-error icon-notification"></i>
+											</div>
+											<div class="col-sm-10 error-msg-col">
+												choose a latitude value between -90 and 90.
+											</div>
+										</div>
+									</div>
+									<div ng-message="pattern">
+										<div class="row">
+											<div class="col-sm-2">
+												<i class="icon icon-error icon-notification"></i>
+											</div>
+											<div class="col-sm-10 error-msg-col" ng-if="form.latitude.$error.pattern">
+												 this is not a valid latitude.
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group control" ng-class="{'has-error': form.longitude.$dirty && form.longitude.$error.pattern}">
+								<label class="location_label" for="longitude">Longitude: </label>
+								<input ng-change="change('Location')" class="form-control input-sm" type="text" name="longitude"
+									pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-model="filters.Location.longitude" limlatlng="180">
+								<div class="error-messages search" ng-messages="form.longitude.$error" ng-if="form.longitude.$error.limlatlng || form.longitude.$error.pattern">
+									<div ng-message="limlatlng">
+										<div class="row">
+											<div class="col-sm-2">
+												<i class="icon icon-error icon-notification"></i>
+											</div>
+											<div class="col-sm-10 error-msg-col">
+												choose a longitude value between -180 and 180.
+											</div>
+										</div>
+									</div>
+									<div ng-message="pattern">
+										<div class="row">
+											<div class="col-sm-2">
+												<i class="icon icon-error icon-notification"></i>
+											</div>
+											<div class="col-sm-10 error-msg-col" ng-if="form.longitude.$error.pattern">
+												 this is not a valid longitude.
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group control" ng-class="{'has-error': form.radius.$dirty && form.radius.$error.pattern}">
+								<label class="location_label" for="radius">Radius: </label>
+								<input ng-change="change('Location')" class="form-control input-sm" type="text" name="radius"
+									pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-model="filters.Location.radius">
+								<div class="error-messages search" ng-messages="form.radius.$error" ng-if="form.radius.$error.pattern">
+									<div ng-message="pattern">
+										<div class="row">
+											<div class="col-sm-2">
+												<i class="icon icon-error icon-notification"></i>
+											</div>
+											<div class="col-sm-10 error-msg-col" ng-if="form.radius.$error.pattern">
+												 this is not a valid radius.
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
 
-        <div role="tab">
-          <h4>
-            <a bs-collapse-toggle ng-click="collapse('Location')">Location
-              <i ng-if="isCollapsed.Location" class="pull-right fa fa-expand" aria-hidden="true"></i>
-              <i ng-if="!isCollapsed.Location" class="pull-right fa fa-compress" aria-hidden="true"></i>
-            </a>
-          </h4>
-        </div>
-        <div uib-collapse="isCollapsed.Location">
-          <div class="panel-body">
-            <form name="form">
-              <div class="form-group control" ng-class="{'has-error': form.latitude.$dirty && form.latitude.$error.pattern}">
-                <label class="location_label" for="latitude">Latitude: </label>
-                <input ng-change="change('Location')" class="form-control input-sm" type="text" name="latitude"
-                  pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-model="filters.Location.latitude" limlatlng="90">
-                <div class="error-messages search" ng-messages="form.latitude.$error" ng-if="form.latitude.$error.limlatlng || form.latitude.$error.pattern">
-                  <div ng-message="limlatlng">
-                    <div class="row">
-                      <div class="col-sm-2">
-                        <i class="icon icon-error icon-notification"></i>
-                      </div>
-                      <div class="col-sm-10 error-msg-col">
-                        choose a latitude value between -90 and 90.
-                      </div>
-                    </div>
-                  </div>
-                  <div ng-message="pattern">
-                    <div class="row">
-                      <div class="col-sm-2">
-                        <i class="icon icon-error icon-notification"></i>
-                      </div>
-                      <div class="col-sm-10 error-msg-col" ng-if="form.latitude.$error.pattern">
-                         this is not a valid latitude.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group control" ng-class="{'has-error': form.longitude.$dirty && form.longitude.$error.pattern}">
-                <label class="location_label" for="longitude">Longitude: </label>
-                <input ng-change="change('Location')" class="form-control input-sm" type="text" name="longitude"
-                  pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-model="filters.Location.longitude" limlatlng="180">
-                <div class="error-messages search" ng-messages="form.longitude.$error" ng-if="form.longitude.$error.limlatlng || form.longitude.$error.pattern">
-                  <div ng-message="limlatlng">
-                    <div class="row">
-                      <div class="col-sm-2">
-                        <i class="icon icon-error icon-notification"></i>
-                      </div>
-                      <div class="col-sm-10 error-msg-col">
-                        choose a longitude value between -180 and 180.
-                      </div>
-                    </div>
-                  </div>
-                  <div ng-message="pattern">
-                    <div class="row">
-                      <div class="col-sm-2">
-                        <i class="icon icon-error icon-notification"></i>
-                      </div>
-                      <div class="col-sm-10 error-msg-col" ng-if="form.longitude.$error.pattern">
-                         this is not a valid longitude.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group control" ng-class="{'has-error': form.radius.$dirty && form.radius.$error.pattern}">
-                <label class="location_label" for="radius">Radius: </label>
-                <input ng-change="change('Location')" class="form-control input-sm" type="text" name="radius"
-                  pattern="^[+-]?[0-9]+([\.|,][0-9]{1,20})?" ng-model="filters.Location.radius">
-                <div class="error-messages search" ng-messages="form.radius.$error" ng-if="form.radius.$error.pattern">
-                  <div ng-message="pattern">
-                    <div class="row">
-                      <div class="col-sm-2">
-                        <i class="icon icon-error icon-notification"></i>
-                      </div>
-                      <div class="col-sm-10 error-msg-col" ng-if="form.radius.$error.pattern">
-                         this is not a valid radius.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
+				<div role="tab">
+					<h4>
+						<a bs-collapse-toggle ng-click="collapse('Boundarys')">Geographical
+							<i ng-if="isCollapsed.Boundarys" class="pull-right fa fa-expand" aria-hidden="true"></i>
+							<i ng-if="!isCollapsed.Boundarys" class="pull-right fa fa-compress" aria-hidden="true"></i>
+						</a>
+					</h4>
+				</div>
+				<div uib-collapse="isCollapsed.Boundarys">
+					<div class="panel-body geographical">
+						<button type="button" class="form-control btn btn-default"
+							ng-click="SetBoundarys()">Search Areas</button>
+						<div class="panel-body checkbox">
+							<div ng-repeat="boundary in filters.Boundarys">
+								<span class="cr pull-right" ng-click="DialogDelete(boundary)">
+									<i class="cr-icon fa fa-times"></i>
+								</span>
+								<label>
+									<input type="checkbox" ng-change="Update_Boundarys()"
+										ng-model="boundary.selected" ng-checked="boundary.selected">{{! boundary.title}}
+							 </label>
+						 </div>
+					 </div>
+					</div>
+				</div>
 
-        <div role="tab">
-          <h4>
-            <a bs-collapse-toggle ng-click="collapse('Boundarys')">Geographical
-              <i ng-if="isCollapsed.Boundarys" class="pull-right fa fa-expand" aria-hidden="true"></i>
-              <i ng-if="!isCollapsed.Boundarys" class="pull-right fa fa-compress" aria-hidden="true"></i>
-            </a>
-          </h4>
-        </div>
-        <div uib-collapse="isCollapsed.Boundarys">
-          <div class="panel-body geographical">
-            <button type="button" class="form-control btn btn-default"
-              ng-click="SetBoundarys()">Search Areas</button>
-            <div class="panel-body checkbox">
-              <div ng-repeat="boundary in filters.Boundarys">
-                <span class="cr pull-right" ng-click="DialogDelete(boundary)">
-                  <i class="cr-icon fa fa-times"></i>
-                </span>
-                <label>
-                  <input type="checkbox" ng-change="Update_Boundarys()"
-                    ng-model="boundary.selected" ng-checked="boundary.selected">{{! boundary.title}}
-               </label>
-             </div>
-           </div>
-          </div>
-        </div>
+			</div>
 
-      </div>
+			<h3 class="text-muted batch-mode">
+				<a class="btn btn-default batch-mode-btn" ng-class="{active: isBatchMode}" ng-click="Select_BatchMode();">
+					<span ng-if="batch.loading" class="text-center loading">
+						<img src="/static/images/loading.gif"/>
+					</span>
+					<span ng-if="!batch.loading && $parent.isBatchMode">
+						Disable Batch Mode
+					</span>
+					<span ng-if="!batch.loading && !$parent.isBatchMode">
+						Select Batch Mode
+					</span>
+				</a>
+			</h3>
 
-      <h3 class="text-muted batch-mode">
-        <a class="btn btn-default batch-mode-btn" ng-class="{active: isBatchMode}" ng-click="Select_BatchMode();">
-          <span ng-if="batch.loading" class="text-center loading">
-            <img src="/static/images/loading.gif"/>
-          </span>
-          <span ng-if="!batch.loading && $parent.isBatchMode">
-            Disable Batch Mode
-          </span>
-          <span ng-if="!batch.loading && !$parent.isBatchMode">
-            Select Batch Mode
-          </span>
-        </a>
-      </h3>
+			<div class="form-group" uib-collapse="!$parent.isBatchMode">
+				<div ng-show="isBatchMode" class="form-group batch-item-btn">
+					<metadata-batch class="metadata-batch" use-ctrl="MetadataBatchCtrl" use-template-url="metadata.batch.html"
+						form-size="lg" meta-data="{selected: Selecteds, type: 'imagesets'}" update-action="BatchUpdateImageset(data)"
+						disable-btn="!Selecteds.length" debug="debug" modal-status="modal_status">
+					</metadata-batch>
+					<button type="button" class="btn btn-primary btn-export" ng-disabled="!Selecteds.length"
+						ng-click="BatchExport()">
+						<span ng-if="exporting" class="text-center exporting">
+							<img src="/static/images/loading.gif"/>
+						</span>
+						Export
+					</button>
+					<div class="div-btn-delete" ng-class="{'tooltip-wrapper disabled' : canNotDelete}"
+						tooltip-placement="top" tooltip-trigger="'mouseenter'" tooltip-enable="canNotDelete"
+						uib-tooltip="Can't Delete Primary ImageSet. Delete in Lion Info or View Lion Database (batch mode) page">
+						<button type="button" class="btn btn-primary btn-delete" ng-disabled="!Selecteds.length || canNotDelete"
+							ng-click="BatchDelete()" >Delete
+						</button>
+					</div>
+				</div>
+			</div>
+			<h4 class="viewer-selecteds">
+				{{! viewer_selected()}}
+			</h4>
+		</div>
+		<div class="Right-Panel">
+	        <div class="Container-Panel-2">
+    	    	<div class="Right-Top-Panel">
+					<h4 class="viewer-founds">
+						{{! filtered_image_sets.length }} image sets found.
+						<p class="clearfix" ng-if="isBatchMode">
+							<a class="btn btn-default btn-xs" ng-disabled="selection.allSel" ng-click="check_all(true)">Select All</a>
+							<a class="btn btn-default btn-xs" ng-disabled="selection.allUnSel" ng-click="check_all(false)">Select None</a>
+						</p>
+					</h4>
+				</div>
+				<div class="Scroll-Panel">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th class="text-center" ng-if="isBatchMode"></th>
 
-      <div class="form-group" uib-collapse="!$parent.isBatchMode">
-        <div ng-show="isBatchMode" class="form-group batch-item-btn">
-          <metadata-batch class="metadata-batch" use-ctrl="MetadataBatchCtrl" use-template-url="metadata.batch.html"
-            form-size="lg" meta-data="{selected: Selecteds, type: 'imagesets'}" update-action="BatchUpdateImageset(data)"
-            disable-btn="!Selecteds.length" debug="debug" modal-status="modal_status">
-          </metadata-batch>
-          <button type="button" class="btn btn-primary btn-export" ng-disabled="!Selecteds.length"
-            ng-click="BatchExport()">
-            <span ng-if="exporting" class="text-center exporting">
-              <img src="/static/images/loading.gif"/>
-            </span>
-            Export
-          </button>
-          <div class="div-btn-delete" ng-class="{'tooltip-wrapper disabled' : canNotDelete}"
-            tooltip-placement="top" tooltip-trigger="'mouseenter'" tooltip-enable="canNotDelete"
-            uib-tooltip="Can't Delete Primary ImageSet. Delete in Lion Info or View Lion Database (batch mode) page">
-            <button type="button" class="btn btn-primary btn-delete" ng-disabled="!Selecteds.length || canNotDelete"
-              ng-click="BatchDelete()" >Delete
-            </button>
-          </div>
-        </div>
-      </div>
-      <h4 class="viewer-selecteds">
-        {{! viewer_selected()}}
-      </h4>
-    </div>
-    </div>
-    <div class="col-sm-10">
-      <h4 class="viewer-founds">
-        {{! filtered_image_sets.length }} image sets found.
-        <p class="clearfix" ng-if="isBatchMode">
-          <a class="btn btn-default btn-xs" ng-disabled="selection.allSel" ng-click="check_all(true)">Select All</a>
-          <a class="btn btn-default btn-xs" ng-disabled="selection.allUnSel" ng-click="check_all(false)">Select None</a>
-        </p>
-      </h4>
-      <div class="div-table">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th class="text-center" ng-if="isBatchMode"></th>
+								<th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': predicate === 'id'}">Id</a>
+									<span class="sortorder" ng-show="predicate === 'id'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': predicate === 'id'}">Id</a>
-                <span class="sortorder" ng-show="predicate === 'id'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center">Photo</th>
 
-              <th class="text-center">Photo</th>
+								<th class="text-center">
+									<a ng-click="order('name')" ng-class="{'order_class': predicate === 'name'}">Lion Name</a>
+									<span class="sortorder" ng-show="predicate === 'name'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center">
-                <a ng-click="order('name')" ng-class="{'order_class': predicate === 'name'}">Lion Name</a>
-                <span class="sortorder" ng-show="predicate === 'name'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center">
+									<a ng-click="order('lion_id')" ng-class="{'order_class': predicate === 'lion_id'}">Lion Id</a>
+									<span class="sortorder" ng-show="predicate === 'lion_id'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center">
-                <a ng-click="order('lion_id')" ng-class="{'order_class': predicate === 'lion_id'}">Lion Id</a>
-                <span class="sortorder" ng-show="predicate === 'lion_id'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center"  ng-show="ShowColumn('age')">
+									<a ng-click="order('age')" ng-class="{'order_class': predicate === 'age'}">Age</a>
+									<span class="sortorder" ng-show="predicate === 'age'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center"  ng-show="ShowColumn('age')">
-                <a ng-click="order('age')" ng-class="{'order_class': predicate === 'age'}">Age</a>
-                <span class="sortorder" ng-show="predicate === 'age'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center" ng-show="ShowColumn('date_of_birth')">
+									<a ng-click="order('date_of_birth')" ng-class="{'order_class': predicate === 'date_of_birth'}">Date of Birth</a>
+									<span class="sortorder" ng-show="predicate === 'date_of_birth'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center" ng-show="ShowColumn('date_of_birth')">
-                <a ng-click="order('date_of_birth')" ng-class="{'order_class': predicate === 'date_of_birth'}">Date of Birth</a>
-                <span class="sortorder" ng-show="predicate === 'date_of_birth'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center" ng-show="ShowColumn('dead')">
+									<a ng-click="order('dead')" ng-class="{'order_class': predicate === 'dead'}">Dead</a>
+									<span class="sortorder" ng-show="predicate === 'dead'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center" ng-show="ShowColumn('dead')">
-                <a ng-click="order('dead')" ng-class="{'order_class': predicate === 'dead'}">Dead</a>
-                <span class="sortorder" ng-show="predicate === 'dead'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center" ng-show="ShowColumn('organization')">
+									<a ng-click="order('organization')" ng-class="{'order_class': predicate === 'organization'}">Organization</a>
+									<span class="sortorder" ng-show="predicate === 'organization'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center" ng-show="ShowColumn('organization')">
-                <a ng-click="order('organization')" ng-class="{'order_class': predicate === 'organization'}">Organization</a>
-                <span class="sortorder" ng-show="predicate === 'organization'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center" ng-show="ShowColumn('gender')">
+									<a ng-click="order('gender')" ng-class="{'order_class': predicate === 'gender'}">Gender</a>
+									<span class="sortorder" ng-show="predicate === 'gender'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center" ng-show="ShowColumn('gender')">
-                <a ng-click="order('gender')" ng-class="{'order_class': predicate === 'gender'}">Gender</a>
-                <span class="sortorder" ng-show="predicate === 'gender'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center" ng-show="ShowColumn('latitude')">
+									<a ng-click="order('latitude')" ng-class="{'order_class': predicate === 'latitude'}">Latitude</a>
+									<span class="sortorder" ng-show="predicate === 'latitude'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center" ng-show="ShowColumn('latitude')">
-                <a ng-click="order('latitude')" ng-class="{'order_class': predicate === 'latitude'}">Latitude</a>
-                <span class="sortorder" ng-show="predicate === 'latitude'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center" ng-show="ShowColumn('longitude')">
+									<a ng-click="order('longitude')" ng-class="{'order_class': predicate === 'longitude'}">Longitude</a>
+									<span class="sortorder" ng-show="predicate === 'longitude'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center" ng-show="ShowColumn('longitude')">
-                <a ng-click="order('longitude')" ng-class="{'order_class': predicate === 'longitude'}">Longitude</a>
-                <span class="sortorder" ng-show="predicate === 'longitude'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center" ng-show="ShowColumn('tag_location')">
+									<a ng-click="order('tag_location')" ng-class="{'order_class': orderby.predicate === 'tag_location'}">Location Tag</a>
+									<span class="sortorder" ng-show="orderby.predicate === 'tag_location'" ng-class="{reverse: orderby.reverse}"></span>
+								</th>
 
-              <th class="text-center" ng-show="ShowColumn('tag_location')">
-                <a ng-click="order('tag_location')" ng-class="{'order_class': orderby.predicate === 'tag_location'}">Location Tag</a>
-                <span class="sortorder" ng-show="orderby.predicate === 'tag_location'" ng-class="{reverse: orderby.reverse}"></span>
-              </th>
+								<th class="text-center" ng-show="ShowColumn('geopos_private')">
+									<a ng-click="order('geopos_private')" ng-class="{'order_class': predicate === 'geopos_private'}">GPS Points<br>Private</a>
+									<span class="sortorder" ng-show="predicate === 'geopos_private'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center" ng-show="ShowColumn('geopos_private')">
-                <a ng-click="order('geopos_private')" ng-class="{'order_class': predicate === 'geopos_private'}">GPS Points<br>Private</a>
-                <span class="sortorder" ng-show="predicate === 'geopos_private'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center tag_features" ng-show="ShowColumn('tag_features')">
+									<a ng-click="order('tag_features')" ng-class="{'order_class': predicate === 'tag_features'}">Tag Features</a>
+									<span class="sortorder" ng-show="predicate === 'tag_features'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center tag_features" ng-show="ShowColumn('tag_features')">
-                <a ng-click="order('tag_features')" ng-class="{'order_class': predicate === 'tag_features'}">Tag Features</a>
-                <span class="sortorder" ng-show="predicate === 'tag_features'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center notes" ng-show="ShowColumn('notes')">
+									<a ng-click="order('notes')" ng-class="{'order_class': predicate === 'notes'}">Notes</a>
+									<span class="sortorder" ng-show="predicate === 'notes'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center notes" ng-show="ShowColumn('notes')">
-                <a ng-click="order('notes')" ng-class="{'order_class': predicate === 'notes'}">Notes</a>
-                <span class="sortorder" ng-show="predicate === 'notes'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center" ng-show="ShowColumn('date_stamp')">
+									<a ng-click="order('date_stamp')" ng-class="{'order_class': predicate === 'date_stamp'}">Date Stamp</a>
+									<span class="sortorder" ng-show="predicate === 'date_stamp'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center" ng-show="ShowColumn('date_stamp')">
-                <a ng-click="order('date_stamp')" ng-class="{'order_class': predicate === 'date_stamp'}">Date Stamp</a>
-                <span class="sortorder" ng-show="predicate === 'date_stamp'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center" ng-show="ShowColumn('is_verified')">
+									<a ng-click="order('is_verified')" ng-class="{'order_class': predicate === 'is_verified'}">Verified</a>
+									<span class="sortorder" ng-show="predicate === 'is_verified'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center" ng-show="ShowColumn('is_verified')">
-                <a ng-click="order('is_verified')" ng-class="{'order_class': predicate === 'is_verified'}">Verified</a>
-                <span class="sortorder" ng-show="predicate === 'is_verified'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th class="text-center"  ng-show="ShowColumn('is_primary')">
+									<a ng-click="order('is_primary')" ng-class="{'order_class': predicate === 'is_primary'}">Primary</a>
+									<span class="sortorder" ng-show="predicate === 'is_primary'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th class="text-center"  ng-show="ShowColumn('is_primary')">
-                <a ng-click="order('is_primary')" ng-class="{'order_class': predicate === 'is_primary'}">Primary</a>
-                <span class="sortorder" ng-show="predicate === 'is_primary'" ng-class="{reverse:reverse}"></span>
-              </th>
+								<th colspan="3" class="text-center" ng-hide="isBatchMode">
+									<a ng-click="order('action')" ng-class="{'order_class': predicate === 'action'}">Actions</a>
+									<span class="sortorder" ng-show="predicate === 'action'" ng-class="{reverse:reverse}"></span>
+								</th>
 
-              <th colspan="3" class="text-center" ng-hide="isBatchMode">
-                <a ng-click="order('action')" ng-class="{'order_class': predicate === 'action'}">Actions</a>
-                <span class="sortorder" ng-show="predicate === 'action'" ng-class="{reverse:reverse}"></span>
-              </th>
+							</tr>
+						</thead>
+						<tbody infinite-scroll="Paging()" infinite-scroll-distance="1" infinite-scroll-container="'.Scroll-Panel'">
 
-            </tr>
-          </thead>
-          <tbody infinite-scroll="Paging()" infinite-scroll-distance="1">
+							<tr class="link" ng-repeat="imageset in limited_imagesets = ( ordered_image_sets = ( filtered_image_sets =
+								( mine_imagesets = (imagesets | filter:BatchFilter)) | nameid_filter: filters.NameOrId : 'lion_id' |
+								age_filter: filters.Ages | organization_filter: filters.Organizations | features_filter: filters.TagFeatures |
+								gender_filter: filters.Genders | primary_filter: filters.Primary | LatLngFilter: filters.Location : true |
+								geographical: GeoBounds ) | orderBy: orderby.predicate : orderby.reverse ) | limitTo: ViewTotal">
 
-            <tr class="link" ng-repeat="imageset in limited_imagesets = ( ordered_image_sets = ( filtered_image_sets =
-              ( mine_imagesets = (imagesets | filter:BatchFilter)) | nameid_filter: filters.NameOrId : 'lion_id' |
-              age_filter: filters.Ages | organization_filter: filters.Organizations | features_filter: filters.TagFeatures |
-              gender_filter: filters.Genders | primary_filter: filters.Primary | LatLngFilter: filters.Location : true |
-              geographical: GeoBounds ) | orderBy: orderby.predicate : orderby.reverse ) | limitTo: ViewTotal">
+								<td class="text-center" ng-if="isBatchMode">
+									<input type="checkbox" ng-model="imageset.selected" ng-click="Select_Imageset($event, imageset);$event.stopPropagation();">
+								</td>
 
-              <td class="text-center" ng-if="isBatchMode">
-                <input type="checkbox" ng-model="imageset.selected" ng-click="Select_Imageset($event, imageset);$event.stopPropagation();">
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);">
+									<a>{{!imageset.id}}</a>
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);">
-                <a>{{!imageset.id}}</a>
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);" ng-right-click="show_photo(imageset.image)">
+									<img ng-src="{{!imageset.thumbnail}}" width="40" height="40">
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);" ng-right-click="show_photo(imageset.image)">
-                <img ng-src="{{!imageset.thumbnail}}" width="40" height="40">
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);">
+									<a>{{!imageset.name}}</a>
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);">
-                <a>{{!imageset.name}}</a>
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);">
+									<a>{{!imageset.lion_id}}</a>
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);">
-                <a>{{!imageset.lion_id}}</a>
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('age')">
+									<a ng-if="imageset.age!=null">{{! imageset.age }} y/o</a>
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('age')">
-                <a ng-if="imageset.age!=null">{{! imageset.age }} y/o</a>
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('date_of_birth')">
+									<a ng-if="imageset.age!=null" >{{! imageset.date_of_birth | date:'mediumDate' }}</a>
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('date_of_birth')">
-                <a ng-if="imageset.age!=null" >{{! imageset.date_of_birth | date:'mediumDate' }}</a>
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('dead')">
+									<i ng-if="imageset.dead" class="search-icon-dead"></i>
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('dead')">
-                <i ng-if="imageset.dead" class="search-icon-dead"></i>
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('organization')">
+									<a>{{!imageset.organization}}</a>
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('organization')">
-                <a>{{!imageset.organization}}</a>
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('gender')">
+									<a>{{!imageset.gender}}</a>
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('gender')">
-                <a>{{!imageset.gender}}</a>
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('latitude')">
+									<a ng-if="imageset.permissions.canLocate">{{!imageset.latitude | number:6}}</a>
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('latitude')">
-                <a ng-if="imageset.permissions.canLocate">{{!imageset.latitude | number:6}}</a>
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('longitude')">
+									<a ng-if="imageset.permissions.canLocate">{{!imageset.longitude | number:6}}</a>
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('longitude')">
-                <a ng-if="imageset.permissions.canLocate">{{!imageset.longitude | number:6}}</a>
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('tag_location')">
+									<a ng-if="imageset.permissions.canLocate" >{{!tag_location_label(imageset.tag_location)}}</a>
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('tag_location')">
-                <a ng-if="imageset.permissions.canLocate" >{{!tag_location_label(imageset.tag_location)}}</a>
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('geopos_private')">
+									<i ng-if="imageset.geopos_private" class="icon icon-check"></i>
+									<i ng-if="!imageset.geopos_private" class="icon icon-cross"></i>
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('geopos_private')">
-                <i ng-if="imageset.geopos_private" class="icon icon-check"></i>
-                <i ng-if="!imageset.geopos_private" class="icon icon-cross"></i>
-              </td>
+								<td class="text-center tag_features" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('tag_features')">
+									<a>{{!imageset.tag_features}}</a>
+								</td>
 
-              <td class="text-center tag_features" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('tag_features')">
-                <a>{{!imageset.tag_features}}</a>
-              </td>
+								<td class="text-center notes" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('notes')">
+									<a>{{!imageset.notes}}</a>
+								</td>
 
-              <td class="text-center notes" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('notes')">
-                <a>{{!imageset.notes}}</a>
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('date_stamp')">
+									<div class="div-date_stamp"><a>{{!imageset.date_stamp | date:'mediumDate'}}</a></div>
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('date_stamp')">
-                <div class="div-date_stamp"><a>{{!imageset.date_stamp | date:'mediumDate'}}</a></div>
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('is_verified')">
+									<i ng-if="imageset.is_verified" class="icon icon-check"></i>
+									<i ng-if="!imageset.is_verified" class="icon icon-cross"></i>
+								</td>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('is_verified')">
-                <i ng-if="imageset.is_verified" class="icon icon-check"></i>
-                <i ng-if="!imageset.is_verified" class="icon icon-cross"></i>
-              </td>
+								<td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('is_primary')">
+									<i ng-if="imageset.is_primary" class="icon icon-check"></i>
+									<i ng-if="!imageset.is_primary" class="icon icon-cross"></i>
+								</td>
+								<td class="text-center actions-col" ng-hide="isBatchMode">
+									<span ng-if="imageset.permissions.canDisassociate && !isBatchMode">
+										<button class="btn btn-primary btn-sm"
+											data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Disassociate(imageset)">
+											<i class="icon icon-flash"></i>Disassociate
+										</button>
+									</span>
 
-              <td class="text-center" ng-click="goto_imageset(imageset);" ng-show="ShowColumn('is_primary')">
-                <i ng-if="imageset.is_primary" class="icon icon-check"></i>
-                <i ng-if="!imageset.is_primary" class="icon icon-cross"></i>
-              </td>
-              <td class="text-center actions-col" ng-hide="isBatchMode">
-                <span ng-if="imageset.permissions.canDisassociate && !isBatchMode">
-                  <button class="btn btn-primary btn-sm"
-                    data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Disassociate(imageset)">
-                    <i class="icon icon-flash"></i>Disassociate
-                  </button>
-                </span>
+									<span ng-if="imageset.permissions.NeedVerify && !isBatchMode">
+										<button ng-if="!imageset.is_verified" class="btn btn-primary btn-sm btn-verify"
+											data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Verify(imageset)">
+											<i class="icon icon-flash"></i>Verify
+										</button>
 
-                <span ng-if="imageset.permissions.NeedVerify && !isBatchMode">
-                  <button ng-if="!imageset.is_verified" class="btn btn-primary btn-sm btn-verify"
-                    data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Verify(imageset)">
-                    <i class="icon icon-flash"></i>Verify
-                  </button>
+										<button ng-if="imageset.is_verified && !isBatchMode" class="btn btn-primary btn-sm"
+											data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Disassociate(imageset)">
+											<i class="icon icon-flash"></i>Disassociate
+										</button>
+									</span>
 
-                  <button ng-if="imageset.is_verified && !isBatchMode" class="btn btn-primary btn-sm"
-                    data-animation="am-fade-and-slide-top" ng-click="!isBatchMode && Disassociate(imageset)">
-                    <i class="icon icon-flash"></i>Disassociate
-                  </button>
-                </span>
+									<span ng-if="imageset.permissions.CanSetPrimary && !isBatchMode" >
+										<button class="btn btn-default btn-sm" ng-click="!isBatchMode && SetPrimary(imageset)"
+											data-animation="am-fade-and-slide-top">Set Primary
+										</button>
+									</span>
 
-                <span ng-if="imageset.permissions.CanSetPrimary && !isBatchMode" >
-                  <button class="btn btn-default btn-sm" ng-click="!isBatchMode && SetPrimary(imageset)"
-                    data-animation="am-fade-and-slide-top">Set Primary
-                  </button>
-                </span>
-
-                <span ng-if="imageset.permissions.canShow && !isBatchMode">
-                  <cvresults class="cvresults" ng-if="imageset.action == 'cvresults'"
-                    use-ctrl="CVResultsCtrl" use-template-url="cvresults.html" form-size="lg" imageset="imageset"
-                    cvresults-id="imageset.cvresults" cvrequest-id="imageset.cvrequest" type="search"
-                    cv-result-erased="CVResultsErased(imagesetId)" imageset-updated="UpdateImageset(data, imagesetId)"
-                    debug="debug" modal-status="modal_status">
-                  </cvresults>
-                  <cvrequest class="cvrequest" ng-if="imageset.action == 'cvrequest' || imageset.action == 'error'"
-                    use-ctrl="CVRequesCtrl" use-template-url="cvrequest.html" form-size="lg" imageset="imageset" debug="debug"
-                    type="search" cv-request-success="CVReqSuccess(imageset_Id, request_Obj)" modal-status="modal_status"
-                    cv-req-error="imageset.action=='error'" update-cv-status="updateCVStatus(response)" >
-                  </cvrequest>
-                  <span ng-if="imageset.action == 'cvpending'">
-                    <i class="icon icon-clock icon-clock-pending"></i><br>
-                    <span>CV Request pending</span>
-                  </span>
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  <div ng-hide="true">
-    <map id="main"></map>
-  </div>
+									<span ng-if="imageset.permissions.canShow && !isBatchMode">
+										<cvresults class="cvresults" ng-if="imageset.action == 'cvresults'"
+											use-ctrl="CVResultsCtrl" use-template-url="cvresults.html" form-size="lg" imageset="imageset"
+											cvresults-id="imageset.cvresults" cvrequest-id="imageset.cvrequest" type="search"
+											cv-result-erased="CVResultsErased(imagesetId)" imageset-updated="UpdateImageset(data, imagesetId)"
+											debug="debug" modal-status="modal_status">
+										</cvresults>
+										<cvrequest class="cvrequest" ng-if="imageset.action == 'cvrequest' || imageset.action == 'error'"
+											use-ctrl="CVRequesCtrl" use-template-url="cvrequest.html" form-size="lg" imageset="imageset" debug="debug"
+											type="search" cv-request-success="CVReqSuccess(imageset_Id, request_Obj)" modal-status="modal_status"
+											cv-req-error="imageset.action=='error'" update-cv-status="updateCVStatus(response)" >
+										</cvrequest>
+										<span ng-if="imageset.action == 'cvpending'">
+											<i class="icon icon-clock icon-clock-pending"></i><br>
+											<span>CV Request pending</span>
+										</span>
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div ng-hide="true">
+		<map id="main"></map>
+	</div>
 </div>

@@ -1132,7 +1132,7 @@ hr.style-line {
 			a{
 				padding: 0px 12px;
 				.fa-expand, .fa-compress{
-					font-size: 16px; padding-top: 3px; 
+					font-size: 16px; padding-top: 3px;
 				}
 			}
 		}
@@ -2284,7 +2284,7 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 .view-lion-database, .view-imagesets{
 	h1{
 		margin-bottom: 15px;
-		
+
 	}
 	h4.viewer-founds{
 		margin-top: 0px;
@@ -2314,16 +2314,14 @@ $tooltip-arrow-border-width: $tooltip-arrow-width + $tooltip-border-width;
 		margin-top: 20px;
 		text-align: center;
 	}
-	.main-row{
-		padding-bottom: 20px;
-		.tablist{
-			.fa-expand, .fa-compress{
-				font-size: 16px;
-				padding-top: 3px;
-				
-			}
-		}
-	}
+
+	.Container-Panel { display: flex; overflow: hidden; height: 75vh; position: relative; width: 100%; backface-visibility: hidden; will-change: overflow; }
+	.Container-Panel-2 { display: flex; overflow: hidden; height: 75vh; position: relative; width: 100%; backface-visibility: hidden; will-change: overflow; }
+	.Left-Panel { overflow: auto; width: 15%; min-width: 170px; height: auto; padding: .5rem; .tablist{ .fa-expand, .fa-compress{ font-size: 16px; padding-top: 3px; } } }
+	.Right-Panel { overflow: auto; width: 85%; height: auto;}
+	.Right-Top-Panel { display: flex; justify-content: left; position: fixed; width: 70%; z-index: 10; height: auto; }
+	.Scroll-Panel { overflow-y: scroll; max-height: 450px; width: 100%; padding: .1rem; margin-top:4rem; margin-left:1rem; }
+
 	.batch-mode{
 		margin-top: 30px;
 		margin-bottom: 0px;
