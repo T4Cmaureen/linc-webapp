@@ -17,136 +17,144 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 For more information or to contact visit linclion.org or email tech@linclion.org -->
 <script type="text/ng-template" id="Edit_User.tpl.html">
-  <form name="form" ng-submit="submit(form.$valid)" class="font-homenaje-1-1">
-    <div class="modal-header" ng-show="title">
-      <h4 class="modal-title" ng-bind-html="title"></h4>
-    </div>
-    <div class="modal-body">
-      <div ng-hide="User_Mode=='add'" class="form-group">
-        <label for="user_id">Id:</label>
-        <input name="user_id" readonly type="text" class="form-control" ng-model="user.id">
-      </div>
-      <div class="form-group">
-        <label for="user_email">Email:</label>
-        <input type="email" required class="form-control" name="user_email" ng-model="user.email">
-      </div>
-      <!--
-      <div class="form-group" ng-if="User_Mode=='add'">
-        <label for="user_organization">Organization:</label>
-        <ui-select allow-new-obj={{!new_organization}} ng-model="user.organization" theme="bootstrap">
-          <ui-select-match placeholder="Select/Search a organization or Edit New Organization Name">{{!$select.selected.name}}</ui-select-match>
-          <ui-select-choices repeat="organization in organizations | filter: $select.search">
-            <div ng-bind-html="organization.name | highlight: $select.search"></div>
-          </ui-select-choices>
-        </ui-select>
-      </div> 
-      -->
-      <div class="form-group">
-        <label for="user_organization_id">Organization:</label>
-        <ui-select ng-model="user.organization_id" theme="bootstrap">
-          <ui-select-match placeholder="Select or search a organization in the list...">{{!$select.selected.name}}</ui-select-match>
-          <ui-select-choices repeat="organization.id as organization in organizations | filter: {'name' : $select.search}">
-            <small><div ng-bind-html="organization.name | highlight: $select.search"></div></small>
-          </ui-select-choices>
-        </ui-select>
-      </div>
-      <div ng-hide="User_Mode=='edit'" class="form-group">
-        <label for="user_password">Password:</label>
-        <input class="form-control" type="password" name="user_password" ng-model="user.password" placeholder="New Password" ng-required="password_required" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('please fill out this field with Password')">
-      </div>
-      <div ng-hide="User_Mode=='edit'" class="form-group">
-        <label for="user_verify">Password:</label>
-        <input class="form-control" type="password" name="user_verify" ng-model="user.confirmPassword" placeholder="Confirm Password" ng-required="password_required" oninput="setCustomValidity('')" nx-equal-ex="user.password" oninvalid="this.setCustomValidity('please repeat the Password in this field')">
-        <div>
-          <span ng-show="showValidationMessages && form.verify.$error.nxEqualEx" class="help-inline">Passwords must match!</span>
-        </div>
-      </div>
-      <div class="form-group checkbox adm-checkbox">
-        <label for="user_admin">
-          <input name="user_admin" id="user_admin" type="checkbox"  ng-model="user.admin" ng-checked="user.admin">
-          <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-          Administrator
-        </label>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-default" ng-click="cancel()" data-dismiss="modal">Cancel</button>
-      <button ng-show="User_Mode=='add'" type="submit" class="btn btn-primary">Add New</button>
-      <button ng-show="User_Mode=='edit'" type="submit" class="btn btn-primary">Update</button>
-      <p class="text-center" ng-if="dataSending"><img src="/static/images/loading.gif" /> submitting&hellip;</p>
-    </div>
-  </form>
+	<form name="form" ng-submit="submit(form.$valid)" class="font-homenaje-1-1">
+		<div class="modal-header" ng-show="title">
+			<h4 class="modal-title" ng-bind-html="title"></h4>
+		</div>
+		<div class="modal-body">
+			<div ng-hide="User_Mode=='add'" class="form-group">
+				<label for="user_id">Id:</label>
+				<input name="user_id" readonly type="text" class="form-control" ng-model="user.id">
+			</div>
+			<div class="form-group">
+				<label for="user_email">Email:</label>
+				<input type="email" required class="form-control" name="user_email" ng-model="user.email">
+			</div>
+			<!--
+			<div class="form-group" ng-if="User_Mode=='add'">
+				<label for="user_organization">Organization:</label>
+				<ui-select allow-new-obj={{!new_organization}} ng-model="user.organization" theme="bootstrap">
+					<ui-select-match placeholder="Select/Search a organization or Edit New Organization Name">{{!$select.selected.name}}</ui-select-match>
+					<ui-select-choices repeat="organization in organizations | filter: $select.search">
+						<div ng-bind-html="organization.name | highlight: $select.search"></div>
+					</ui-select-choices>
+				</ui-select>
+			</div>
+			-->
+			<div class="form-group">
+				<label for="user_organization_id">Organization:</label>
+				<ui-select ng-model="user.organization_id" theme="bootstrap">
+					<ui-select-match placeholder="Select or search a organization in the list...">{{!$select.selected.name}}</ui-select-match>
+					<ui-select-choices repeat="organization.id as organization in organizations | filter: {'name' : $select.search}">
+						<small><div ng-bind-html="organization.name | highlight: $select.search"></div></small>
+					</ui-select-choices>
+				</ui-select>
+			</div>
+			<div ng-hide="User_Mode=='edit'" class="form-group">
+				<label for="user_password">Password:</label>
+				<input class="form-control" type="password" name="user_password" ng-model="user.password" placeholder="New Password" ng-required="password_required" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('please fill out this field with Password')">
+			</div>
+			<div ng-hide="User_Mode=='edit'" class="form-group">
+				<label for="user_verify">Password:</label>
+				<input class="form-control" type="password" name="user_verify" ng-model="user.confirmPassword" placeholder="Confirm Password" ng-required="password_required" oninput="setCustomValidity('')" nx-equal-ex="user.password" oninvalid="this.setCustomValidity('please repeat the Password in this field')">
+				<div>
+					<span ng-show="showValidationMessages && form.verify.$error.nxEqualEx" class="help-inline">Passwords must match!</span>
+				</div>
+			</div>
+			<div class="form-group checkbox adm-checkbox">
+				<label for="user_admin">
+					<input name="user_admin" id="user_admin" type="checkbox"  ng-model="user.admin" ng-checked="user.admin">
+					<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+					Administrator
+				</label>
+			</div>
+			<div ng-hide="User_Mode=='add'"  class="form-group">
+				<label ng-if="user.agree" for="user_agree">Accepted the Agreement (EULA) on: <b>{{!user.agree | date:'short' }}</b></label>
+				<label ng-if="!user.agree" for="user_agree">Did not Accept the Agreement (EULA)</label>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" ng-click="cancel()" data-dismiss="modal">Cancel</button>
+			<button ng-show="User_Mode=='add'" type="submit" class="btn btn-primary">Add New</button>
+			<button ng-show="User_Mode=='edit'" type="submit" class="btn btn-primary">Update</button>
+			<p class="text-center" ng-if="dataSending"><img src="/static/images/loading.gif" /> submitting&hellip;</p>
+		</div>
+	</form>
 </script>
 
 <div class="form-group" ng-controller="AdminUsersCtrl">
-  <div class="btn-toolbar" role="toolbar" aria-label="toolbar_btns">
-    <div class="btn-group">
-      <button type="button" class = "btn btn btn-warning" ng-click="Add_User()">Add</button>
-    </div>
-    <div class="btn-group">
-      <button ng-disabled="!(Selecteds.length==1)" type="button" class = "btn btn btn-warning" ng-click="Edit_User()">Edit</button>
-    </div>
-    <div class="btn-group">
-      <button ng-disabled="!(Selecteds.length>0)" type="button" class = "btn btn btn-warning" ng-click="Delete_User()">Delete</button>
-    </div>
-    <div class="btn-group adm-btn">
-      <button ng-disabled="!(Selecteds.length>0)" type="button" class = "btn btn btn-warning" ng-click="CopyToClipBoard(Selecteds)"><span>Copy to</span><span>Clipboard</span></button>
-    </div>
-    <div class="btn-group adm-btn">
-      <button ng-disabled="!(Selecteds.length==1)" type="button" class = "btn btn btn-warning" ng-click="ChangePassword()"><span>Change</span><span>Password</span></button>
-    </div>
-    <div ng-show="debug" class="btn-group">
-      <button type = "button" class = "btn btn btn-default">
-        {{!settings.users.Selecteds.length}}
-      </button>
-    </div>
-  </div>
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th class="text-center">
-          <i class="icon icon-check icon-border" ng-class="{active:all_selected}" ng-click="check_all(true)"></i>
-          <i class="icon icon-cross icon-border" ng-class="{active:all_unselected}" ng-click="check_all(false)"></i>
-        </th>
-        <th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': predicate === 'id'}">Id</a>
-          <span class="sortorder" ng-show="predicate === 'id'" ng-class="{reverse:reverse}"></span>
-        </th>
-        <th ><a ng-click="order('email')" ng-class="{'order_class': predicate === 'email'}">Email</a>
-          <span class="sortorder" ng-show="predicate === 'email'" ng-class="{reverse:reverse}"></span>
-        </th>
-        <th ><a ng-click="order('organization')" ng-class="{'order_class': predicate === 'organization'}">Organization</a>
-          <span class="sortorder" ng-show="predicate === 'organization'" ng-class="{reverse:reverse}"></span>
-        </th>
-        <th class="text-center"><a ng-click="order('admin')" ng-class="{'order_class': predicate === 'admin'}">Administrator</a>
-          <span class="sortorder" ng-show="predicate === 'admin'" ng-class="{reverse:reverse}"></span>
-        </th>
-        <th ><a ng-click="order('created_at')" ng-class="{'order_class': predicate === 'created_at'}">Created At</a>
-          <span class="sortorder" ng-show="predicate === 'created_at'" ng-class="{reverse:reverse}"></span>
-        </th>
-        <th ><a ng-click="order('updated_at')" ng-class="{'order_class': predicate === 'updated_at'}">Updated At</a>
-          <span class="sortorder" ng-show="predicate === 'updated_at'" ng-class="{reverse:reverse}"></span>
-        </th>
-        <th >Info</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="link" ng-repeat="user in ordered_users = (users | orderBy:predicate:reverse)" 
-        ng-class="{active:user.selected}" 
-        ng-click="Select_User($event, user, 'line-click');$event.stopPropagation();">
-        <td class="text-center"><input type="checkbox" ng-disabled="User_Mode != ''" ng-model="user.selected" ng-click="Select_User($event, user, 'checkbox-click');$event.stopPropagation();"></td>
-        <td class="text-center">{{!user.id}}</td>
-        <td >{{!user.email}}</td>
-        <td >{{!user.organization}}</td>
-        <td class="text-center">
-          <i ng-if="user.admin" class="icon icon-check"></i>
-          <i ng-if="!user.admin" class="icon icon-cross"></i>
-        </td>
-        <td >{{!user.created_at | date:'short'}}</td>
-        <td >{{!user.updated_at | date:'short'}}</td>
-        <td>
-          <a href data-animation="am-flip-x" data-html="true" placement="auto" bs-tooltip="user.tooltip">Info</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+	<div class="btn-toolbar" role="toolbar" aria-label="toolbar_btns">
+		<div class="btn-group">
+			<button type="button" class = "btn btn btn-warning" ng-click="Add_User()">Add</button>
+		</div>
+		<div class="btn-group">
+			<button ng-disabled="!(Selecteds.length==1)" type="button" class = "btn btn btn-warning" ng-click="Edit_User()">Edit</button>
+		</div>
+		<div class="btn-group">
+			<button ng-disabled="!(Selecteds.length>0)" type="button" class = "btn btn btn-warning" ng-click="Delete_User()">Delete</button>
+		</div>
+		<div class="btn-group adm-btn">
+			<button ng-disabled="!(Selecteds.length>0)" type="button" class = "btn btn btn-warning" ng-click="CopyToClipBoard(Selecteds)"><span>Copy to</span><span>Clipboard</span></button>
+		</div>
+		<div class="btn-group adm-btn">
+			<button ng-disabled="!(Selecteds.length==1)" type="button" class = "btn btn btn-warning" ng-click="ChangePassword()"><span>Change</span><span>Password</span></button>
+		</div>
+		<div ng-show="debug" class="btn-group">
+			<button type = "button" class = "btn btn btn-default">
+				{{!settings.users.Selecteds.length}}
+			</button>
+		</div>
+	</div>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th class="text-center">
+					<i class="icon icon-check icon-border" ng-class="{active:all_selected}" ng-click="check_all(true)"></i>
+					<i class="icon icon-cross icon-border" ng-class="{active:all_unselected}" ng-click="check_all(false)"></i>
+				</th>
+				<th class="text-center"><a ng-click="order('id')" ng-class="{'order_class': predicate === 'id'}">Id</a>
+					<span class="sortorder" ng-show="predicate === 'id'" ng-class="{reverse:reverse}"></span>
+				</th>
+				<th ><a ng-click="order('email')" ng-class="{'order_class': predicate === 'email'}">Email</a>
+					<span class="sortorder" ng-show="predicate === 'email'" ng-class="{reverse:reverse}"></span>
+				</th>
+				<th ><a ng-click="order('organization')" ng-class="{'order_class': predicate === 'organization'}">Organization</a>
+					<span class="sortorder" ng-show="predicate === 'organization'" ng-class="{reverse:reverse}"></span>
+				</th>
+				<th class="text-center"><a ng-click="order('admin')" ng-class="{'order_class': predicate === 'admin'}">Administrator</a>
+					<span class="sortorder" ng-show="predicate === 'admin'" ng-class="{reverse:reverse}"></span>
+				</th>
+				<th class="text-center"><a ng-click="order('agree')" ng-class="{'order_class': predicate === 'agree'}">Agreed On</a>
+					<span class="sortorder" ng-show="predicate === 'agree'" ng-class="{reverse:reverse}"></span>
+				</th>
+				<th ><a ng-click="order('created_at')" ng-class="{'order_class': predicate === 'created_at'}">Created At</a>
+					<span class="sortorder" ng-show="predicate === 'created_at'" ng-class="{reverse:reverse}"></span>
+				</th>
+				<th ><a ng-click="order('updated_at')" ng-class="{'order_class': predicate === 'updated_at'}">Updated At</a>
+					<span class="sortorder" ng-show="predicate === 'updated_at'" ng-class="{reverse:reverse}"></span>
+				</th>
+				<th >Info</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="link" ng-repeat="user in ordered_users = (users | orderBy:predicate:reverse)"
+				ng-class="{active:user.selected}"
+				ng-click="Select_User($event, user, 'line-click');$event.stopPropagation();">
+				<td class="text-center"><input type="checkbox" ng-disabled="User_Mode != ''" ng-model="user.selected" ng-click="Select_User($event, user, 'checkbox-click');$event.stopPropagation();"></td>
+				<td class="text-center">{{!user.id}}</td>
+				<td >{{!user.email}}</td>
+				<td >{{!user.organization}}</td>
+				<td class="text-center">
+					<i ng-if="user.admin" class="icon icon-check"></i>
+					<i ng-if="!user.admin" class="icon icon-cross"></i>
+				</td>
+				<td >{{!user.agree | date:'short'}}</td>
+				<td >{{!user.created_at | date:'short'}}</td>
+				<td >{{!user.updated_at | date:'short'}}</td>
+				<td>
+					<a href data-animation="am-flip-x" data-html="true" placement="auto" bs-tooltip="user.tooltip">Info</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

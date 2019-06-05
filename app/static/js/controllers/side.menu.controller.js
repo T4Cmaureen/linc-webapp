@@ -20,8 +20,8 @@
 
 angular.module('linc.side.menu.controller', [])
 
-.controller('SideMenuCtrl', ['$scope', '$state', 'AuthService', 'NotificationFactory', 'MANUAL_URL', 
-  function ($scope, $state, AuthService, NotificationFactory, MANUAL_URL) {
+.controller('SideMenuCtrl', ['$scope', '$state', 'AuthService', 'NotificationFactory', 'DOC_URLS',
+  function ($scope, $state, AuthService, NotificationFactory, DOC_URLS) {
 
   $scope.modal_status = { is_open:  false };
   $scope.title = 'Menu';
@@ -56,8 +56,18 @@ angular.module('linc.side.menu.controller', [])
     });
   };
 
-  $scope.user_manual = function(){
-    var url = MANUAL_URL.url;
+  $scope.USER_MANUAL = function(){
+    var url = DOC_URLS['USER_MANUAL'];
+    window.open(url,'_blank');
+  };
+
+  $scope.TERMS_OF_USE = function(){
+    var url = DOC_URLS['TERMS_OF_USE'];
+    window.open(url,'_blank');
+  };
+
+  $scope.PRIVACY_POLICY = function(){
+    var url = DOC_URLS['PRIVACY_POLICY'];
     window.open(url,'_blank');
   };
 

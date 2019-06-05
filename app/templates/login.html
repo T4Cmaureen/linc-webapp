@@ -17,77 +17,77 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 For more information or to contact visit linclion.org or email tech@linclion.org -->
 <script type="text/ng-template" id="ForgetSended.tpl.html">
-  <div name="ForgetSended" class="font-homenaje-1-1">
-    <div class="modal-header" ng-show="title">
-      <h4 class="modal-title" ng-bind-html="title"></h4>
-    </div>
-    <div class="modal-body break-paragraph" ng-bind-html="modalMessage">
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary" ng-click="close()">Close</button>
-    </div>
-  </div>
+	<div name="ForgetSended" class="font-homenaje-1-1">
+		<div class="modal-header" ng-show="title">
+			<h4 class="modal-title" ng-bind-html="title"></h4>
+		</div>
+		<div class="modal-body break-paragraph" ng-bind-html="modalMessage">
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-primary" ng-click="close()">Close</button>
+		</div>
+	</div>
 </script>
 <script type="text/ng-template" id="LoginError.tpl.html">
-  <div name="LoginError" class="font-homenaje-1-1">
-    <div class="modal-header" ng-show="title">
-      <h4 class="modal-title" ng-bind-html="title"></h4>
-    </div>
-    <div class="modal-body wrap-paragraph" ng-bind-html="modalMessage">
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary" ng-click="close()">Close</button>
-    </div>
-  </div>
+	<div name="LoginError" class="font-homenaje-1-1">
+		<div class="modal-header" ng-show="title">
+			<h4 class="modal-title" ng-bind-html="title"></h4>
+		</div>
+		<div class="modal-body wrap-paragraph" ng-bind-html="modalMessage">
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-primary" ng-click="close()">Close</button>
+		</div>
+	</div>
 </script>
 <script type="text/ng-template" id="ForgetPwd.tpl.html">
-  <div name="ForgetPws" class="font-homenaje-1-1">
-    <div class="modal-header" ng-show="title">
-      <button type="button" class="close" ng-click="cancel()">&times;</button>
-      <h1 class="modal-title forgot-title" ng-bind-html="title"></h1>
-    </div>
-    <div class="modal-body">
-      <div id="container-forgot" class="wrapper">
-        <div class="instruction">
-          <p>Please provide the email address that you used when you signed up for your Linc account.</p>
-          <p>We will send you an email with a new password.</p>
-        </div>
-        <div class="callout-box">
-          <form name="form" class="form-signin" ng-submit="resetPassword(form.$valid)">
-            <div class="form-group" ng-class="{'has-error': form.email.$dirty && form.email.$error.required }">
-              <!-- <label for="username" class="sr-only">Email address</label> -->
-              <input type="email" name="email" id="email" class="form-control" ng-model="forgot.username" placeholder="Email address" required oninvalid="this.setCustomValidity('Email address is required')" oninput="setCustomValidity('')" autofocus>
-            </div>
-            <div class="form-actions">
-              <button class="btn btn-lg btn-primary btn-block" type="submit">Reset Password</button>
-              <p class="text-center" ng-if="dataSending"><img src="/static/images/loading.gif" /> submitting&hellip;</p>
-             </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div name="ForgetPws" class="font-homenaje-1-1">
+		<div class="modal-header" ng-show="title">
+			<button type="button" class="close" ng-click="cancel()">&times;</button>
+			<h1 class="modal-title forgot-title" ng-bind-html="title"></h1>
+		</div>
+		<div class="modal-body">
+			<div id="container-forgot" class="wrapper">
+				<div class="instruction">
+					<p>Please provide the email address that you used when you signed up for your Linc account.</p>
+					<p>We will send you an email with a new password.</p>
+				</div>
+				<div class="callout-box">
+					<form name="form" class="form-signin" ng-submit="resetPassword(form.$valid)">
+						<div class="form-group" ng-class="{'has-error': form.email.$dirty && form.email.$error.required }">
+							<!-- <label for="username" class="sr-only">Email address</label> -->
+							<input type="email" name="email" id="email" class="form-control" ng-model="forgot.username" placeholder="Email address" required oninvalid="this.setCustomValidity('Email address is required')" oninput="setCustomValidity('')" autofocus>
+						</div>
+						<div class="form-actions">
+							<button class="btn btn-lg btn-primary btn-block" type="submit">Reset Password</button>
+							<p class="text-center" ng-if="dataSending"><img src="/static/images/loading.gif" /> submitting&hellip;</p>
+						 </div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </script>
 <form name="form" class="form-signin font-homenaje-1-1" ng-submit="login()">
-  <input type="hidden" name="_xsrf" ng-init="loginData._xsrf='{{xsrf}}'" ng-model="loginData._xsrf">
-  <h2 class="form-signin-heading">Please sign in</h2>
-  <div class="form-group" ng-class="{'has-error': form.email.$dirty && form.email.$error.required }">
-    <label for="email" class="sr-only">Email address</label>
-    <input type="email" name="email" id="email" class="form-control" ng-model="loginData.username" placeholder="Email address" required oninvalid="this.setCustomValidity('Email address is required')" oninput="setCustomValidity('')" autofocus>
-  </div>
-  <div class="form-group" ng-class="{'has-error': form.password.$dirty && form.password.$error.required }">
-    <label for="password" class="sr-only">Email address</label>
-    <input type="password" name="password" id="password" class="form-control" ng-model="loginData.password" placeholder="Password" required oninvalid="this.setCustomValidity('Password is required')" oninput="setCustomValidity('')">
-  </div>
-  <div class="form-actions">
-    <p><button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button></p>
-    <p class="text-center" ng-if="dataLoading"><img src="/static/images/loading.gif" /> Loading&hellip;</p>
-  </div>  
-  <div class="forgotPasswordContainer">
-    <a ng-click="forgotPwd()" target="_top" class="forgot-password">Forgot password?</a>
-    <request-acess 
-      use-ctrl="RequestAccessCtrl" 
-      use-template-url="request.access.tpl.html" 
-    ></request-acess>
-  </div>
+	<input type="hidden" name="_xsrf" ng-init="loginData._xsrf='{{xsrf}}'" ng-model="loginData._xsrf">
+	<h2 class="form-signin-heading">Please sign in</h2>
+	<div class="form-group" ng-class="{'has-error': form.email.$dirty && form.email.$error.required }">
+		<label for="email" class="sr-only">Email address</label>
+		<input type="email" name="email" id="email" class="form-control" ng-model="loginData.username" placeholder="Email address" required oninvalid="this.setCustomValidity('Email address is required')" oninput="setCustomValidity('')" autofocus>
+	</div>
+	<div class="form-group" ng-class="{'has-error': form.password.$dirty && form.password.$error.required }">
+		<label for="password" class="sr-only">Email address</label>
+		<input type="password" name="password" id="password" class="form-control" ng-model="loginData.password" placeholder="Password" required oninvalid="this.setCustomValidity('Password is required')" oninput="setCustomValidity('')">
+	</div>
+	<div class="form-actions">
+		<p><button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button></p>
+		<p class="text-center" ng-if="dataLoading"><img src="/static/images/loading.gif" /> Loading&hellip;</p>
+	</div>
+	<div class="forgotPasswordContainer">
+		<a ng-click="forgotPwd()" target="_top" class="forgot-password">Forgot password?</a>
+		<request-acess
+			use-ctrl="RequestAccessCtrl"
+			use-template-url="request.access.tpl.html"
+		></request-acess>
+	</div>
  </form>

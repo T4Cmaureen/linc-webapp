@@ -243,3 +243,7 @@ class ClassifierGraphHandler(BaseHandler):
     def get(self):
         self.render('classifier.graph.tpl.html')
 
+
+class AgreementHandler(BaseHandler):
+    def get(self):
+        self.render('agreement.html')

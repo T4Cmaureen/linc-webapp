@@ -81,8 +81,10 @@ app.constant('TAG_LABELS', {
     {value:'NONE',label:'None',chekall:false}]
 })
 
-.constant('MANUAL_URL', {
-  url: 'http://linclion.com/linc/linc-manual/'
+.constant('DOC_URLS',{
+  USER_MANUAL: 'http://linclion.com/linc/linc-manual/',
+  TERMS_OF_USE: 'http://linc.linclion.org/Terms-Of-Use',
+  PRIVACY_POLICY: 'http://linc.linclion.org/Privacy-Policy'
 })
 
 .constant('CONST_VIEWCOLUMNS', {

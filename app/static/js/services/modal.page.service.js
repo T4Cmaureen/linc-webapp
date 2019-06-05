@@ -33,7 +33,7 @@ angular.module('modal.page.service', ['ui.bootstrap.modal'])
 		_.forEach(dlgData, function(val, name){
 			dlgsettings.resolve[name] = val;
 		});
-		
+
 		return $uibModal.open(dlgsettings).result;
 
 	};

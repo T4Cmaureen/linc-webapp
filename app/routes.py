@@ -21,7 +21,8 @@
 # For more information or to contact visit linclion.org or email tech@linclion.org
 
 from handlers.base import VersionHandler
-from handlers.auth import LogoutHandler, LoginHandler, CheckAuthHandler, ResetPassword, ChangePassword, RequestAccessEmailHandler
+from handlers.auth import LogoutHandler, LoginHandler, CheckAuthHandler, ResetPassword, ChangePassword, AgreementAuthHandler,\
+    RequestAccessEmailHandler
 from handlers.main import MainHandler, LoginMainHandler, HomeHandler, SideMenuHandler, RelativesTplHandler, CarouselGalleryHandler
 from handlers.main import LionMainHandler, ViewLionDatabaseHandler, ImageSetMainHandler, ViewImageSetsHandler, BoundaryMapHandler
 from handlers.main import ConservationistsHandler, ImageGalleryHandler, LocationHistoryHandler, ViewImagesHandler, CompareImagesHandler
@@ -29,7 +30,7 @@ from handlers.main import EditMetadataHandler, CVResultsMainHandler, CVRequestMa
 from handlers.main import PageAdminHandler, PageAdminUsersHandler, PageAdminOrganizationsHandler, PageAdminLionsHandler
 from handlers.main import PageAdminImageSetsHandler, PageAdminImagesHandler, PageAdminCVRequestsHandler, PageAdminCVResultsHandler
 from handlers.main import RequestAccessHandler, MetadataBatchHandler, LocationOnMapHandler, DeleteBatchHandler, SelectBoundarysHandler
-from handlers.main import ClassifierGraphHandler
+from handlers.main import ClassifierGraphHandler, AgreementHandler
 from handlers.api import LionsListHandler, ImagesListHandler, ImageSetsListHandler, OrganizationsListHandler, ImageSetsReqHandler
 from handlers.api import ImagesUploadHandler, ImagesHandler, LionsHandler, ImageSetsHandler
 from handlers.api import OrganizationsHandler, CVResultsHandler, CVRequestHandler, UsersHandler, RelativesHandler
@@ -75,6 +76,7 @@ url_patterns = [
     (r"/carousel.gallery.tpl.html", CarouselGalleryHandler),
     (r"/select.boundarys.tpl.html", SelectBoundarysHandler),
     (r"/classifier.graph.tpl.html", ClassifierGraphHandler),
+    (r"/agreement.html", AgreementHandler),
     # Handlers for API comunication
     (r"/imagesets/list", ImageSetsListHandler),
     (r"/imagesets/(\w+)/(cvrequest)/?$", ImageSetsListHandler),
@@ -111,6 +113,7 @@ url_patterns = [
     (r"/cvrequests/(\w+)/?$", CVRequestHandler),
     (r"/login/?$", LoginHandler),
     (r"/logout/?$", LogoutHandler),
+    (r"/auth/agree/?$", AgreementAuthHandler),
     (r"/auth/check/?$", CheckAuthHandler),
     (r"/auth/recover/?$", ResetPassword),
     (r"/auth/requestaccess/?$", RequestAccessEmailHandler),

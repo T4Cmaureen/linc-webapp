@@ -30,6 +30,8 @@ from logging import info
 
 
 class CheckAuthHandler(BaseHandler):
+    SUPPORTED_METHODS = ("GET")
+
     @asynchronous
     @engine
     @web_authenticated
@@ -39,21 +41,19 @@ class CheckAuthHandler(BaseHandler):
         self.set_json_output()
         if response.code != 200:
             resource_url = self.settings['API_URL'] + '/auth/login'
-            body = self.json_encode(
-                {'username': self.current_user['username'],
-                 'password': self.current_user['password']})
+            body = self.json_encode({'username': self.current_user['username']})
             response = yield Task(self.api_call, url=resource_url, method='POST', body=body)
             if response and response.code == 200:
                 data = loads(response.body.decode('utf-8'))['data']
-                obj = {'username': self.current_user['username'],
-                       'orgname': data['orgname'],
-                       'admin': (data['role'] == 'admin'),
-                       'token': data['token'],
-                       'id': data['id'],
-                       'organization_id': data['organization_id'],
-                       'password': self.current_user['password']}
+                obj = {
+                    'username': self.current_user['username'],
+                    'orgname': data['orgname'],
+                    'admin': (data['role'] == 'admin'),
+                    'token': data['token'],
+                    'id': data['id'],
+                    'organization_id': data['organization_id']
+                }
                 self.set_secure_cookie("userlogin", dumps(obj))
-                del obj['password']
                 self.response(200, 'The system executed an automatic new login on the API.', obj)
                 return
         elif response.code == 200:
@@ -63,10 +63,13 @@ class CheckAuthHandler(BaseHandler):
 
 
 class LoginHandler(BaseHandler):
+    SUPPORTED_METHODS = ("POST")
+
     @asynchronous
     @engine
     def post(self):
-        if self.input_data['username'] and self.input_data['password']:
+        if 'username' in self.input_data.keys() and \
+           'password' in self.input_data.keys():
             # Check authentication with the API
             body = {'username': self.input_data['username'],
                     'password': self.input_data['password']}
@@ -78,17 +81,74 @@ class LoginHandler(BaseHandler):
             resp = loads(response.body.decode('utf-8'))
             if 200 <= response.code < 300:
                 data = resp['data']
-                obj = {'username': self.input_data['username'],
-                       'orgname': data['orgname'],
-                       'admin': (data['role'] == 'admin'),
-                       'token': data['token'],
-                       'id': data['id'],
-                       'organization_id': data['organization_id'],
-                       'password': self.input_data['password']}
+                obj = {
+                    'username': self.input_data['username'],
+                    'orgname': data['orgname'],
+                    'admin': (data['role'] == 'admin'),
+                    'token': data['token'],
+                    'id': data['id'],
+                    'organization_id': data['organization_id']
+                }
                 self.set_secure_cookie("userlogin", dumps(obj))
-                del obj['password']
                 # this will be acquired with the api
                 self.response(response.code, resp['message'], obj)
+            elif response.code == 412:
+                self.set_status(response.code)
+                output_response = {
+                    'data': resp['data'],
+                    'status': 'error',
+                    'message': resp['message']
+                }
+                self.write(self.json_encode(output_response))
+                self.finish()
+            else:
+                self.response(response.code, resp['message'])
+        else:
+            self.response(401, 'Invalid request, you must provide username and password to login.')
+
+
+class AgreementAuthHandler(BaseHandler):
+    SUPPORTED_METHODS = ("POST")
+
+    @asynchronous
+    @engine
+    def post(self):
+        if 'username' in self.input_data.keys() and \
+           'agree_code' in self.input_data.keys():
+
+            # Check authentication with the API
+            body = {
+                'username': self.input_data['username'],
+                'agree_code': self.input_data['agree_code']
+            }
+            response = yield Task(
+                self.api_call,
+                url=self.settings['API_URL'] + '/auth/agree',
+                method='POST',
+                body=self.json_encode(body))
+            resp = loads(response.body.decode('utf-8'))
+            if 200 <= response.code < 300:
+                data = resp['data']
+                obj = {
+                    'username': self.input_data['username'],
+                    'orgname': data['orgname'],
+                    'admin': (data['role'] == 'admin'),
+                    'token': data['token'],
+                    'id': data['id'],
+                    'organization_id': data['organization_id']
+                }
+                self.set_secure_cookie("userlogin", dumps(obj))
+                # this will be acquired with the api
+                self.response(response.code, resp['message'], obj)
+            elif response.code == 412:
+                self.set_status(response.code)
+                output_response = {
+                    'data': resp['data'],
+                    'status': 'error',
+                    'message': resp['message']
+                }
+                self.write(self.json_encode(output_response))
+                self.finish()
             else:
                 self.response(response.code, resp['message'])
         else:
@@ -96,6 +156,8 @@ class LoginHandler(BaseHandler):
 
 
 class LogoutHandler(BaseHandler):
+    SUPPORTED_METHODS = ("POST")
+
     @asynchronous
     @engine
     @web_authenticated
@@ -114,6 +176,8 @@ class LogoutHandler(BaseHandler):
 
 
 class ResetPassword(BaseHandler):
+    SUPPORTED_METHODS = ("POST")
+
     @asynchronous
     @coroutine
     def post(self):
@@ -130,6 +194,8 @@ class ResetPassword(BaseHandler):
 
 
 class ChangePassword(BaseHandler):
+    SUPPORTED_METHODS = ("POST")
+
     @asynchronous
     @coroutine
     @web_authenticated
@@ -147,6 +213,8 @@ class ChangePassword(BaseHandler):
 
 
 class RequestAccessEmailHandler(BaseHandler):
+    SUPPORTED_METHODS = ("POST")
+
     @asynchronous
     @coroutine
     def post(self):

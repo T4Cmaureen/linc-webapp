@@ -18,142 +18,173 @@
 // For more information or to contact visit linclion.org or email tech@linclion.org
 angular.module('linc.auth.services', [])
 
-.factory('AuthService', ['$http', '$q', '$localStorage', '$cookies', 
+.factory('AuthService', ['$http', '$q', '$localStorage', '$cookies',
   function ($http, $q, $localStorage, $cookies) {
-  var authService = {'user': $localStorage.user};
+	var authService = {'user': $localStorage.user};
 
-  authService.Login = function (data, success, error){
-    var req = { method: 'POST',
-                url: '/login',
-                data: data,
-                headers: { 'Content-Type': 'application/json', 'X-XSRFToken' : data['_xsrf']},
-                config: {}};
-    $http(req).then(function(response){
-      var data = response.data.data;
-      var auth_user = {
-        'name': data['username'],
-        'id': data['id'],
-        'organization': data['orgname'],
-        'organization_id': data['organization_id'],
-        'admin': data['admin'],
-        'logged': true,
-        'token': data['token']
-      }
-      $localStorage.user = auth_user;
-      authService.user = auth_user;
-      success(auth_user.logged);
-    }, error);
-  };
+	authService.Login = function (data, success, error){
+		var req = { method: 'POST',
+								url: '/login',
+								data: data,
+								headers: { 'Content-Type': 'application/json', 'X-XSRFToken' : data['_xsrf']},
+								config: {}};
+		$http(req).then(function(response){
+			var data = response.data.data;
+			var auth_user = {
+				'name': data['username'],
+				'id': data['id'],
+				'organization': data['orgname'],
+				'organization_id': data['organization_id'],
+				'admin': data['admin'],
+				'logged': true,
+				'token': data['token']
+			}
+			$localStorage.user = auth_user;
+			authService.user = auth_user;
+			success(auth_user.logged);
+		}, function(response){
+			var data = response.data;
+			if (response.status == 412){
+				data = response.data.data;
+			}
+			error({status: response.status, data: data});
+		});
+	};
 
-  authService.Logout = function (success, error){
-    var xsrfcookie = $cookies.get('_xsrf');
-    var req = { method: 'POST',
-                   url: '/logout',
-                  data: {},
-               headers: { 'Content-Type': 'application/json', 'X-XSRFToken' : xsrfcookie},
-                config: {}};
-    $http(req).then(function(response){
-      $cookies.remove('userlogin');
-      $localStorage.$reset();
-      authService.user = null;
-      success();
-    }, function(response){
-      $cookies.remove('userlogin');
-      $localStorage.$reset();
-      authService.user = null;
-      error(response);
-    });
-  };
+	authService.Agree = function (data, success, error){
+		var req = {
+			method: 'POST',
+			url: '/auth/agree',
+			data: data,
+			headers: { 'Content-Type': 'application/json', 'X-XSRFToken' : data['_xsrf']},
+			config: {}
+		};
+		$http(req).then(function(response){
+			var data = response.data.data;
+			var auth_user = {
+				'name': data['username'],
+				'id': data['id'],
+				'organization': data['orgname'],
+				'organization_id': data['organization_id'],
+				'admin': data['admin'],
+				'logged': true,
+				'token': data['token']
+			}
+			$localStorage.user = auth_user;
+			authService.user = auth_user;
+			success(auth_user.logged);
+		}, error);
+	};
 
-  authService.resetPassword = function(data){
-    var deferred = $q.defer();
-    var xsrfcookie = $cookies.get('_xsrf');
-    var req = { 
-      method: 'POST',
-        url: '/auth/recover',
-        data: data,
-        headers: {'Content-Type': 'application/json', 'X-XSRFToken' : xsrfcookie},
-        //'X-XSRFToken' : data['_xsrf']},
-        config: {}
-      };
-    $http(req).then(function(response){
-      deferred.resolve(response.data);
-    },function(err){
-      deferred.reject(err);
-    });
-    return deferred.promise;
-  };
+	authService.Logout = function (success, error){
+		var xsrfcookie = $cookies.get('_xsrf');
+		var req = { method: 'POST',
+									 url: '/logout',
+									data: {},
+							 headers: { 'Content-Type': 'application/json', 'X-XSRFToken' : xsrfcookie},
+								config: {}};
+		$http(req).then(function(response){
+			$cookies.remove('userlogin');
+			$localStorage.$reset();
+			authService.user = null;
+			success();
+		}, function(response){
+			$cookies.remove('userlogin');
+			$localStorage.$reset();
+			authService.user = null;
+			error(response);
+		});
+	};
 
-  authService.ChangePassword = function(data){
-    var deferred = $q.defer();
-    var xsrfcookie = $cookies.get('_xsrf');
-    var url = '/auth/changepassword';
-    var req = { 
-      method: 'POST', 
-      url: url, 
-      data: data['data'],
-      headers: { 'Content-Type': 'application/json','X-XSRFToken' : xsrfcookie}, 
-      config: {}
-    };
+	authService.resetPassword = function(data){
+		var deferred = $q.defer();
+		var xsrfcookie = $cookies.get('_xsrf');
+		var req = {
+			method: 'POST',
+				url: '/auth/recover',
+				data: data,
+				headers: {'Content-Type': 'application/json', 'X-XSRFToken' : xsrfcookie},
+				//'X-XSRFToken' : data['_xsrf']},
+				config: {}
+			};
+		$http(req).then(function(response){
+			deferred.resolve(response.data);
+		},function(err){
+			deferred.reject(err);
+		});
+		return deferred.promise;
+	};
 
-    $http(req).then(function(response){
-      deferred.resolve(response.data);
-    },function(err){
-      deferred.reject(err);
-    });
-    return deferred.promise;
-  };
+	authService.ChangePassword = function(data){
+		var deferred = $q.defer();
+		var xsrfcookie = $cookies.get('_xsrf');
+		var url = '/auth/changepassword';
+		var req = {
+			method: 'POST',
+			url: url,
+			data: data['data'],
+			headers: { 'Content-Type': 'application/json','X-XSRFToken' : xsrfcookie},
+			config: {}
+		};
 
-  authService.RequestAccess = function(data){
-    var deferred = $q.defer();
-    var xsrfcookie = $cookies.get('_xsrf');
-    var url = '/auth/requestaccess';
-    var req = { 
-      method: 'POST', 
-      url: url, 
-      data: data['data'],
-      headers: { 'Content-Type': 'application/json','X-XSRFToken' : xsrfcookie}, 
-      config: {}
-    };
+		$http(req).then(function(response){
+			deferred.resolve(response.data);
+		},function(err){
+			deferred.reject(err);
+		});
+		return deferred.promise;
+	};
 
-    $http(req).then(function(response){
-      deferred.resolve(response.data);
-    },function(err){
-      deferred.reject(err);
-    });
-    return deferred.promise;
-  };
+	authService.RequestAccess = function(data){
+		var deferred = $q.defer();
+		var xsrfcookie = $cookies.get('_xsrf');
+		var url = '/auth/requestaccess';
+		var req = {
+			method: 'POST',
+			url: url,
+			data: data['data'],
+			headers: { 'Content-Type': 'application/json','X-XSRFToken' : xsrfcookie},
+			config: {}
+		};
 
-  authService.isAuthenticated = function(){
-    var user = authService.user;
-    if(user==undefined || !user.logged)
-      return false;
-    else
-      return true;
-  };
+		$http(req).then(function(response){
+			deferred.resolve(response.data);
+		},function(err){
+			deferred.reject(err);
+		});
+		return deferred.promise;
+	};
 
-  authService.isAuthorized = function (authorized) {
-    var user = authService.user;
-    if(user==undefined) return false;
-    if(!user.logged) return false;
-    if(user.admin) return true;
-    if(authorized=='admin') return false;
-    return true;
-  };
-  
-  authService.setUser = function (val) {
-    authService.user = val;
-    $localStorage.user = val;
-  };
+	authService.isAuthenticated = function(){
+		var user = authService.user;
+		if(user==undefined || !user.logged)
+			return false;
+		else
+			return true;
+	};
 
-  authService.chech_auth = function(){
-    var req = { method: 'GET', url: 'auth/check', data: {} };
-    return $http(req);
-  };
+	authService.isAuthorized = function (authorized) {
+		var user = authService.user;
+		if(user==undefined) return false;
+		if(!user.logged) return false;
+		if(user.admin) return true;
+		if(authorized=='admin') return false;
+		return true;
+	};
 
-  authService.login_chech_auth = function(){
-    var req = { method: 'GET', url: 'auth/check', data: {}, ignore401: true };
-    return $http(req);
-  }
-  return authService;
+	authService.setUser = function (val) {
+		authService.user = val;
+		$localStorage.user = val;
+	};
+
+	authService.chech_auth = function(){
+		var req = { method: 'GET', url: 'auth/check', data: {} };
+		return $http(req);
+	};
+
+	authService.login_chech_auth = function(){
+		var req = { method: 'GET', url: 'auth/check', data: {}, ignore401: true };
+		return $http(req);
+	}
+	return authService;
 }]);
