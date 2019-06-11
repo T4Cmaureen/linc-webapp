@@ -114,6 +114,7 @@ url_patterns = [
     (r"/login/?$", LoginHandler),
     (r"/logout/?$", LogoutHandler),
     (r"/auth/agree/?$", AgreementAuthHandler),
+    (r"/auth/agree/(\w+)/?$", AgreementAuthHandler),
     (r"/auth/check/?$", CheckAuthHandler),
     (r"/auth/recover/?$", ResetPassword),
     (r"/auth/requestaccess/?$", RequestAccessEmailHandler),

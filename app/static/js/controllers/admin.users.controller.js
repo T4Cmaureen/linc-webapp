@@ -20,7 +20,7 @@
 
 angular.module('linc.admin.users.controller', [])
 
-.controller('AdminUsersCtrl', ['$scope', '$q', '$uibModal', function ($scope, $q, $uibModal) {
+.controller('AdminUsersCtrl', ['$scope', '$timeout', '$uibModal', function ($scope, $timeout, $uibModal) {
 
   $scope.User_Mode = $scope.settings.users.Mode;
 
@@ -90,14 +90,14 @@ angular.module('linc.admin.users.controller', [])
 
     modalScope.organizations = angular.copy($scope.$parent.organizations);
     modalScope.user = {
-      'email': '', 
-      'organization': '', 
-      'password': '', 
-      'confirmPassword': '', 
-      'admin': false, 
+      'email': '',
+      'organization': '',
+      'password': '',
+      'confirmPassword': '',
+      'admin': false,
       'selected': true
     }
-    
+
     var modalInstance = $uibModal.open({
         templateUrl: 'Edit_User.tpl.html',
         scope: modalScope
@@ -122,10 +122,10 @@ angular.module('linc.admin.users.controller', [])
         modalScope.dataSending = true;
         $scope.LincApiServices.Users({'method': 'post', 'data': data}).then(function(response){
           $scope.Notification.success({
-            title: 'User Info', 
+            title: 'User Info',
             message: 'New User successfully created',
-            position: "right", 
-            duration: 2000 
+            position: "right",
+            duration: 2000
           });
           var user = response.data;
           user.created_at = (user.created_at || "").substring(0,19);
@@ -139,10 +139,10 @@ angular.module('linc.admin.users.controller', [])
         },
         function(error){
           $scope.Notification.error({
-            title: "Fail", 
+            title: "Fail",
             message: 'Fail to create new User',
-            position: 'right', 
-            duration: 5000 
+            position: 'right',
+            duration: 5000
           });
           modalInstance.dismiss();
         });
@@ -164,6 +164,7 @@ angular.module('linc.admin.users.controller', [])
       modalScope.title = 'Edit User';
 
       modalScope.dataSending = false;
+      modalScope.agree_removed = true;
       modalScope.password_required = false;
       modalScope.showValidationMessages = false;
 
@@ -193,10 +194,10 @@ angular.module('linc.admin.users.controller', [])
           modalScope.dataSending = true;
           $scope.LincApiServices.Users({'method': 'put', 'user_id' : modalScope.user.id, 'data': data}).then(function(response){
             $scope.Notification.success({
-              title: 'User Info', 
+              title: 'User Info',
               message: 'User data successfully updated',
               position: "right",
-              duration: 2000 
+              duration: 2000
             });
             var user = $scope.Selecteds[0];
             _.merge(user, user, response.data);
@@ -208,13 +209,13 @@ angular.module('linc.admin.users.controller', [])
           },
           function(error){
             $scope.Notification.error({
-              title: "Fail", 
+              title: "Fail",
               message: 'Fail to change User data',
               position: 'right',
               duration: 5000
             });
             modalInstance.dismiss();
-          });           
+          });
         }
         else {
           modalScope.showValidationMessages = true;
@@ -222,6 +223,35 @@ angular.module('linc.admin.users.controller', [])
       };
       modalScope.cancel = function(){
         modalInstance.dismiss();
+      };
+      modalScope.Remove_Agree= function(user){
+        var title = "agreement from " + modalScope.user.email;
+        $scope.DialogDelete(title).then(function (result) {
+          $scope.LincApiServices.Users({'method': 'agreement', 'users_id' : [modalScope.user.id]}).then(function(response){
+            $scope.Notification.success({
+              title: 'User Agreement',
+              message: 'User agreement data successfully removed',
+              position: "right",
+              duration: 2000
+            });
+            delete modalScope.user.agree;
+            delete $scope.Selecteds[0].agree;
+            $timeout(function () {
+              $modalScope.$apply(function () {
+                modalScope.agree_removed = true;
+              });
+            }, 100);
+          },
+          function(error){
+            $scope.Notification.error({
+              title: "Fail",
+              message: 'Fail to remove User agreement data.',
+              position: 'right',
+              duration: 5000
+            });
+            modalInstance.dismiss();
+          });
+        });
       };
     }
   }
@@ -236,19 +266,19 @@ angular.module('linc.admin.users.controller', [])
           var data = _.map(response.error, 'id');
           var msg = (data.length>1) ? 'Unable to delete users ' + data : 'Unable to delete user ' + data;
           $scope.Notification.error({
-            title: "Delete", 
+            title: "Delete",
             message: msg,
-            position: "right", 
-            duration: 2000 
+            position: "right",
+            duration: 2000
           });
         }
         else if(response.success.length>0){
           var msg = (response.success.length>1) ? 'Users successfully deleted' : 'User successfully deleted';
           $scope.Notification.success({
-            title: "Delete", 
+            title: "Delete",
             message: msg,
             position: "right",
-            duration: 2000 
+            duration: 2000
           });
         }
         _.forEach(response.success, function(item, i){
@@ -261,14 +291,56 @@ angular.module('linc.admin.users.controller', [])
       });
     }, function () {
       $scope.Notification.info({
-        title: "Cancel", 
+        title: "Cancel",
         message: 'Delete canceled',
         position: 'right',
-        duration: 2000 
+        duration: 2000
       });
     });
   }
 
+  $scope.RemoveAgreement = function(user) {
+    $scope.DialogDelete('Agreements')
+    .then(function (result) {
+      var users_id = _.map($scope.Selecteds, 'id');
+
+      $scope.LincApiServices.Users({'method': 'agreement', 'users_id': users_id}).then(function(response){
+        if(response.error.length>0){
+          var data = _.map(response.error, 'id');
+          var msg = (data.length>1) ? 'Unable to remove user agreements' : 'Unable to remove user agreement';
+          $scope.Notification.error({
+            title: "Delete",
+            message: msg,
+            position: "right",
+            duration: 2000
+          });
+        }
+        else if(response.success.length>0){
+          var msg = (response.success.length>1) ? 'Successfully removed user agreements' : 'Successfully removed user agreement';
+          $scope.Notification.success({
+            title: "Delete",
+            message: msg,
+            position: "right",
+            duration: 2000
+          });
+        }
+        _.forEach(response.success, function(item, i){
+          var user = _.find($scope.$parent.users, {id: item.id});
+          if (user)
+            delete user.agree;
+        });
+        // $scope.Selecteds = [];
+        // $scope.settings.users.Selecteds = $scope.Selecteds;
+      });
+    }, function () {
+      $scope.Notification.info({
+        title: "Cancel",
+        message: 'Delete canceled',
+        position: 'right',
+        duration: 2000
+      });
+    });
+  }
   // var FindOrganization = function(name, organizations){
   //   var deferred = $q.defer();
   //   var org = _.find(organizations,{'name': name});
@@ -276,10 +348,10 @@ angular.module('linc.admin.users.controller', [])
   //     var data = {'name': name};
   //     $scope.LincApiServices.Organizations({'method': 'post', 'data': data}).then(function(response){
   //       $scope.Notification.success({
-  //         title: 'Organization Info', 
+  //         title: 'Organization Info',
   //         message: 'New Organization successfully created',
-  //         position: "right", 
-  //         duration: 2000 
+  //         position: "right",
+  //         duration: 2000
   //       });
   //       var organization = response.data;
   //       organization.created_at = (organization.created_at || "").substring(0,19);
@@ -289,10 +361,10 @@ angular.module('linc.admin.users.controller', [])
   //     },
   //     function(error){
   //       $scope.Notification.error({
-  //         title: "Fail", 
+  //         title: "Fail",
   //         message: 'Fail to create new Organization',
-  //         position: 'right', 
-  //         duration: 5000 
+  //         position: 'right',
+  //         duration: 5000
   //       });
   //       deferred.reject();
   //     });
@@ -309,10 +381,10 @@ angular.module('linc.admin.users.controller', [])
       modalScope.title = 'Change Password';
       modalScope.showValidationMessages = false;
       modalScope.tooltip = {title: '<span><i class="icon icon-info"></i>passwords must match</span>', checked: false};
-      modalScope.sel_user = { 
+      modalScope.sel_user = {
         'email': $scope.Selecteds[0].email,
         'id': $scope.Selecteds[0].id,
-        'password': "", 'confirmPassword': "" 
+        'password': "", 'confirmPassword': ""
       };
       var modalInstance = $uibModal.open({
           templateUrl: 'Password.tpl.html',
@@ -328,14 +400,14 @@ angular.module('linc.admin.users.controller', [])
         if(valid){
           modalScope.dataSending = true;
           var data = {
-            'method': 'put', 
-            'user_id' : modalScope.sel_user.id, 
+            'method': 'put',
+            'user_id' : modalScope.sel_user.id,
             'data': {'password': modalScope.sel_user.password}
           };
           $scope.LincApiServices.Users(data)
           .then(function(response){
               $scope.Notification.success({
-              title: 'Change Password', 
+              title: 'Change Password',
               message: modalScope.sel_user.email + "'s password successfully updated",
               position: "right",
               duration: 4000
@@ -344,10 +416,10 @@ angular.module('linc.admin.users.controller', [])
           },
           function(error){
             $scope.Notification.error({
-              title: "Fail", 
+              title: "Fail",
               message: 'Fail to change User Password',
-              position: 'right', 
-              duration: 5000 
+              position: 'right',
+              duration: 5000
             });
             modalInstance.dismiss();
           });

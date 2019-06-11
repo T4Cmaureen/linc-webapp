@@ -251,6 +251,32 @@ angular.module('linc.api.services', [])
         deferred.reject(reason);
       });
     }
+    if(data_in.method=='agreement'){
+      var promises = data_in.users_id.map(function(id) {
+        var data = {
+          'method': 'DELETE',
+          'url': '/auth/agree/' + id,
+          'data': {}
+        }
+        return http_defer(id,data);
+      });
+      $q.all(promises).then(function (results) {
+        var success = [];
+        var error = [];
+        _.forEach(results, function (result, index){
+          if (result.success) {
+            success.push(result.data);
+          }
+          else{
+            error.push(result.data);
+          }
+        });
+        deferred.resolve({'success': success, 'error': error});
+      },
+      function (reason) {
+        deferred.reject(reason);
+      });
+    }
     return deferred.promise;
   };
 
