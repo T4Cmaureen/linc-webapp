@@ -108,7 +108,7 @@ class LoginHandler(BaseHandler):
 
 
 class AgreementAuthHandler(BaseHandler):
-    SUPPORTED_METHODS = ("POST")
+    SUPPORTED_METHODS = ("POST", "DELETE")
 
     @asynchronous
     @engine
@@ -153,6 +153,20 @@ class AgreementAuthHandler(BaseHandler):
                 self.response(response.code, resp['message'])
         else:
             self.response(401, 'Invalid request, you must provide username and password to login.')
+
+    @asynchronous
+    @engine
+    @web_authenticated
+    def delete(self, user_id=''):
+        response = yield Task(
+            self.api_call,
+            url=self.settings['API_URL'] + '/auth/agree/{}'.format(user_id),
+            method='DELETE')
+        self.set_status(response.code)
+        if response.code in [200, 201]:
+            self.finish(response.body)
+        else:
+            self.finish({'status': 'error', 'message': 'Fail to delete cv results.'})
 
 
 class LogoutHandler(BaseHandler):
