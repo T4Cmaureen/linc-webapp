@@ -163,7 +163,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 							<input ng-change="change('NameOrId')" type="text" class="form-control input-sm" 
 								ng-model="filters.NameOrId" placeholder="Enter Name or ID to filter">
 						</div>
-					</div>					
+					</div>
 					<div class="filter-pannel" uib-collapse="isCollapsed.Organization">
 						<div class="panel-body checkbox">
 							<label class="organization" ng-repeat="organization in filters.Organizations">
@@ -187,9 +187,8 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 							<rzslider class="age-slider"
 								rz-slider-model="filters.Ages.min"
 								rz-slider-high="filters.Ages.max"
-								rz-slider-options="filters.Ages.options"
+								rz-slider-options="slider_options"
 								rz-slider-step="1"
-								rz-slider-on-change="change('Ages')"
 								rz-slider-tpl-url="rzSliderTpl.html">
 							</rzslider>
 						</div>

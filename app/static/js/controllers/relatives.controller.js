@@ -71,12 +71,15 @@ angular.module('linc.relatives.controller', [])
 		LincDataFactory.set_relatives(relatives_options);
 	};
 
+	$scope.slider_options = { ceil: 32, floor: 0, onChange: function(){ $scope.ChangeFilter('Ages');}};
+
 	$scope.isCollapsed.NameOrId = $scope.filters.NameOrId ? false : true;
 	$scope.isCollapsed.Organization = _.every($scope.filters.Organizations, {checked: true});
-	$scope.isCollapsed.Age = (($scope.filters.Ages.options.floor == $scope.filters.Ages.min &&  $scope.filters.Ages.options.ceil == $scope.filters.Ages.max) ? true : false);
+	$scope.isCollapsed.Age = (($scope.slider_options.floor == $scope.filters.Ages.min &&  $scope.slider_options.ceil == $scope.filters.Ages.max) ? true : false);
 	$scope.isCollapsed.Gender = _.every($scope.filters.Genders, {checked: true});
 	$scope.is_Collaped.Filter = !(_.values($scope.isCollapsed).some(function(item){return item===false;}));
-	
+
+
 	$scope.refreshSlider = function () {
 		$timeout(function () {
 			$scope.$broadcast('rzSliderForceRender');
