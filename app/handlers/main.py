@@ -247,3 +247,15 @@ class ClassifierGraphHandler(BaseHandler):
 class AgreementHandler(BaseHandler):
     def get(self):
         self.render('agreement.html')
+
+
+class TermsOfUseHandler(BaseHandler):
+    @web_authenticated
+    def get(self):
+        self.render('terms.of.use.html')
+
+
+class PrivacyPolicyHandler(BaseHandler):
+    @web_authenticated
+    def get(self):
+        self.render('privacy.policy.html')

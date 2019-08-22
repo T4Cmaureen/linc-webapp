@@ -425,6 +425,30 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', functio
       }
     })
 
+    //TERMS_OF_USE: 'http://linc.linclion.org/Terms-Of-Use',
+    .state("terms_of_use", {
+      url: "/terms_of_use",
+      controller: function($scope){
+      },
+      templateUrl: 'terms.of.use.html',
+      data: {
+        bodyClasses: 'termsofuse',
+        authorized: 'logged',
+        debug: debug
+      }
+    })
+    //PRIVACY_POLICY: 'http://linc.linclion.org/Privacy-Policy'
+    .state("privacy_policy", {
+      url: "/privacy_policy",
+      controller: function($scope){
+      },
+      templateUrl: 'privacy.policy.html',
+      data: {
+        bodyClasses: 'privacy_policy',
+        authorized: 'logged',
+        debug: debug
+      }
+    })
     // About
     .state('about', {
       url: '/about',

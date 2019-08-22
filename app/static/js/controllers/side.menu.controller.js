@@ -61,15 +61,15 @@ angular.module('linc.side.menu.controller', [])
     window.open(url,'_blank');
   };
 
-  $scope.TERMS_OF_USE = function(){
-    var url = DOC_URLS['TERMS_OF_USE'];
-    window.open(url,'_blank');
-  };
+  // $scope.TERMS_OF_USE = function(){
+  //   var url = DOC_URLS['TERMS_OF_USE'];
+  //   window.open(url,'_blank');
+  // };
 
-  $scope.PRIVACY_POLICY = function(){
-    var url = DOC_URLS['PRIVACY_POLICY'];
-    window.open(url,'_blank');
-  };
+  // $scope.PRIVACY_POLICY = function(){
+  //   var url = DOC_URLS['PRIVACY_POLICY'];
+  //   window.open(url,'_blank');
+  // };
 
   $scope.changePWD = function($hide){
      $hide();

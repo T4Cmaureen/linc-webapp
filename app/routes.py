@@ -30,7 +30,7 @@ from handlers.main import EditMetadataHandler, CVResultsMainHandler, CVRequestMa
 from handlers.main import PageAdminHandler, PageAdminUsersHandler, PageAdminOrganizationsHandler, PageAdminLionsHandler
 from handlers.main import PageAdminImageSetsHandler, PageAdminImagesHandler, PageAdminCVRequestsHandler, PageAdminCVResultsHandler
 from handlers.main import RequestAccessHandler, MetadataBatchHandler, LocationOnMapHandler, DeleteBatchHandler, SelectBoundarysHandler
-from handlers.main import ClassifierGraphHandler, AgreementHandler
+from handlers.main import ClassifierGraphHandler, AgreementHandler, TermsOfUseHandler, PrivacyPolicyHandler
 from handlers.api import LionsListHandler, ImagesListHandler, ImageSetsListHandler, OrganizationsListHandler, ImageSetsReqHandler
 from handlers.api import ImagesUploadHandler, ImagesHandler, LionsHandler, ImageSetsHandler
 from handlers.api import OrganizationsHandler, CVResultsHandler, CVRequestHandler, UsersHandler, RelativesHandler
@@ -77,6 +77,8 @@ url_patterns = [
     (r"/select.boundarys.tpl.html", SelectBoundarysHandler),
     (r"/classifier.graph.tpl.html", ClassifierGraphHandler),
     (r"/agreement.html", AgreementHandler),
+    (r"/terms.of.use.html", TermsOfUseHandler),
+    (r"/privacy.policy.html", PrivacyPolicyHandler),
     # Handlers for API comunication
     (r"/imagesets/list", ImageSetsListHandler),
     (r"/imagesets/(\w+)/(cvrequest)/?$", ImageSetsListHandler),
