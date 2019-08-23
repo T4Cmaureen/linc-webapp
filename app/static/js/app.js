@@ -427,7 +427,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', functio
 
     //TERMS_OF_USE: 'http://linc.linclion.org/Terms-Of-Use',
     .state("terms_of_use", {
-      url: "/terms_of_use",
+      url: "/linc/Terms-Of-Use",
       controller: function($scope){
       },
       templateUrl: 'terms.of.use.html',
@@ -439,7 +439,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', functio
     })
     //PRIVACY_POLICY: 'http://linc.linclion.org/Privacy-Policy'
     .state("privacy_policy", {
-      url: "/privacy_policy",
+      url: "/linc/Privacy-Policy",
       controller: function($scope){
       },
       templateUrl: 'privacy.policy.html',
