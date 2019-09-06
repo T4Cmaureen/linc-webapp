@@ -21,8 +21,8 @@
 # For more information or to contact visit linclion.org or email tech@linclion.org
 
 from handlers.base import VersionHandler
-from handlers.auth import LogoutHandler, LoginHandler, CheckAuthHandler, ChangePassword, AgreementAuthHandler,\
-    RequestAccessEmailHandler, RecoveryHandler
+from handlers.auth import LogoutHandler, LoginHandler, CheckAuthHandler, ResetPassword, ChangePassword, AgreementAuthHandler,\
+    RequestAccessEmailHandler
 from handlers.main import MainHandler, LoginMainHandler, HomeHandler, SideMenuHandler, RelativesTplHandler, CarouselGalleryHandler
 from handlers.main import LionMainHandler, ViewLionDatabaseHandler, ImageSetMainHandler, ViewImageSetsHandler, BoundaryMapHandler
 from handlers.main import ConservationistsHandler, ImageGalleryHandler, LocationHistoryHandler, ViewImagesHandler, CompareImagesHandler
@@ -118,8 +118,7 @@ url_patterns = [
     (r"/auth/agree/?$", AgreementAuthHandler),
     (r"/auth/agree/(\w+)/?$", AgreementAuthHandler),
     (r"/auth/check/?$", CheckAuthHandler),
-    (r"/auth/recovery/(.*)/?$", RecoveryHandler),
-    (r"/auth/recovery/?$", RecoveryHandler),
+    (r"/auth/recover/?$", ResetPassword),
     (r"/auth/requestaccess/?$", RequestAccessEmailHandler),
     (r"/auth/changepassword/?$", ChangePassword),
     (r"/users/?$", UsersHandler),

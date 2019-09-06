@@ -75,6 +75,7 @@ config['version'] = 'LINC webapp version v4.0.0-2018-04-05'
 config['static_path'] = join(appdir, "static")
 config['template_path'] = join(appdir, "templates")
 config['autoescape'] = None
+config['login_url'] = '/#/login'
 config['default_handler_class'] = BaseHandler
 
 config['scheduler'] = TornadoScheduler()
@@ -82,10 +83,7 @@ config['scheduler'].start()
 
 # Setting URL
 # appurl = "https://linc-website.herokuapp.com/"
-config['APP_URL'] = environ.get('APP_URL', 'http://localhost:5080')
-# config['APP_URL'] = 'http://linc-webapp.venidera.local'
-# config['login_url'] = config['APP_URL'] + '/#/login'
+config['url'] = environ.get('APP_URL', 'http://localhost:5080')
 
 # Setting linc-api URL
 config['API_URL'] = environ.get('API_URL', 'http://localhost:5050')
-# config['API_URL'] = 'http://linc-api.venidera.local'

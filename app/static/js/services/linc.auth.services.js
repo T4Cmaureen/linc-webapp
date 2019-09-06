@@ -96,19 +96,21 @@ angular.module('linc.auth.services', [])
 		});
 	};
 
-	authService.UpdatePassword = function(data){
+	authService.resetPassword = function(data){
 		var deferred = $q.defer();
 		var xsrfcookie = $cookies.get('_xsrf');
-		$http({
+		var req = {
 			method: 'POST',
-			url: '/auth/recovery',
-			data: data,
-			headers: { 'Content-Type': 'application/json', 'X-XSRFToken': xsrfcookie },
-			config: {}
-		}).then(function(response){
+				url: '/auth/recover',
+				data: data,
+				headers: {'Content-Type': 'application/json', 'X-XSRFToken' : xsrfcookie},
+				//'X-XSRFToken' : data['_xsrf']},
+				config: {}
+			};
+		$http(req).then(function(response){
 			deferred.resolve(response.data);
-		}, function(error){
-			deferred.reject(error.data);
+		},function(err){
+			deferred.reject(err);
 		});
 		return deferred.promise;
 	};

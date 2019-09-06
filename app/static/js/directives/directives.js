@@ -444,39 +444,5 @@ angular.module('linc.directives', ['linc.cvrequest.directive', 'linc.cvresults.d
             });
         }
     };
-}])
-
-.directive('nxEqualExq', ['$timeout', function($timeout) {
-	return {
-		require: 'ngModel',
-		link: function (scope, elem, attrs, ngModelCtrl) {
-			if (!attrs.nxEqualExq) {
-				console.error('nxEqualExq expects a model as an argument!');
-				return;
-			}
-
-			scope.$watch(attrs.nxEqualExq, function (value) {
-				// Only compare values if the second ctrl has a value.
-				if (ngModelCtrl.$viewValue !== undefined && ngModelCtrl.$viewValue !== '') {
-					ngModelCtrl.$setValidity('nxEqualExq', value === ngModelCtrl.$viewValue);
-				}
-				if (value === ngModelCtrl.$viewValue){
-					scope.$parent.$parent.showValidationMessages=false;
-				}
-			});
-			ngModelCtrl.$parsers.push(function (value) {
-				// Mute the nxEqual error if the second ctrl is empty.
-				if (value === undefined || value === '') {
-					ngModelCtrl.$setValidity('nxEqualExq', true);
-					return value;
-				}
-				var isValid = value === scope.$eval(attrs.nxEqualExq);
-				ngModelCtrl.$setValidity('nxEqualExq', isValid);
-				if (ngModelCtrl.$valid)
-					scope.$parent.$parent.showValidationMessages=false;
-				return isValid ? value : undefined;
-			});
-		}
-	};
 }]);
 
