@@ -114,27 +114,28 @@ angular.module('linc.login.controller', [])
 	};
 
 	$scope.forgotPwd = function(){
-		var modalScope = $scope.$new();
+	 	var modalScope = $scope.$new();
 		modalScope.dataSending = false;
 		modalScope.title = 'Reset your password?';
 		modalScope.showValidationMessages = false;
 		modalScope.forgot = {username: $scope.loginData.username};
+		modalScope.tooltip = {title: '<span><i class="icon icon-info"></i>passwords must match</span>', checked: false};
 
 		var modalInstance = $uibModal.open({
 			templateUrl: 'ForgetPwd.tpl.html',
 			scope: modalScope
 		});
 		modalInstance.result.then(function (result) {
-			var data = {'username': result.username};
+			var data = {'username': result.username, 'password': null};
 			modalScope.dataSending = false;
 			ShowInfo(data);
 		});
-		modalScope.resetPassword = function (valid){
+		modalScope.UpdatePassword = function (valid){
 			if(valid){
 				modalScope.dataSending = true;
-				AuthService.resetPassword({'email': modalScope.forgot.username})
+				AuthService.UpdatePassword({email: modalScope.forgot.username, password: modalScope.forgot.password})
 				.then(function(response){
-					$scope.loginData.username = modalScope.forgot.username;
+					// $scope.loginData.username = modalScope.forgot.username;
 					modalInstance.close(modalScope.forgot);
 				},
 				function(error){
@@ -162,7 +163,7 @@ angular.module('linc.login.controller', [])
 	var ShowInfo = function (data){
 		var modalScope = $scope.$new();
 		modalScope.title = 'New Password';
-		modalScope.modalMessage = "An email with new password has been sent to "+
+		modalScope.modalMessage = "An email with instructions to change password has been sent to "+
 													data.username + ".";
 		var modalInstance = $uibModal.open({
 			templateUrl: 'ForgetSended.tpl.html',
