@@ -211,13 +211,11 @@ class RecoveryHandler(BaseHandler):
             if response.code in [200, 201]:
                 body = loads(response.body.decode('utf-8'))
                 data = body['data']
-                info(data)
                 title = data['title']
                 msg = data['message']
             elif response.code == 400:
                 msg = message
         redirect = "5;url=" + self.settings['login_url']
-        info("message: {} redirect: {}".format(redirect))
         self.render('message.html', message=msg, title=title, redirect=redirect)
         return
 
