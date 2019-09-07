@@ -90,7 +90,7 @@ class DataExportHandler(BaseHandler):
                     name='Remove file ' + fn + ' at ' + str(dtexec),
                     run_date=dtexec,
                     args=[self.settings['scheduler'], fn, jobid], coalesce=True, id=jobid)
-                self.set_header('FileUrl', self.settings['url'] + '/static/export/' + fn.split('/')[-1])
+                self.set_header('FileUrl', self.settings['APP_URL'] + '/static/export/' + fn.split('/')[-1])
                 self.set_header('Content-Disposition', 'attachment; filename=export.csv')
                 with open(fn, 'r') as f:
                     for line in f:

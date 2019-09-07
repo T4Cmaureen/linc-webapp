@@ -50,14 +50,49 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 			<div id="container-forgot" class="wrapper">
 				<div class="instruction">
 					<p>Please provide the email address that you used when you signed up for your Linc account.</p>
-					<p>We will send you an email with a new password.</p>
+					<p>We will send you an email with instructions to change the password.</p>
+					<small><b>Choose a "strong password" using uppercase, lowercase letters, numbers and symbols.
+						   Password must be at least 8 characters.</b>
+					</small>
+					<br>
 				</div>
 				<div class="callout-box">
-					<form name="form" class="form-signin" ng-submit="resetPassword(form.$valid)">
+					<form name="form" class="form-signin" ng-submit="UpdatePassword(form.$valid)">
 						<div class="form-group" ng-class="{'has-error': form.email.$dirty && form.email.$error.required }">
-							<!-- <label for="username" class="sr-only">Email address</label> -->
-							<input type="email" name="email" id="email" class="form-control" ng-model="forgot.username" placeholder="Email address" required oninvalid="this.setCustomValidity('Email address is required')" oninput="setCustomValidity('')" autofocus>
+							<input type="email" name="email" id="email" class="form-control" ng-model="forgot.username" placeholder="Email address"
+							required oninvalid="this.setCustomValidity('Email address is required')"
+							oninput="setCustomValidity('')" autofocus>
 						</div>
+
+						<div class="form-group">
+							<label for="password">New Password:</label>
+							<input type="password" name="password_fake" value="" class="display-none" />
+							<input class="form-control" type="password" name="password" ng-model="forgot.password"
+								minlength=8 placeholder="enter the new password"
+								ng-required="true" oninput="setCustomValidity('')"
+								oninvalid="
+									if (validity.valueMissing){
+										this.setCustomValidity('please fill out this field with Password ');
+									}
+									else if (validity.tooShort){
+										this.setCustomValidity('Please enter a password of at least 8 characters');
+									}
+								">
+						</div>
+						<div class="form-group confirm-password" ng-model-options="{ allowInvalid: true}">
+							<label for="confirm_password">Confirm Password:</label>
+							<input type="password" name="password_fake" value="" class="display-none" />
+							<input class="form-control" type="password" name="confirm_password"
+								ng-model="forgot.confirm_password" placeholder="confirm the new password"
+								ng-required="true" oninput="setCustomValidity('')"
+								oninvalid="this.setCustomValidity('please repeat the Password in this field')"
+								nx-equal-exq="forgot.password"
+								data-animation="am-flip-x" data-html="true" data-type="info"
+									placement="bottom" bs-tooltip="tooltip" data-template-url='tooltip.password.tpl.html'
+									data-trigger="manual"
+									data-bs-show="showValidationMessages && (form.confirm_password.$error.nxEqualExq!=undefined)">
+						</div>
+
 						<div class="form-actions">
 							<button class="btn btn-lg btn-primary btn-block" type="submit">Reset Password</button>
 							<p class="text-center" ng-if="dataSending"><img src="/static/images/loading.gif" /> submitting&hellip;</p>
