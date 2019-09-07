@@ -84,7 +84,7 @@ config['scheduler'].start()
 # appurl = "https://linc-website.herokuapp.com/"
 config['APP_URL'] = environ.get('APP_URL', 'http://localhost:5080')
 # config['APP_URL'] = 'http://linc-webapp.venidera.local'
-# config['login_url'] = config['APP_URL'] + '/#/login'
+config['login_url'] = config['APP_URL'] + '/#/login'
 
 # Setting linc-api URL
 config['API_URL'] = environ.get('API_URL', 'http://localhost:5050')
