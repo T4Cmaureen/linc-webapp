@@ -188,23 +188,53 @@ class LogoutHandler(BaseHandler):
         else:
             self.response(500, 'Fail to logout.')
 
+class RecoveryHandler(BaseHandler):
+    SUPPORTED_METHODS = ("GET", "POST")
 
-class ResetPassword(BaseHandler):
-    SUPPORTED_METHODS = ("POST")
+    @asynchronous
+    @coroutine
+    def get(self, code=None):
+        self.set_default_headers()
+        title = 'Invalid request'
+        msg = 'A code is required to use this resource.'
+        if code:
+            response = yield Task(
+                self.api_call,
+                url=self.settings['API_URL'] + '/auth/recovery/' + code,
+                method='GET')
+            if hasattr(response, 'message'):
+                message = response.message
+            elif hasattr(response, 'body'):
+                message = loads(response.body.decode('utf-8'))['message']
+            else:
+                message = ''
+            if response.code in [200, 201]:
+                body = loads(response.body.decode('utf-8'))
+                data = body['data']
+                info(data)
+                title = data['title']
+                msg = data['message']
+            elif response.code == 400:
+                msg = message
+        redirect = "5;url=" + self.settings['login_url']
+        self.render('message.html', message=msg, title=title, redirect=redirect)
+        return
 
     @asynchronous
     @coroutine
     def post(self):
-        if 'email' in self.input_data.keys():
+        if 'email' in self.input_data.keys() and 'password' in self.input_data.keys():
             response = yield Task(
                 self.api_call,
-                url=self.settings['API_URL'] + '/auth/recover',
+                url=self.settings['API_URL'] + '/auth/recovery',
                 method='POST',
-                body=self.json_encode({'email': self.input_data['email']}))
-            resp = loads(response.body.decode('utf-8'))
-            self.response(response.code, resp['message'])
+                body=self.json_encode(
+                    {'email': self.input_data['email'],
+                     'password': self.input_data['password']}))
+            body = loads(response.body.decode('utf-8'))
+            self.response(response.code, body['message'])
         else:
-            self.response(400, 'An email is required to restart user\'s passwords.')
+            self.response(400, 'An email and password is required to restart user\'s passwords.')
 
 
 class ChangePassword(BaseHandler):
