@@ -114,7 +114,7 @@ angular.module('linc.login.controller', [])
 	};
 
 	$scope.forgotPwd = function(){
-	 	var modalScope = $scope.$new();
+		var modalScope = $scope.$new();
 		modalScope.dataSending = false;
 		modalScope.title = 'Reset your password?';
 		modalScope.showValidationMessages = false;
