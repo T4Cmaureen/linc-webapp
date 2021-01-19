@@ -1,0 +1,60 @@
+# Copyright(C) Venidera Research & Development, Inc - All Rights Reserved
+# Unauthorized copying of this file, via any medium is strictly prohibited
+# Proprietary and confidential
+# Written by Rafael Giordano Vieira <rafael@venidera.com>
+
+# A workflow for building, testing and deploying applications
+name: CI
+
+on:
+  # Trigger the workflow on push
+  push:
+    # Push events on branches develop and master
+    branches: [develop, master]
+    # Anytime a path name matches, the workflow will not run
+    paths-ignore: ['README.md']
+  # Trigger the workflow on pull request
+  pull_request:
+    # Pull request events on branches develop and master
+    branches: [develop, master]
+    # Anytime a path name matches, the workflow will not run
+    paths-ignore: ['README.md']
+
+# Typed pipeline variables declared at the top level of a configuration.
+# Users can pass parameters into their pipelines when triggering a new run.
+env:
+  IMAGE_NAME: venideraco/linc-webapp
+
+# The basic units of work in a run
+jobs:
+  deploy:
+    # Job name
+    name: Deploying
+    # Primary machine where all commands run
+    runs-on: ubuntu-latest
+    steps:
+      # Used to check out source code to the configured path
+      - name: Check out source repository
+        uses: actions/checkout@v2
+      # Logging in to DockerHub
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      # Building the Docker image
+      - name: Build the Docker image
+        run: |
+          docker build \
+            --build-arg=UI_PORT='${{ secrets.UI_PORT }}' \
+            --build-arg=COOKIE_SECRET='${{ secrets.COOKIE_SECRET }}' \
+            --build-arg=REDISCLOUD_URL='${{ secrets.REDISCLOUD_URL }}' \
+            --build-arg=REDIS_URL='${{ secrets.REDIS_URL }}' \
+            --build-arg=S3_ACCESS_KEY='${{ secrets.S3_ACCESS_KEY }}' \
+            --build-arg=S3_SECRET_KEY='${{ secrets.S3_SECRET_KEY }}' \
+            --tag ${IMAGE_NAME}:${GITHUB_REF##*/} .
+      # Publishing image to DockerHub
+      - name: Publish the Docker image into DockerHub
+        run: docker push $IMAGE_NAME:${GITHUB_REF##*/}
+
+

@@ -1,4 +1,6 @@
-# linc-webapp
+# LINC-webapp
+![Supported Python Version](https://img.shields.io/badge/python-3.8.0-orange.svg "Supported Python Version") [![GitHub Actions](https://github.com/linc-lion/linc-webapp/workflows/CI/badge.svg)](https://github.com/linc-lion/linc-webapp/actions?query=workflow%3ACI) [![Image registry on Docker Hub](https://img.shields.io/badge/container-ready-blue.svg "Image registry on Docker Hub")](https://hub.docker.com/repository/docker/venideraco/linc-webapp/tags)
+
 LINC-webapp is a website that allows Lion Guardians to identify lions in Africa.
 
 # License
