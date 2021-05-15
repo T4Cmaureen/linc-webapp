@@ -88,4 +88,3 @@ config['login_url'] = config['APP_URL'] + '/#/login'
 
 # Setting linc-api URL
 config['API_URL'] = environ.get('API_URL', 'http://localhost:5050')
-# config['API_URL'] = 'http://linc-api.venidera.local'

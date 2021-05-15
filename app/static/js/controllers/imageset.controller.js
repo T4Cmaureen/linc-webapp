@@ -32,7 +32,6 @@ angular.module('linc.imageset.controller', [])
 
 	$scope.ChangeStatus = $rootScope.ChangeStatus;
 
-
 	var count = 0;
 	var Poller = function () {
 		PollerService.cvrequests_list().then(function(response){

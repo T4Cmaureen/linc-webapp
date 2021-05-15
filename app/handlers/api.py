@@ -190,6 +190,7 @@ class ImagesListHandler(BaseHandler):
 
 
 class LionsListHandler(BaseHandler):
+    SUPPORTED_METHODS = ("GET", "POST")
     @asynchronous
     @engine
     @web_authenticated
@@ -198,12 +199,39 @@ class LionsListHandler(BaseHandler):
         org_id = self.get_argument('org_id', None)
         if org_id:
             resource_url += '?org_id=' + str(org_id)
+        token = self.get_argument('token', None)
+        if token:
+            resource_url += '?token=' + str(token)
+
+        response = yield Task(self.api_call, url=resource_url, method='GET')
+
+        message = ''
+        if hasattr(response, 'message'):
+            message = response.message
+        elif hasattr(response, 'body'):
+            body = loads(response.body.decode('utf-8'))
+            if body and 'message' in body:
+                message = body['message']
+
+        if response and response.code in [200, 206]:
+            body = loads(response.body)
+            self.response(response.code, body['message'], body)
+        else:
+            self.response(response.code, message)
+
+    @asynchronous
+    @engine
+    @web_authenticated
+    def post(self):  # Execute a consult (POST)'===
+        org_id = self.get_argument('org_id', None)
+        url = self.settings['API_URL'] + '/lions/list'
+        if org_id:
+            url += '?org_id=' + org_id
+        body = self.json_encode(self.input_data)
+        headers = {'Content-type': 'application/json'}
         response = yield Task(
-            self.api_call,
-            url=resource_url,
-            method='GET')
+            self.api_call, url=url, method='POST', body=body, headers=headers)
         self.set_json_output()
-        self.set_status(response.code)
         if response.code in [200, 201]:
             self.finish(response.body)
         else:

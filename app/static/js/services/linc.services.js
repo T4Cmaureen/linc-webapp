@@ -18,11 +18,19 @@
 // For more information or to contact visit linclion.org or email tech@linclion.org
 'use strict';
 
-angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'linc.data.factory',
-	'linc.interceptor.factory', 'linc.notification.factory', 'modal.page.service'])
+angular.module('linc.services', [
+	'linc.api.services',
+	'linc.auth.services',
+	'linc.data.factory',
+	'linc.interceptor.factory',
+	'linc.notification.factory',
+	'modal.page.service'
+])
 
-.factory('LincServices', ['$http', '$state', '$q', '$cookies', 'AuthService', 'NotificationFactory', function($http, $state, $q, $cookies, AuthService, NotificationFactory) {
+.factory('LincServices', ['$http', '$state', '$q', '$cookies', '$localStorage', '$interval', 'AuthService', 'PollerService', 'NotificationFactory',
+  function($http, $state, $q, $cookies, $localStorage, $interval, AuthService, PollerService, NotificationFactory) {
 
+	var $storage = $localStorage;
 	var debug = ($state.current.data == undefined) ? false : ($state.current.data.debug || false);
 	var HTTPGet = function (url, config){
 		var deferred = $q.defer();
@@ -69,17 +77,63 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 		});
 		return deferred.promise;
 	};
-	// Get All Lions List
-	var GetAllLions = function (org) {
+
+	var ProcessAllLions = function(org){
 		var deferred = $q.defer();
+		var xsrfcookie = $cookies.get('_xsrf');
 		var url = databases['lions'].url + '/list';
 		if(org !== undefined)
 			url = url + '?org_id=' + org;
+		$http({ method: 'POST', url: url, data: {}, config: {},
+			headers: { 'Content-Type': 'application/json', 'X-XSRFToken' : xsrfcookie} })
+		.then(function (response) {
+			deferred.resolve(response);
+		}, function (error) {
+			deferred.reject(error);
+		});
+		return deferred.promise;
+	};
 
-		HTTPGet(url, {}).then(function (results) {
-			deferred.resolve(results.data);
-		},
-		function (error) {
+	var GetAllLions = function (org) {
+		var deferred = $q.defer();
+		ProcessAllLions(org).then(function(response){
+			NotificationFactory.info({
+				title: "Lion's data",
+				message: "Please wait. Processing the lion's data",
+				position: 'right',
+				duration: 2000
+			});
+			$storage.token = response.data.data.token;
+			var promise = null;
+			var poller = function() {
+				PollerService.lions_list($storage.token).then(function (response) {
+					if (response.status == 200) {
+						delete $storage.token;
+						if (angular.isDefined(promise)) {
+							$interval.cancel(promise);
+							promise = undefined;
+						}
+						NotificationFactory.success({
+							title: "Processing finished",
+							message: "Returning the lions' data.",
+							position: 'right',
+							duration: 2000
+						});
+						deferred.resolve(response.data.data.data);
+					}
+					else if (response.status == 206) {
+						NotificationFactory.info({
+							title: "Lion's data",
+							message: "Please wait. Processing the lion's data",
+							position: 'right',
+							duration: 2000
+						});
+					}
+				});
+			};
+			poller();
+			var promise = $interval(poller, 10000);
+		}, function (error){
 			if(debug || (error.status != 401 && error.status != 403)){
 				NotificationFactory.error({
 					title: "Error", message: 'Unable to load Lions datas',
@@ -93,7 +147,7 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 			}
 			else{
 				console.log("lions reject error");
-				deferred.reject(error);
+				deferred.resolve({});
 			}
 		});
 		return deferred.promise;
@@ -219,7 +273,6 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 		// deferred.resolve({cv: true, whisker: true});
 		return deferred.promise;
 	};
-	// Get Lion by Id
 	var GetLion = function (id) {
 		var deferred = $q.defer();
 		var url = databases['lions'].url + '/' + id + '/profile';
@@ -827,7 +880,7 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 	// List of ImageSets , Lions and Organizations
 	dataFactory.Organizations = GetAllOrganizations;
 	dataFactory.ImageSets = GetAllImageSets;
-	dataFactory.Lions = GetAllLions;
+	dataFactory.AllLions = GetAllLions;
 	// ImageSet to ImageSet Profile
 	dataFactory.ImageSet = GetImageSet;
 	// Lion to lion Profile
@@ -892,7 +945,20 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 				deferred.reject(error);
 			});
 			return deferred.promise;
+		},
+		lions_list: function(token){
+			var url = 'lions/list?token=' + token['id'];
+			var deferred = $q.defer();
+			AuthService.chech_auth().then( function(resp){
+				$http.get(url).then(function (response) {
+					deferred.resolve(response);
+				}, function(error){
+					deferred.reject(error);
+				});
+			},function(error){
+				deferred.reject(error);
+			});
+			return deferred.promise;
 		}
 	}
-}])
-;
+}]);

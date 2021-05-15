@@ -73,11 +73,8 @@ class LoginHandler(BaseHandler):
             # Check authentication with the API
             body = {'username': self.input_data['username'],
                     'password': self.input_data['password']}
-            response = yield Task(
-                self.api_call,
-                url=self.settings['API_URL'] + '/auth/login',
-                method='POST',
-                body=self.json_encode(body))
+            url = self.settings['API_URL'] + '/auth/login'
+            response = yield Task(self.api_call, url=url, method='POST', body=self.json_encode(body))
             resp = loads(response.body.decode('utf-8'))
             if 200 <= response.code < 300:
                 data = resp['data']
