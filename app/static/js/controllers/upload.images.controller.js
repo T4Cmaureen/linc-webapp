@@ -261,6 +261,8 @@ angular.module('linc.upload.images.controller', [])
 				});
 			}
 		}
+		$scope.SucessItems = [];  $scope.Duplicateds = [];
+		$scope.InvalidData = [];  $scope.ErrorItems = [];
 		uploader.clearQueue();
 	};
 
