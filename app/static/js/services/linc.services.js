@@ -78,6 +78,9 @@ angular.module('linc.services', [
 		return deferred.promise;
 	};
 
+	var cachedData = {
+		LionsList: []
+	};
 	var ProcessAllLions = function(org){
 		var deferred = $q.defer();
 		var xsrfcookie = $cookies.get('_xsrf');
@@ -96,60 +99,67 @@ angular.module('linc.services', [
 
 	var GetAllLions = function (org) {
 		var deferred = $q.defer();
-		ProcessAllLions(org).then(function(response){
-			NotificationFactory.info({
-				title: "Lion's data",
-				message: "Please wait. Processing the lion's data",
-				position: 'right',
-				duration: 2000
-			});
-			$storage.token = response.data.data.token;
-			var promise = null;
-			var poller = function() {
-				PollerService.lions_list($storage.token).then(function (response) {
-					if (response.status == 200) {
-						delete $storage.token;
-						if (angular.isDefined(promise)) {
-							$interval.cancel(promise);
-							promise = undefined;
+		if (!_.isEmpty(cachedData.LionsList)){
+			var cached = cachedData.LionsList;
+			deferred.resolve(cached);
+		}
+		else{
+			ProcessAllLions(org).then(function(response){
+				NotificationFactory.info({
+					title: "Lion's data",
+					message: "Please wait. Processing the lion's data",
+					position: 'right',
+					duration: 2000
+				});
+				$storage.token = response.data.data.token;
+				var promise = null;
+				var poller = function() {
+					PollerService.lions_list($storage.token).then(function (response) {
+						if (response.status == 200) {
+							delete $storage.token;
+							if (angular.isDefined(promise)) {
+								$interval.cancel(promise);
+								promise = undefined;
+							}
+							NotificationFactory.success({
+								title: "Processing finished",
+								message: "Returning the lions' data.",
+								position: 'right',
+								duration: 2000
+							});
+							cachedData.LionsList = response.data.data.data;
+							deferred.resolve(cachedData.LionsList);
 						}
-						NotificationFactory.success({
-							title: "Processing finished",
-							message: "Returning the lions' data.",
-							position: 'right',
-							duration: 2000
-						});
-						deferred.resolve(response.data.data.data);
-					}
-					else if (response.status == 206) {
-						NotificationFactory.info({
-							title: "Lion's data",
-							message: "Please wait. Processing the lion's data",
-							position: 'right',
-							duration: 2000
-						});
-					}
-				});
-			};
-			poller();
-			var promise = $interval(poller, 10000);
-		}, function (error){
-			if(debug || (error.status != 401 && error.status != 403)){
-				NotificationFactory.error({
-					title: "Error", message: 'Unable to load Lions datas',
-					position: 'right', // right, left, center
-					duration: 5000   // milisecond
-				});
-			}
-			if(error.status == 401 || error.status == 403){
-				console.log("lions resolve error");
-				deferred.resolve({});
-			}
-			else{
-				console.log("lions reject error");
-				deferred.resolve({});
-			}
-		});
+						else if (response.status == 206) {
+							NotificationFactory.info({
+								title: "Lion's data",
+								message: "Please wait. Processing the lion's data",
+								position: 'right',
+								duration: 2000
+							});
+						}
+					});
+				};
+				poller();
+				var promise = $interval(poller, 10000);
+			}, function (error){
+				if(debug || (error.status != 401 && error.status != 403)){
+					NotificationFactory.error({
+						title: "Error", message: 'Unable to load Lions datas',
+						position: 'right', // right, left, center
+						duration: 5000   // milisecond
+					});
+				}
+				if(error.status == 401 || error.status == 403){
+					console.log("lions resolve error");
+					deferred.resolve({});
+				}
+				else{
+					console.log("lions reject error");
+					deferred.resolve({});
+				}
+			});
+		}
 		return deferred.promise;
 	};
 	// Get All Organizations List
@@ -441,6 +451,9 @@ angular.module('linc.services', [
 				deferred.reject(error);
 			});
 		}
+		else{
+			cachedData.LionsList = [];
+		}
 		if(data_in.method=='POST'){
 			var data = data_in.data;
 			HTTP('POST', url, data, {}, function (response) {
@@ -496,6 +509,8 @@ angular.module('linc.services', [
 
 	// Post Imageset (CV Request)
 	var RequestCV = function (imageset_id, data, success) {
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('POST', '/imagesets/' + imageset_id + '/cvrequest', data, {}, success,
 		function (error) {
 			if(debug || (error.status != 401 && error.status != 403)){
@@ -511,16 +526,22 @@ angular.module('linc.services', [
 
 	// Put ImageSet (Update Imageset)
 	var PutImageSet = function (imageset_id, data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('PUT', '/imagesets/' + imageset_id, data, {}, success, error);
 	};
 
 	// Post ImageSet - New Imageset
 	var PostImageset = function (data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('POST', '/imagesets', data, {}, success, error);
 	};
 
 	// Put Lion (Update Lion)
 	var PutLionImageset = function (lion_id, data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
 			var promises = [];
@@ -558,11 +579,15 @@ angular.module('linc.services', [
 
 	// Put Lion (Set Primary)
 	var SetPrimary = function (lion_id, data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('PUT', '/lions/' + lion_id, data, {}, success, error);
 	};
 
 	// Post Lion - New Lion
 	var CreateLion = function (input_data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
 			var result_data;
@@ -583,6 +608,8 @@ angular.module('linc.services', [
 	};
 
 	var SwitchLion = function (input_data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
 			// Lion
@@ -606,6 +633,8 @@ angular.module('linc.services', [
 
 	// Put Lion (Update Lion)
 	var UpdateImage = function (image_id, data, success){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('PUT', '/images/' + image_id, data, {},
 			function (result) {
 				success(result.data.data);
@@ -623,6 +652,8 @@ angular.module('linc.services', [
 	};
 
 	var UpdateImages = function (items, success){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
 			var promises = items.map(function(item) {
@@ -665,21 +696,29 @@ angular.module('linc.services', [
 
 	// Delete CVRequest / CVResults
 	var DeleteImage = function (image_id, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('DELETE', '/images/' + image_id, {}, {}, success, error);
 	};
 
 	// Delete ImageSet
 	var DeleteImageSet = function (imageset_id, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('DELETE', '/imagesets/' + imageset_id, {}, {}, success, error);
 	};
 
 	// Delete Lion
 	var DeleteLion = function (lion_id, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('DELETE', '/lions/' + lion_id, {}, {}, success, error);
 	};
 
 	// Batch Delete Lions / Imagesets / Images
 	var BatchDelete = function(data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
 			var url = '/'+ data.type + '/';
@@ -708,6 +747,8 @@ angular.module('linc.services', [
 
 	// Batch Delete Lions / Imagesets / Images
 	var BatchUpdate = function(input_data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
 			var promises = [];
@@ -803,6 +844,8 @@ angular.module('linc.services', [
 
 	// Delete CVRequest / CVResults
 	var DeleteCVRequest = function (cvrequest_id, success){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('DELETE', '/cvrequests/' + cvrequest_id, {}, {}, success,
 		function(error){
 			if(debug || (error.status != 401 && error.status != 403)){
