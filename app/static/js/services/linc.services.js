@@ -27,8 +27,8 @@ angular.module('linc.services', [
 	'modal.page.service'
 ])
 
-.factory('LincServices', ['$rootscope', '$http', '$state', '$q', '$cookies', '$localStorage', '$interval', 'AuthService', 'PollerService', 'NotificationFactory',
-  function($rootscope, $http, $state, $q, $cookies, $localStorage, $interval, AuthService, PollerService, NotificationFactory) {
+.factory('LincServices', ['$rootScope', '$http', '$state', '$q', '$cookies', '$localStorage', '$interval', 'AuthService', 'PollerService', 'NotificationFactory',
+  function($rootScope, $http, $state, $q, $cookies, $localStorage, $interval, AuthService, PollerService, NotificationFactory) {
 
 	var $storage = $localStorage;
 	var debug = ($state.current.data == undefined) ? false : ($state.current.data.debug || false);
@@ -82,7 +82,7 @@ angular.module('linc.services', [
 		LionsList: []
 	};
 
-	$rootscope.$on("EmptyLionListCache", function(evt, data){
+	$rootScope.$on("EmptyLionListCache", function(evt, data){
 		cachedData.LionsList = [];
 	});
 
