@@ -62,7 +62,7 @@ angular.module('linc.metadata.controller', [])
 		$scope.selected.new_lion = undefined;
 		$scope.ListLions = [];
 		$scope.lion_association.label = 'Wait. Loading...'
-		LincServices.Lions().then(function(lions){
+		LincServices.AllLions().then(function(lions){
 			console.log("loaded");
 			_.forEach(lions, function(lion, index) {
 				var label = '<span>' + lion.id + ' - ' + lion.name;
