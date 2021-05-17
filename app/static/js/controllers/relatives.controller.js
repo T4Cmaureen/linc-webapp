@@ -71,7 +71,7 @@ angular.module('linc.relatives.controller', [])
 		LincDataFactory.set_relatives(relatives_options);
 	};
 
-	$scope.slider_options = { ceil: 32, floor: 0, onChange: function(){ $scope.ChangeFilter('Ages');}};
+	$scope.slider_options = { ceil: 32, floor: 0, onChange: function(){ /*$scope.ChangeFilter('Ages');*/}};
 
 	$scope.isCollapsed.NameOrId = $scope.filters.NameOrId ? false : true;
 	$scope.isCollapsed.Organization = _.every($scope.filters.Organizations, {checked: true});
