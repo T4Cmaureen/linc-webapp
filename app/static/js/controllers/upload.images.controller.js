@@ -164,6 +164,8 @@ angular.module('linc.upload.images.controller', [])
     if(!uploader.getNotUploadedItems().length)
       $scope.enable_Upload = false;
     console.info('onCompleteAll');
+    $scope.$broadcast("onUploadImages");
+    $scope.$emit("onUploadImages");
     var message = '';
     if($scope.SucessItems.length>0){
       if($scope.SucessItems.length==1){
