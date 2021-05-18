@@ -27,8 +27,8 @@ angular.module('linc.services', [
 	'modal.page.service'
 ])
 
-.factory('LincServices', ['$http', '$state', '$q', '$cookies', '$localStorage', '$interval', 'AuthService', 'PollerService', 'NotificationFactory',
-  function($http, $state, $q, $cookies, $localStorage, $interval, AuthService, PollerService, NotificationFactory) {
+.factory('LincServices', ['$rootScope', '$http', '$state', '$q', '$cookies', '$localStorage', '$interval', 'AuthService', 'PollerService', 'NotificationFactory',
+  function($rootScope, $http, $state, $q, $cookies, $localStorage, $interval, AuthService, PollerService, NotificationFactory) {
 
 	var $storage = $localStorage;
 	var debug = ($state.current.data == undefined) ? false : ($state.current.data.debug || false);
@@ -81,6 +81,11 @@ angular.module('linc.services', [
 	var cachedData = {
 		LionsList: []
 	};
+
+	$rootScope.$on("EmptyLionListCache", function(evt, data){
+		cachedData.LionsList = [];
+	});
+
 	var ProcessAllLions = function(org){
 		var deferred = $q.defer();
 		var xsrfcookie = $cookies.get('_xsrf');

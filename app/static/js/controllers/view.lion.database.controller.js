@@ -155,7 +155,7 @@ angular.module('linc.view.lion.database.controller', [])
 
 	set_all_lions(lions);
 
-	$scope.slider_options = { ceil: 32, floor: 0, onChange: function(){ $scope.ChangeFilter('Ages');}};
+	$scope.slider_options = { ceil: 32, floor: 0, onChange: function(){/*$scope.ChangeFilter('Ages');*/}};
 
 	$scope.pfilters = $stateParams.filter ? $stateParams.filter : {};
 

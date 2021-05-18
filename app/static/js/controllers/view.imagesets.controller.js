@@ -441,7 +441,7 @@ angular.module('linc.view.imagesets.controller', [])
 	if(cvrequest_pendings.length)
 		start_Poller(0);
 
-	$scope.slider_options = { ceil: 32, floor: 0, onChange: function(){ $scope.ChangeFilter('Ages');}};
+	$scope.slider_options = { ceil: 32, floor: 0, onChange: function(){/*$scope.ChangeFilter('Ages');*/}};
 
 	$scope.pfilters = $stateParams.filter ? $stateParams.filter : {};
 
