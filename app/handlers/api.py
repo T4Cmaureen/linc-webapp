@@ -782,7 +782,7 @@ class ImagesUploadHandler(BaseHandler, ProcessMixin):
                     self.api_call,
                     url=self.settings['API_URL'] + '/images/upload',
                     method='POST',
-                    body=dumps(body))
+                    body=self.json_encode(body))
                 if response.code in [200, 201]:
                     self.response(200, 'File successfully uploaded. You must wait the processing phase for your image.')
                 elif response.code == 409:
