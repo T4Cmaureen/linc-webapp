@@ -76,7 +76,6 @@ def get_exif_data(filename):
                             dval = math.nan if math.isnan(val) else val
                         except:
                             dval = math.nan
-                        info(dval)
                         dvalue.append(dval)
                 exif_data[decoded] = dvalue
             if decoded in ['DateTimeOriginal', 'DateTime', 'DateTimeDigitized']:
