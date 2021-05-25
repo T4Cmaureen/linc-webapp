@@ -111,6 +111,9 @@ angular.module('linc.login.controller', [])
 				});
 			}
 		}
+		else{
+			$state.go("home");
+		}
 	};
 
 	$scope.forgotPwd = function(){
