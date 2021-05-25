@@ -285,7 +285,7 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 	        <div class="Container-Panel-2">
     	    	<div class="Right-Top-Panel">
 					<h4 class="viewer-founds">
-						{{! ordered_lions.length }} lions found.
+						{{! filtered_lions.length }} lions found.
 						<p class="clearfix" ng-if="isBatchMode">
 							<a class="btn btn-default btn-xs" ng-disabled="selection.allSel" ng-click="check_all(true)">Select All</a>
 							<a class="btn btn-default btn-xs" ng-disabled="selection.allUnSel" ng-click="check_all(false)">Select None</a>
@@ -384,10 +384,20 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 						<tbody infinite-scroll="Paging()" infinite-scroll-distance="1" infinite-scroll-container="'.Scroll-Panel'">
 
 							<tr class="link" ng-click="!isBatchMode && goto_lion(lion);"
-								ng-repeat="lion in limited_lions = ( ordered_lions = ( filtered_lions = ( mine_lions = ( lions | filter: BatchFilter ) ) |
-									nameid_filter: filters.NameOrId: 'primary_image_set_id' | age_filter: filters.Ages | organization_filter: filters.Organizations |
-									features_filter: filters.TagFeatures | gender_filter: filters.Genders | LatLngFilter: filters.Location : true |
-									geographical: GeoBounds ) | orderBy : orderby.predicate : orderby.reverse ) | limitTo: ViewTotal">
+								ng-repeat="lion in limited_lions = (
+									ordered_lions = (
+										filtered_lions = (
+											(mine_lions = ( lions | filter: BatchFilter ) ) |
+											nameid_filter: filters.NameOrId: 'primary_image_set_id' |
+											age_filter: filters.Ages |
+											organization_filter: filters.Organizations |
+											features_filter: filters.TagFeatures |
+											gender_filter: filters.Genders |
+											LatLngFilter: filters.Location : true |
+											geographical: GeoBounds
+										) | orderBy : orderby.predicate : orderby.reverse
+									) | limitTo: ViewTotal
+								)">
 
 								<td class="text-center" ng-if="isBatchMode">
 									<input type="checkbox" ng-model="lion.selected" ng-click="Select_Lion($event, lion);$event.stopPropagation();">
