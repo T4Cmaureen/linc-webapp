@@ -16,208 +16,186 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 For more information or to contact visit linclion.org or email tech@linclion.org -->
-<script type="text/ng-template" id="custom.caourlse.tpl.html">
-  <div class="carousel-inner" ng-style="slide.Style"  ng-transclude></div>
+<script type="text/ng-template" id="custom.carousel.tpl.html">
+	<div class="carousel-inner" ng-style="slide.Style"  ng-transclude></div>
 </script>
-<div name="CompareImages" class="modal-compare-images font-homenaje-1-1" ng-cloak>
+<div name="CompareImages" class="modal-compare-images font-homenaje-1-1" ng-style="resize()" resizable resize-change="resizeChange()" ng-cloak>
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-cloak style="min-width: 800px;">
+		<div class="nav navbar-nav navbar-left title-gallery">
+			<h4 class="text-center">
+				Image Set Query ({{!imageset.id}}) Gallery
+			</h4>
+		</div>
+		<div class="nav navbar-nav navbar-right" style="padding: 6px 30px;">
+			<!-- CV Results Lions' Carousel -->
+			<ul class="pagination pagination-cv">
+				<li class="li-title-2">
+					<h4>
+						CV Results
+					</h4>
+					<div>
+						{{!carouselCV.Page}}/{{!carouselCV.TotalPages}} page
+					</div>
+				</li>
+				<!-- Previous Button -->
+				<li class="previous" ng-class="prevPageDisabled(carouselCV)">
+					<a href ng-click="prevPage(carouselCV)">«</a>
+				</li>
+				<!-- Thumbnails's Carousel -->
+				<li ng-repeat="photo in carouselCV.paginated = (carouselCV.gallery | limitTo:carouselCV.Count:carouselCV.Begin)"
+					ng-click="selectLion(photo)"
+					ng-class="{active:(photo.index==carouselCV.active)}" >
+					<span data-animation="am-flip-x"
+						data-html="true"
+						placement="bottom-center"
+						bs-tooltip="photo.tooltip">
+						<img ng-src="{{!photo.thumbnail || '//:0' }}">
+					</span>
+				</li>
+				<!-- Next Button -->
+				<li class="next" ng-class="nextPageDisabled(carouselCV)">
+					<a href ng-click="nextCVPage(carouselCV)">»</a>
+				</li>
+				<li class="li-title-1">
+					<h4>
+						{{!CVResultsTitle}}
+					</h4>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<div class="body-compare-images" style="margin-top: 116px;">
+		<div class="pull-right" style="width: 50%; margin-bottom: 120px;">
+			<div uib-carousel active="carouselLion.active"
+					no-transition="carousel.no_transition"
+					interval="carousel.interval"
+					no-wrap="carousel.noWrapSlides"
+					ng-show="carouselLion.showslide">
+				<div template-url="custom.carousel.tpl.html" uib-slide ng-repeat="photo in carouselLion.gallery track by photo.index"
+						index="photo.index"
+						class="carousel-pagination">
+					<div class="div-image">
+						<img style="width: 95%;" ng-src="{{!photo.medium || '//:0' }}" class="carousel-img img-responsive center-block">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pull-left" style="width: 50%; margin-bottom: 120px;">
+			<div uib-carousel active="carouselImg.active"
+				 no-transition="carousel.no_transition"
+				 interval="carousel.interval"
+				 no-wrap="carousel.noWrapSlides"
+				 ng-show="carouselImg.showslide">
+				<div template-url="custom.carousel.tpl.html" uib-slide ng-repeat="photo in carouselImg.gallery track by photo.index"
+					 index="photo.index"
+					 class="carousel-pagination">
+					<div class="div-image">
+						<img style="width: 95%;" ng-src="{{!photo.medium || '//:0' }}" class="carousel-img img-responsive center-block">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="navbar navbar-fixed-bottom" style="height: 100px;">
 
-  <div class="body-compare-images" ng-style="resize()"
-      resizable resize-change="resizeChange()">
-    <!-- Gallery Selected Thumbnail Image -->
-    <div class="row row-carousel">
-      <!-- Imaget Set -->
-      <div class="col-sm-6 left-panel">
-        <nav class="text-center">
-          <ul class="pagination pagination-2">
-            <li class="li-title-1">
-              <h4>
-                Image Set Query ({{!imageset.id}}) Gallery
-              </h4>
-            </li>
-          </ul>
-        </nav>
-        <div uib-carousel active="carouselImg.active"
-           no-transition="carousel.no_transition"
-           interval="carousel.interval"
-           no-wrap="carousel.noWrapSlides"
-           ng-show="carouselImg.showslide">
-          <div template-url="custom.caourlse.tpl.html" uib-slide ng-repeat="photo in carouselImg.gallery track by photo.index"
-             index="photo.index"
-             class="carousel-pagination">
-            <div class="div-image">
-              <img ng-src="{{!photo.medium || '//:0' }}" class="carousel-img img-responsive center-block">
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- CV Result's Selected Lion's Primary Imaget Set-->
-      <div class="col-sm-6 right-panel">
-        <nav class="text-left">
-          <!-- CV Results Lions' Carousel -->
-          <ul class="pagination pagination-2">
-            <li class="li-title-2">
-              <h4>
-                CV Results
-              </h4>
-              <div>
-                {{!carouselCV.Page}}/{{!carouselCV.TotalPages}} page
-              </div>
-            </li>
-            <!-- Previous Button -->
-            <li class="previous" ng-class="prevPageDisabled(carouselCV)">
-              <a href ng-click="prevPage(carouselCV)">«</a>
-            </li>
-            <!-- Thumbnails's Carousel -->
-            <li ng-repeat="photo in carouselCV.paginated = (carouselCV.gallery | limitTo:carouselCV.Count:carouselCV.Begin)"
-              ng-click="selectLion(photo)"
-              ng-class="{active:(photo.index==carouselCV.active)}" >
-              <span data-animation="am-flip-x"
-                data-html="true"
+		<nav class="pull-left" style="width: 50%;">
+			<ul class="pagination pagination-3">
+				<li class="filter">
+					<div class="tablist" data-allow-multiple="true" role="tablist" aria-multiselectable="true" bs-collapse>
+						<div role="tab" class="div-tab">
+							<a bs-collapse-toggle ng-click="isImageSetCollapsed=!isImageSetCollapsed">
+								<i class="pull-right icon icon-select-arrows"></i>Tags
+							</a>
+						</div>
+						<div uib-collapse="isImageSetCollapsed" class="div-collapse">
+							<div class="panel-body checkbox">
+								<label ng-repeat="tag in ImageSetTags">
+									<input ng-click="Change_Tags(carouselImg, ImageSetTags)" type="checkbox" ng-model="tag.checked" ng-checked="tag.checked">
+									<span class="cr">
+										<i class="cr-icon fa fa-check"></i>
+									</span>
+									{{! tag.label}}
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="page-count">
+						{{!carouselImg.Page}}/{{!carouselImg.TotalPages}} page
+					</div>
+				</li>
+				<li class="previous" ng-class="prevPageDisabled(carouselImg)">
+					<a href ng-click="prevPage(carouselImg)">«</a>
+				</li>
+				<li ng-repeat="photo in carouselImg.paginated = (carouselImg.filtered = (carouselImg.gallery | TagsFilter: ImageSetTags) | limitTo:carouselImg.Count:carouselImg.Begin)"
+					ng-click="setActive(photo.index, carouselImg)"
+					ng-class="{active:(photo.index==carouselImg.active)}" ng-cloak>
+					<span data-animation="am-flip-x"
+						data-html="true"
 
-                placement="bottom-center"
-                bs-tooltip="photo.tooltip">
-                <img ng-src="{{!photo.thumbnail || '//:0' }}">
-              </span>
-            </li>
-            <!-- Next Button -->
-            <li class="next" ng-class="nextPageDisabled(carouselCV)">
-              <a href ng-click="nextCVPage(carouselCV)">»</a>
-            </li>
-            <li class="li-title-1">
-              <h4>
-                {{!CVResultsTitle}}
-              </h4>
-            </li>
-          </ul>
-        </nav>
-        <div uib-carousel active="carouselLion.active"
-           no-transition="carousel.no_transition"
-           interval="carousel.interval"
-           no-wrap="carousel.noWrapSlides"
-           ng-show="carouselLion.showslide">
-          <div template-url="custom.caourlse.tpl.html" uib-slide ng-repeat="photo in carouselLion.gallery track by photo.index"
-             index="photo.index"
-             class="carousel-pagination">
-            <div class="div-image">
-              <img ng-src="{{!photo.medium || '//:0' }}" class="carousel-img img-responsive center-block">
-            </div>
-          </div>
-        </div>
-        <div class="image-loading" ng-class="{'large': windowWidth>=1000,'medium': windowWidth<1000 && windowWidth>= 768, 'small': windowWidth<768}">
-          <p class="text-center" ng-if="dataLoading">
-            <img src="/static/images/downloading.gif" />
-            Loading ... please wait&hellip;
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="row row-pagination">
-      <div class="col-sm-6 left-panel">
-        <nav class="text-left">
-          <ul class="pagination pagination-3">
-            <li class="filter">
-              <div class="tablist" data-allow-multiple="true" role="tablist" aria-multiselectable="true" bs-collapse>
-                <div role="tab" class="div-tab">
-                  <a bs-collapse-toggle ng-click="isImageSetCollapsed=!isImageSetCollapsed">
-                    <i class="pull-right icon icon-select-arrows"></i>Tags
-                  </a>
-                </div>
-                <div uib-collapse="isImageSetCollapsed" class="div-collapse">
-                  <div class="panel-body checkbox">
-                    <label ng-repeat="tag in ImageSetTags">
-                      <input ng-click="Change_Tags(carouselImg, ImageSetTags)" type="checkbox" ng-model="tag.checked" ng-checked="tag.checked">
-                      <span class="cr">
-                        <i class="cr-icon fa fa-check"></i>
-                      </span>
-                      {{! tag.label}}
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="page-count">
-                {{!carouselImg.Page}}/{{!carouselImg.TotalPages}} page
-              </div>
-            </li>
-            <li class="previous" ng-class="prevPageDisabled(carouselImg)">
-              <a href ng-click="prevPage(carouselImg)">«</a>
-            </li>
-            <li ng-repeat="photo in carouselImg.paginated = (carouselImg.filtered = (carouselImg.gallery | TagsFilter: ImageSetTags) | limitTo:carouselImg.Count:carouselImg.Begin)"
-              ng-click="setActive(photo.index, carouselImg)"
-              ng-class="{active:(photo.index==carouselImg.active)}" ng-cloak>
-              <span data-animation="am-flip-x"
-                data-html="true"
+						placement="top-center"
+						bs-tooltip="photo.tooltip">
+						<img ng-src="{{!photo.medium || '//:0' }}">
+					</span>
+				</li>
+				<li class="next" ng-class="nextPageDisabled(carouselImg)">
+					<a href ng-click="nextPage(carouselImg)">»</a>
+				</li>
+			</ul>
+			<div class="imageset-title" style="text-align: center;">
+				<h4 style="margin: auto;">
+					{{! ImagesetTitle }}
+				</h4>
+			</div>
+		</nav>
+		<nav style="left: calc(50% + 16px); position: absolute; width: 50%;">
+			<!-- Selected Lion's Primary Image Set Carousel -->
+			<ul class="pagination pagination-4">
+				<li class="filter">
+					<div class="tablist" data-allow-multiple="true" role="tablist" aria-multiselectable="true" bs-collapse>
+						<div role="tab" class="div-tab">
+							<a bs-collapse-toggle ng-click="isLionCollapsed=!isLionCollapsed">
+								<i class="pull-right icon icon-select-arrows"></i>Tags
+							</a>
+						</div>
+						<div uib-collapse="isLionCollapsed" class="div-collapse">
+							<div class="panel-body checkbox">
+								<label ng-repeat="tag in LionTags">
+									<input ng-click="Change_Tags(carouselLion, LionTags)" type="checkbox"  ng-model="tag.checked" ng-checked="tag.checked">
+									<span class="cr">
+										<i class="cr-icon fa fa-check"></i>
+									</span>
+									{{! tag.label}}
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="page-count">
+						{{!carouselLion.Page}}/{{!carouselLion.TotalPages}} page
+					</div>
+				</li>
+				<li class="previous" ng-class="prevPageDisabled(carouselLion)">
+					<a href ng-click="prevPage(carouselLion)">«</a>
+				</li>
+				<li ng-repeat="photo in carouselLion.paginated = (carouselLion.filtered = (carouselLion.gallery | TagsFilter: LionTags) | limitTo:carouselLion.Count:carouselLion.Begin)"
+					ng-click="setActive(photo.index, carouselLion)"
+					ng-class="{active:(photo.index==carouselLion.active)}" ng-cloak>
+					<span data-animation="am-flip-x"
+						data-html="true"
 
-                placement="top-center"
-                bs-tooltip="photo.tooltip">
-                <img ng-src="{{!photo.medium || '//:0' }}">
-              </span>
-            </li>
-            <li class="next" ng-class="nextPageDisabled(carouselImg)">
-              <a href ng-click="nextPage(carouselImg)">»</a>
-            </li>
-          </ul>
-        </nav>
-        <div class="imageset-title">
-          <h4>
-            <!-- Image Set {{!imageset.id}} - Gallery  -->
-            {{!ImagesetTitle}}
-          </h4>
-        </div>
-      </div>
-      <div class="col-sm-6 right-panel">
-        <nav class="text-left">
-          <!-- Selected Lion's Primary Image Set Carousel -->
-          <ul class="pagination pagination-4">
-            <li class="filter">
-              <div class="tablist" data-allow-multiple="true" role="tablist" aria-multiselectable="true" bs-collapse>
-                <div role="tab" class="div-tab">
-                  <a bs-collapse-toggle ng-click="isLionCollapsed=!isLionCollapsed">
-                    <i class="pull-right icon icon-select-arrows"></i>Tags
-                  </a>
-                </div>
-                <div uib-collapse="isLionCollapsed" class="div-collapse">
-                  <div class="panel-body checkbox">
-                    <label ng-repeat="tag in LionTags">
-                      <input ng-click="Change_Tags(carouselLion, LionTags)" type="checkbox"  ng-model="tag.checked" ng-checked="tag.checked">
-                      <span class="cr">
-                        <i class="cr-icon fa fa-check"></i>
-                      </span>
-                      {{! tag.label}}
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="page-count">
-                {{!carouselLion.Page}}/{{!carouselLion.TotalPages}} page
-              </div>
-            </li>
-            <li class="previous" ng-class="prevPageDisabled(carouselLion)">
-              <a href ng-click="prevPage(carouselLion)">«</a>
-            </li>
-            <li ng-repeat="photo in carouselLion.paginated = (carouselLion.filtered = (carouselLion.gallery | TagsFilter: LionTags) | limitTo:carouselLion.Count:carouselLion.Begin)"
-              ng-click="setActive(photo.index, carouselLion)"
-              ng-class="{active:(photo.index==carouselLion.active)}" ng-cloak>
-              <span data-animation="am-flip-x"
-                data-html="true"
-
-                placement="top-center"
-                bs-tooltip="photo.tooltip">
-                <img ng-src="{{!photo.medium || '//:0' }}">
-              </span>
-            </li>
-            <li class="next" ng-class="nextPageDisabled(carouselLion)">
-              <a href ng-click="nextPage(carouselLion)">»</a>
-            </li>
-          </ul>
-        </nav>
-        <div class="cvresult-title">
-          <h4>
-          <!-- CV Result (Image Set: {{!lion.primary_image_set_id}}) Gallery  -->
-          {{!TitleLion}}
-          </h4>
-        </div>
-      </div>
-    </div>
-  </div>
+						placement="top-center"
+						bs-tooltip="photo.tooltip">
+						<img ng-src="{{!photo.medium || '//:0' }}">
+					</span>
+				</li>
+				<li class="next" ng-class="nextPageDisabled(carouselLion)">
+					<a href ng-click="nextPage(carouselLion)">»</a>
+				</li>
+			</ul>
+			<div class="cvresult-title" style="text-align: center;">
+				<h4 style="margin: auto;">
+				{{! TitleLion }}
+				</h4>
+			</div>
+		</nav>
+	</div>
 </div>
-
