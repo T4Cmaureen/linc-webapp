@@ -292,6 +292,7 @@ angular.module('linc.view.lion.database.controller', [])
 		var date = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
 		var ids = _.map($scope.Selecteds, 'id');
 		$scope.exporting = true;
+		console.log('selecteds count: %s', ids.length);
 		LincServices.DataExport({'data': {'lions': ids}}).then(function(res_data){
 			var blob = res_data.blob;
 			var fileName = 'Data-Lions-'+ date + '-' + (res_data.fileName || "").substring(res_data.fileName.lastIndexOf('/')+1) || 'images.csv';
