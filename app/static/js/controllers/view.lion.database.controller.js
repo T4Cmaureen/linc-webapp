@@ -122,6 +122,10 @@ angular.module('linc.view.lion.database.controller', [])
 	$scope.change = function(type){
 		lion_options.filters[type] = $scope.filters[type];
 		LincDataFactory.set_lions(lion_options);
+		if (type == 'Organizations'){
+			$scope.check_orgs.status = _.every($scope.filters.Organizations, ['checked', false]) ? 0 :
+				(_.every($scope.filters.Organizations, ['checked', true]) ? 1 : -1);
+		}
 	};
 
 	// Click collapse
@@ -405,4 +409,17 @@ angular.module('linc.view.lion.database.controller', [])
 			modalInstance.dismiss();
 		}
 	};
+	// Check Organizations
+	$scope.check_orgs = { status: 0 };
+	$scope.checkAllOrgs = function(status){
+		// var status = $scope.check_orgs.status;
+		if (status != -1){
+			_.map($scope.filters.Organizations, function(org){
+				org.checked = status ? true : false;
+			});
+		}
+		$scope.check_orgs.status = status;
+	};
+	$scope.check_orgs.status = _.every($scope.filters.Organizations, ['checked', false]) ? 0 :
+        (_.every($scope.filters.Organizations, ['checked', true]) ? 1 : -1);
 }]);
