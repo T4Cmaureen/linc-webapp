@@ -77,10 +77,12 @@ class DataExportHandler(BaseHandler):
             method='POST',
             body=self.json_encode(self.input_data))
         if response.code == 200:
+            info(response)
             # Create the CSV file
             fn = yield Task(self.generate_fn)
             data = loads(response.body.decode('utf-8'))['data']
             resp = yield Task(self.write_csv, fn=fn, data=data)
+            info(resp)
             if resp:
                 dtexec = datetime.now() + timedelta(minutes=1)
                 jobid = str(uuid4())

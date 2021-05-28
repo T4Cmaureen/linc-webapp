@@ -24,6 +24,7 @@ from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 from logging import info
 from datetime import datetime
+import math
 
 tags_skip = ['MakerNote', 'UserComment']
 
@@ -54,7 +55,6 @@ def get_exif_data(filename):
                     if isinstance(tvalue, bytes):
                         tvalue = tvalue.decode('utf-8')
                     gps_data[sub_decoded] = tvalue
-
                 exif_data[decoded] = gps_data
             else:
                 dvalue = value
@@ -69,6 +69,14 @@ def get_exif_data(filename):
                         except Exception as e:
                             info(e)
                             info('Exception: Invalid Encoding Detected for Exif Data.')
+                elif isinstance(value, tuple):
+                    dvalue = list()
+                    for val in list(value):
+                        try:
+                            dval = math.nan if math.isnan(val) else val
+                        except:
+                            dval = math.nan
+                        dvalue.append(dval)
                 exif_data[decoded] = dvalue
             if decoded in ['DateTimeOriginal', 'DateTime', 'DateTimeDigitized']:
                 date_portion = exif_data[decoded][0:10]

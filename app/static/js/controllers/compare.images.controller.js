@@ -64,9 +64,9 @@ angular.module('linc.compare.images.controller', [])
 	// Carousel Options
 	$scope.carousel = { interval: 500000, noWrapSlides: false, no_transition : false};
 	// ImageSet
-	$scope.carouselImg={ showslide: true, gallery:[], name: 'imageset', active: 0, Page: 1, Begin: 0, Count: 4 };
+	$scope.carouselImg={ showslide: true, gallery:[], name: 'imageset', active: 0, Page: 1, Begin: 0, Count: 6 };
 	// Lion
-	$scope.carouselLion={ showslide: true, gallery: [], name: 'lion', active: 0, Page: 1, Begin: 0, Count: 4 };
+	$scope.carouselLion={ showslide: true, gallery: [], name: 'lion', active: 0, Page: 1, Begin: 0, Count: 6 };
 	// ImageSet Gallery
 	var setGallery = function (gallery){
 		var photos = _.map(gallery.images, function(photo, index) {
@@ -179,44 +179,48 @@ angular.module('linc.compare.images.controller', [])
 			$scope.TitleLion = "CV Result (Image Set: "+ $scope.lion.primary_image_set_i + ") - Gallery ( " + $set.filtered.length + " Images )";
 	}
 
-	$scope.resizeChange = function(h,w){
-		if (w >= 1770){
+	$scope.resizeChange = function(h, w){
+		$scope.size = JSON.stringify({
+			h: h,
+			w: w
+		})
+		if (w >= 1886){
 			$scope.carouselLion.Count = 13;
 			$scope.carouselImg.Count = 13;
 		}
-		else if (w >= 1650){
+		else if (w >= 1818){
 			$scope.carouselLion.Count = 12;
 			$scope.carouselImg.Count = 12;
 		}
-		else if (w >= 1550){
+		else if (w >= 1668){
 			$scope.carouselLion.Count = 11;
 			$scope.carouselImg.Count = 11;
 		}
-		else if (w >= 1450){
+		else if (w >= 1562){
 			$scope.carouselLion.Count = 10;
 			$scope.carouselImg.Count = 10;
 		}
-		else if (w >= 1350){
+		else if (w >= 1453){
 			$scope.carouselLion.Count = 9;
 			$scope.carouselImg.Count = 9;
 		}
-		else if (w >= 1250){
+		else if (w >= 1350){
 			$scope.carouselLion.Count = 8;
 			$scope.carouselImg.Count = 8;
 		}
-		else if(w >= 1140){
+		else if(w >= 1240){
 			$scope.carouselLion.Count = 7;
 			$scope.carouselImg.Count = 7;
 		}
-		else if(w >= 1020){
+		else if(w >= 1130){
 			$scope.carouselLion.Count = 6;
 			$scope.carouselImg.Count = 6;
 		}
-		else if(w >= 900){
+		else if(w >= 1022){
 			 $scope.carouselLion.Count = 5;
 			 $scope.carouselImg.Count = 5;
 		}
-		else if(w >= 790){
+		else if(w >= 915){
 			 $scope.carouselLion.Count = 4;
 			 $scope.carouselImg.Count = 4;
 		}
@@ -224,29 +228,31 @@ angular.module('linc.compare.images.controller', [])
 			$scope.carouselLion.Count = 3;
 			$scope.carouselImg.Count = 3;
 		}
+		// $scope.carouselLion.Count = 13;
+		// $scope.carouselImg.Count = 13;
 
-		if (w >= 1820)
+		if (w >= 1886)
+			$scope.carouselCV.Count = 13;
+		else if (w >= 1818)
 			$scope.carouselCV.Count = 12;
-		else if (w >= 1730)
+		else if (w >= 1668)
 			$scope.carouselCV.Count = 11;
-		else if (w >= 1620)
+		else if (w >= 1562)
 			$scope.carouselCV.Count = 10;
-		else if (w >= 1490)
+		else if (w >= 1453)
 			$scope.carouselCV.Count = 9;
-		else if (w >= 1390)
+		else if(w >= 1350)
 			$scope.carouselCV.Count = 8;
-		else if(w >= 1280)
+		else if(w >= 1240)
 			$scope.carouselCV.Count = 7;
-		else if(w >= 1170)
-			$scope.carouselCV.Count = 6;
-		else if(w >= 1060)
-			 $scope.carouselCV.Count = 5;
-		else if(w >= 980)
+		else if(w >= 1130)
+			 $scope.carouselCV.Count = 6;
+		else if(w >= 1022)
+			$scope.carouselCV.Count = 5;
+		else if(w >= 915)
 			$scope.carouselCV.Count = 4;
-		else if(w >= 850)
-			$scope.carouselCV.Count = 3;
 		else
-			$scope.carouselCV.Count = 2;
+			$scope.carouselCV.Count = 3;
 
 		SetCarousel($scope.carouselImg);
 		SetCarousel($scope.carouselLion);
@@ -258,7 +264,7 @@ angular.module('linc.compare.images.controller', [])
 	};
 
 	// Matches
-	$scope.carouselCV={ gallery: [], Page: 1, Begin: 0, Count: 4};
+	$scope.carouselCV={ gallery: [], Page: 1, Begin: 0, Count: 6};
 	// Matches Gallery
 	var photos = []
 	_.forEach($scope.cvresults, function(lion, index){

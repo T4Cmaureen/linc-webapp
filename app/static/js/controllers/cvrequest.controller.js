@@ -115,6 +115,10 @@ angular.module('linc.cvrequest.controller', [])
 	$scope.change = function(type){
 		cvrequests_options.filters[type] = $scope.filters[type];
 		LincDataFactory.set_cvrequests(cvrequests_options);
+		if (type == 'Organizations'){
+			$scope.check_orgs.status = _.every($scope.filters.Organizations, ['checked', false]) ? 0 :
+				(_.every($scope.filters.Organizations, ['checked', true]) ? 1 : -1);
+		}
 	};
 
 	// Click Collapse
@@ -159,7 +163,7 @@ angular.module('linc.cvrequest.controller', [])
 		$scope.ViewTotal += 10;
 	};
 
-	$scope.slider_options = { ceil: 32, floor: 0, onChange: function(){ $scope.ChangeFilter('Ages');}};
+	$scope.slider_options = { ceil: 32, floor: 0, onChange: function(){ /*$scope.ChangeFilter('Ages');*/}};
 
 	$scope.isCollapsed.NameOrId = $scope.filters.NameOrId ? false : true;
 	$scope.isCollapsed.Organization = _.every($scope.filters.Organizations, {checked: true});
@@ -285,4 +289,17 @@ angular.module('linc.cvrequest.controller', [])
 				lion.disabled = false;
 		});
 	};
+	// Check Organizations
+	$scope.check_orgs = { status: 0 };
+	$scope.checkAllOrgs = function(status){
+		// var status = $scope.check_orgs.status;
+		if (status != -1){
+			_.map($scope.filters.Organizations, function(org){
+				org.checked = status ? true : false;
+			});
+		}
+		$scope.check_orgs.status = status;
+	};
+	$scope.check_orgs.status = _.every($scope.filters.Organizations, ['checked', false]) ? 0 :
+        (_.every($scope.filters.Organizations, ['checked', true]) ? 1 : -1);
 }]);

@@ -68,8 +68,32 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 				</div>
 				<div uib-collapse="isCollapsed.Organization">
 					<div class="panel-body checkbox">
+						<label ng-if="check_orgs.status==1">
+							<a ng-click="checkAllOrgs(0)">
+								<span style="border: 1px solid #a9a9a9; border-radius: 3px; padding: 1px 0px; margin-right: 8px;">
+									<i class="fas fa-check-double" style="font-size: 10px; margin: 0px; padding: 0px 1px 0px 3px; color: #636060;"></i>
+								</span>
+								Select None
+							</a>
+						</label>
+						<label ng-if="check_orgs.status==0">
+							<a ng-click="checkAllOrgs(1)">
+								<span style="padding: 1px 8px 1px 8px; border: 1px solid #a9a9a9; border-radius: 3px; margin-right: 8px;">
+								</span>
+								Select All
+							</a>
+						</label>
+						<label ng-if="check_orgs.status==-1">
+							<a ng-click="checkAllOrgs(1)">
+								<span style="border: 1px solid #a9a9a9; border-radius: 3px; padding: 1px 0px 1px 3px; margin-right: 8px;">
+									<i class="fas fa-minus" style="font-size: 12px; margin: 0px; padding: 0px; color: #636060;"></i>
+								</span>
+								Select All
+							</a>
+						</label>
+
 						<label ng-repeat="organization in filters.Organizations">
-							<input ng-click="change('Organizations')" type="checkbox"  ng-model="organization.checked" ng-checked="organization.checked">
+							<input ng-click="change('Organizations')" type="checkbox" ng-model="organization.checked" ng-checked="organization.checked">
 							<span class="cr"><i class="cr-icon fa fa-check"></i></span>
 							{{! organization.name}}
 						</label>
@@ -413,11 +437,22 @@ For more information or to contact visit linclion.org or email tech@linclion.org
 						</thead>
 						<tbody infinite-scroll="Paging()" infinite-scroll-distance="1" infinite-scroll-container="'.Scroll-Panel'">
 
-							<tr class="link" ng-repeat="imageset in limited_imagesets = ( ordered_image_sets = ( filtered_image_sets =
-								( mine_imagesets = (imagesets | filter:BatchFilter)) | nameid_filter: filters.NameOrId : 'lion_id' |
-								age_filter: filters.Ages | organization_filter: filters.Organizations | features_filter: filters.TagFeatures |
-								gender_filter: filters.Genders | primary_filter: filters.Primary | LatLngFilter: filters.Location : true |
-								geographical: GeoBounds ) | orderBy: orderby.predicate : orderby.reverse ) | limitTo: ViewTotal">
+							<tr class="link"
+								ng-repeat="imageset in limited_imagesets = (
+									ordered_image_sets = (
+										filtered_image_sets = (
+											(mine_imagesets = (imagesets | filter:BatchFilter)) |
+											nameid_filter: filters.NameOrId : 'lion_id' |
+											age_filter: filters.Ages |
+											organization_filter: filters.Organizations |
+											features_filter: filters.TagFeatures |
+											gender_filter: filters.Genders |
+											primary_filter: filters.Primary |
+											LatLngFilter: filters.Location : true |
+											geographical: GeoBounds
+										) | orderBy: orderby.predicate : orderby.reverse
+									) | limitTo: ViewTotal
+								)">
 
 								<td class="text-center" ng-if="isBatchMode">
 									<input type="checkbox" ng-model="imageset.selected" ng-click="Select_Imageset($event, imageset);$event.stopPropagation();">

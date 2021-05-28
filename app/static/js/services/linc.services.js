@@ -18,11 +18,19 @@
 // For more information or to contact visit linclion.org or email tech@linclion.org
 'use strict';
 
-angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'linc.data.factory',
-	'linc.interceptor.factory', 'linc.notification.factory', 'modal.page.service'])
+angular.module('linc.services', [
+	'linc.api.services',
+	'linc.auth.services',
+	'linc.data.factory',
+	'linc.interceptor.factory',
+	'linc.notification.factory',
+	'modal.page.service'
+])
 
-.factory('LincServices', ['$http', '$state', '$q', '$cookies', 'AuthService', 'NotificationFactory', function($http, $state, $q, $cookies, AuthService, NotificationFactory) {
+.factory('LincServices', ['$rootScope', '$http', '$state', '$q', '$cookies', '$localStorage', '$interval', 'AuthService', 'PollerService', 'NotificationFactory',
+  function($rootScope, $http, $state, $q, $cookies, $localStorage, $interval, AuthService, PollerService, NotificationFactory) {
 
+	var $storage = $localStorage;
 	var debug = ($state.current.data == undefined) ? false : ($state.current.data.debug || false);
 	var HTTPGet = function (url, config){
 		var deferred = $q.defer();
@@ -69,33 +77,94 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 		});
 		return deferred.promise;
 	};
-	// Get All Lions List
-	var GetAllLions = function (org) {
+
+	var cachedData = {
+		LionsList: []
+	};
+
+	$rootScope.$on("EmptyLionListCache", function(evt, data){
+		cachedData.LionsList = [];
+	});
+
+	var ProcessAllLions = function(org){
 		var deferred = $q.defer();
+		var xsrfcookie = $cookies.get('_xsrf');
 		var url = databases['lions'].url + '/list';
 		if(org !== undefined)
 			url = url + '?org_id=' + org;
-
-		HTTPGet(url, {}).then(function (results) {
-			deferred.resolve(results.data);
-		},
-		function (error) {
-			if(debug || (error.status != 401 && error.status != 403)){
-				NotificationFactory.error({
-					title: "Error", message: 'Unable to load Lions datas',
-					position: 'right', // right, left, center
-					duration: 5000   // milisecond
-				});
-			}
-			if(error.status == 401 || error.status == 403){
-				console.log("lions resolve error");
-				deferred.resolve({});
-			}
-			else{
-				console.log("lions reject error");
-				deferred.reject(error);
-			}
+		$http({ method: 'POST', url: url, data: {}, config: {},
+			headers: { 'Content-Type': 'application/json', 'X-XSRFToken' : xsrfcookie} })
+		.then(function (response) {
+			deferred.resolve(response);
+		}, function (error) {
+			deferred.reject(error);
 		});
+		return deferred.promise;
+	};
+
+	var GetAllLions = function (org) {
+		var deferred = $q.defer();
+		if (!_.isEmpty(cachedData.LionsList)){
+			var cached = cachedData.LionsList;
+			deferred.resolve(cached);
+		}
+		else{
+			ProcessAllLions(org).then(function(response){
+				NotificationFactory.info({
+					title: "Lion's data",
+					message: "Please wait. Processing the lion's data",
+					position: 'right',
+					duration: 2000
+				});
+				$storage.token = response.data.data.token;
+				var promise = null;
+				var poller = function() {
+					PollerService.lions_list($storage.token).then(function (response) {
+						if (response.status == 200) {
+							delete $storage.token;
+							if (angular.isDefined(promise)) {
+								$interval.cancel(promise);
+								promise = undefined;
+							}
+							NotificationFactory.success({
+								title: "Processing finished",
+								message: "Returning the lions' data.",
+								position: 'right',
+								duration: 2000
+							});
+							cachedData.LionsList = response.data.data.data;
+							deferred.resolve(cachedData.LionsList);
+						}
+						else if (response.status == 206) {
+							NotificationFactory.info({
+								title: "Lion's data",
+								message: "Please wait. Processing the lion's data",
+								position: 'right',
+								duration: 2000
+							});
+						}
+					});
+				};
+				poller();
+				var promise = $interval(poller, 10000);
+			}, function (error){
+				if(debug || (error.status != 401 && error.status != 403)){
+					NotificationFactory.error({
+						title: "Error", message: 'Unable to load Lions datas',
+						position: 'right', // right, left, center
+						duration: 5000   // milisecond
+					});
+				}
+				if(error.status == 401 || error.status == 403){
+					console.log("lions resolve error");
+					deferred.resolve({});
+				}
+				else{
+					console.log("lions reject error");
+					deferred.resolve({});
+				}
+			});
+		}
 		return deferred.promise;
 	};
 	// Get All Organizations List
@@ -219,7 +288,6 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 		// deferred.resolve({cv: true, whisker: true});
 		return deferred.promise;
 	};
-	// Get Lion by Id
 	var GetLion = function (id) {
 		var deferred = $q.defer();
 		var url = databases['lions'].url + '/' + id + '/profile';
@@ -388,6 +456,9 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 				deferred.reject(error);
 			});
 		}
+		else{
+			cachedData.LionsList = [];
+		}
 		if(data_in.method=='POST'){
 			var data = data_in.data;
 			HTTP('POST', url, data, {}, function (response) {
@@ -443,6 +514,8 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 
 	// Post Imageset (CV Request)
 	var RequestCV = function (imageset_id, data, success) {
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('POST', '/imagesets/' + imageset_id + '/cvrequest', data, {}, success,
 		function (error) {
 			if(debug || (error.status != 401 && error.status != 403)){
@@ -458,16 +531,22 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 
 	// Put ImageSet (Update Imageset)
 	var PutImageSet = function (imageset_id, data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('PUT', '/imagesets/' + imageset_id, data, {}, success, error);
 	};
 
 	// Post ImageSet - New Imageset
 	var PostImageset = function (data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('POST', '/imagesets', data, {}, success, error);
 	};
 
 	// Put Lion (Update Lion)
 	var PutLionImageset = function (lion_id, data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
 			var promises = [];
@@ -505,11 +584,15 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 
 	// Put Lion (Set Primary)
 	var SetPrimary = function (lion_id, data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('PUT', '/lions/' + lion_id, data, {}, success, error);
 	};
 
 	// Post Lion - New Lion
 	var CreateLion = function (input_data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
 			var result_data;
@@ -530,6 +613,8 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 	};
 
 	var SwitchLion = function (input_data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
 			// Lion
@@ -553,6 +638,8 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 
 	// Put Lion (Update Lion)
 	var UpdateImage = function (image_id, data, success){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('PUT', '/images/' + image_id, data, {},
 			function (result) {
 				success(result.data.data);
@@ -570,6 +657,8 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 	};
 
 	var UpdateImages = function (items, success){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
 			var promises = items.map(function(item) {
@@ -612,21 +701,29 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 
 	// Delete CVRequest / CVResults
 	var DeleteImage = function (image_id, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('DELETE', '/images/' + image_id, {}, {}, success, error);
 	};
 
 	// Delete ImageSet
 	var DeleteImageSet = function (imageset_id, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('DELETE', '/imagesets/' + imageset_id, {}, {}, success, error);
 	};
 
 	// Delete Lion
 	var DeleteLion = function (lion_id, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('DELETE', '/lions/' + lion_id, {}, {}, success, error);
 	};
 
 	// Batch Delete Lions / Imagesets / Images
 	var BatchDelete = function(data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
 			var url = '/'+ data.type + '/';
@@ -655,6 +752,8 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 
 	// Batch Delete Lions / Imagesets / Images
 	var BatchUpdate = function(input_data, success, error){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		AuthService.chech_auth().then( function(resp){
 			var xsrfcookie = $cookies.get('_xsrf');
 			var promises = [];
@@ -750,6 +849,8 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 
 	// Delete CVRequest / CVResults
 	var DeleteCVRequest = function (cvrequest_id, success){
+		// Clear Cached LionsList
+		cachedData.LionsList = [];
 		return HTTP('DELETE', '/cvrequests/' + cvrequest_id, {}, {}, success,
 		function(error){
 			if(debug || (error.status != 401 && error.status != 403)){
@@ -827,7 +928,7 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 	// List of ImageSets , Lions and Organizations
 	dataFactory.Organizations = GetAllOrganizations;
 	dataFactory.ImageSets = GetAllImageSets;
-	dataFactory.Lions = GetAllLions;
+	dataFactory.AllLions = GetAllLions;
 	// ImageSet to ImageSet Profile
 	dataFactory.ImageSet = GetImageSet;
 	// Lion to lion Profile
@@ -892,7 +993,20 @@ angular.module('linc.services', ['linc.api.services', 'linc.auth.services', 'lin
 				deferred.reject(error);
 			});
 			return deferred.promise;
+		},
+		lions_list: function(token){
+			var url = 'lions/list?token=' + token['id'];
+			var deferred = $q.defer();
+			AuthService.chech_auth().then( function(resp){
+				$http.get(url).then(function (response) {
+					deferred.resolve(response);
+				}, function(error){
+					deferred.reject(error);
+				});
+			},function(error){
+				deferred.reject(error);
+			});
+			return deferred.promise;
 		}
 	}
-}])
-;
+}]);

@@ -204,6 +204,10 @@ angular.module('linc.view.imagesets.controller', [])
 	$scope.change = function(type){
 		imagesets_options.filters[type] = $scope.filters[type];
 		LincDataFactory.set_imagesets(imagesets_options);
+		if (type == 'Organizations'){
+			$scope.check_orgs.status = _.every($scope.filters.Organizations, ['checked', false]) ? 0 :
+				(_.every($scope.filters.Organizations, ['checked', true]) ? 1 : -1);
+		}
 	}
 
 	// Click collapse
@@ -441,7 +445,7 @@ angular.module('linc.view.imagesets.controller', [])
 	if(cvrequest_pendings.length)
 		start_Poller(0);
 
-	$scope.slider_options = { ceil: 32, floor: 0, onChange: function(){ $scope.ChangeFilter('Ages');}};
+	$scope.slider_options = { ceil: 32, floor: 0, onChange: function(){/*$scope.ChangeFilter('Ages');*/}};
 
 	$scope.pfilters = $stateParams.filter ? $stateParams.filter : {};
 
@@ -591,6 +595,7 @@ angular.module('linc.view.imagesets.controller', [])
 		var date = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
 		var ids = _.map($scope.Selecteds, 'id');
 		$scope.exporting = true;
+		console.log('selecteds count: %s', ids.length);
 		LincServices.DataExport({'data': {'imagesets': ids}}).then(function(res_data){
 			var blob = res_data.blob;
 			var fileName = 'Data-Imagesets-'+ date + '-' + (res_data.fileName || "").substring(res_data.fileName.lastIndexOf('/')+1) || 'images.csv';
@@ -704,5 +709,17 @@ angular.module('linc.view.imagesets.controller', [])
 			modalInstance.dismiss();
 		}
 	};
-
+	// Check Organizations
+	$scope.check_orgs = { status: 0 };
+	$scope.checkAllOrgs = function(status){
+		// var status = $scope.check_orgs.status;
+        if (status != -1){
+            _.map($scope.filters.Organizations, function(org){
+				org.checked = status ? true : false;
+            });
+        }
+        $scope.check_orgs.status = status;
+    };
+	$scope.check_orgs.status = _.every($scope.filters.Organizations, ['checked', false]) ? 0 :
+        (_.every($scope.filters.Organizations, ['checked', true]) ? 1 : -1);
 }]);

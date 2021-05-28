@@ -29,7 +29,7 @@ angular.module('linc.cvrequest.directive', [])
 			switch (attrs.type) { //view selection. Put type='new' or type='search'
 				case 'search':
 					return '<button class="btn btn-default btn-sm" ng-class="{error: cvReqError}"'+
-							   'uib-tooltip="An error occurred in the last Find Lion Match" tooltip-enable="cvReqError"'+
+							   'uib-tooltip="An error occurred in the last  Match" tooltip-enable="cvReqError"'+
 							   'data-animation="am-fade-and-slide-top" ng-click="show()">'+
 								 '<span ng-if="loading" class="loading text-center">'+
 								 '<img src="/static/images/loading.gif"/></span>'+
@@ -95,7 +95,7 @@ angular.module('linc.cvrequest.directive', [])
 								return scope.imageset;
 							},
 							lions: ['LincServices', function(LincServices) {
-								return LincServices.Lions().then(function(lions){
+								return LincServices.AllLions().then(function(lions){
 									return _.map(lions, function(lion){
 										var elem = {};
 										elem['has_data'] = {
