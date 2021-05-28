@@ -8,11 +8,11 @@ name: CI
 
 on:
   # Trigger the workflow on push
-  push:
-    # Push events on branches develop and master
-    branches: [develop, master]
-    # Anytime a path name matches, the workflow will not run
-    paths-ignore: ['README.md']
+  # push:
+  #   # Push events on branches develop and master
+  #   branches: [develop, master]
+  #   # Anytime a path name matches, the workflow will not run
+  #   paths-ignore: ['README.md']
   # Trigger the workflow on pull request
   pull_request:
     # Pull request events on branches develop and master
